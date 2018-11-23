@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Živnostníček</string>
+    <string name="user_name">E-mail</string>
+    <string name="password">Heslo</string>
+    <string name="remember_me">Zůstat přihlášen</string>
+    <string name="login">Přihlásit</string>
+    <string name="register_here">Registrace zde</string>
+    <string name="name_form">Jméno a přijmení</string>
+    <string name="confirm_password">Heslo znovu</string>
+    <string name="i_have_already_account">Už mám vytvořený účet</string>
+    <string name="register_form">Registrační formulář</string>
+    <string name="register">REGISTRACE</string>
+    <string name="empty_name">Nebylo zadáno jméno a příjmení</string>
+    <string name="empty_user_name">Nebyla vložena e-mailová adresa</string>
+    <string name="empty_password1">Nebylo zadáno heslo</string>
+    <string name="empty_password2">Nebylo zadáno potvrzovací heslo</string>
+    <string name="passwords_are_not_equal">Hesla nejsou stejná</string>
+    <string name="passwords_is_too_short">Heslo je příliš krátké</string>
+    <string name="email_is_not_valid">E-mailová adresa je ve špatném tvaru</string>
+    <string name="wrong_password_or_address">Špatné heslo nebo e-mailová adresa</string>
+    <string name="you_are_succesful_login">Úspěšně přihlášen</string>
+</resources>
