@@ -17,9 +17,38 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegisterActivity" />
+        <!--
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />-->
+        <activity
+            android:name=".activities.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.IncomeActivity"
+            android:label="@string/title_activity_income"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ExpenseActivity"
+            android:label="@string/title_activity_expense"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderActivity"
+            android:label="@string/title_activity_trader"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.StorageActivity"
+            android:label="@string/title_activity_storage"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.InfoActivity"
+            android:label="@string/title_activity_info"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.SynchronizationActivity"
+            android:label="@string/title_activity_synchronization"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

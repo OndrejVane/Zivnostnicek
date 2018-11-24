@@ -153,6 +153,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    public User getUserByEmailAddress(String emailAddress){
+
+        User user = new User();
+
+        String[] columns = { COLUMN_USER_ID, COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_USER_EMAIL + " = ?";
+
+        String[] selectionArgs = {emailAddress};
+
+        Cursor cursor = db.query(TABLE_USER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor != null){
+            cursor.moveToFirst();
+        }
+            user.setId(Integer.parseInt(cursor.getString(0)));
+            user.setFullName(cursor.getString(1));
+            user.setEmail(cursor.getString(2));
+
+        return user;
+    }
+
 
 
 }

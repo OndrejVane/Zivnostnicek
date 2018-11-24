@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //kontrola, zda uživatel zůstal přihlášen
         if (checkIfYouAreLogIn()){
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
         }
@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
             if(databaseHelper.checkUser(userAddressET.getText().toString(),passwordET.getText().toString())){
                 String message = getString(R.string.you_are_succesful_login);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 stayLogIn();
                 startActivity(intent);
                 finish();

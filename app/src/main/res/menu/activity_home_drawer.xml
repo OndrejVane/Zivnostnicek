@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_grey"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/nav_income"
+            android:icon="@drawable/ic_income_grey"
+            android:title="@string/income" />
+        <item
+            android:id="@+id/nav_expense"
+            android:icon="@drawable/ic_expense_grey"
+            android:title="@string/expense" />
+        <item
+            android:id="@+id/nav_traders"
+            android:icon="@drawable/ic_trader_grey"
+            android:title="@string/traders" />
+        <item
+            android:id="@+id/nav_storage"
+            android:icon="@drawable/ic_storage_grey"
+            android:title="@string/storage" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info_grey"
+            android:title="@string/info" />
+        <item
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ic_synchronizate_grey"
+            android:title="@string/data_synchronization" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout_grey"
+            android:title="@string/logout" />
+
+    </group>
+
+</menu>
