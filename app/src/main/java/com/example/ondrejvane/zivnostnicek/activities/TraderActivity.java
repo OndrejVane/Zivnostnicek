@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
 public class TraderActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,10 +28,10 @@ public class TraderActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trader);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,6 +48,9 @@ public class TraderActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Header header = new Header( navigationView, this);
+        header.setTextToHeader();
     }
 
     @Override
@@ -110,7 +115,8 @@ public class TraderActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                alertLogOut();
+                Logout logout = new Logout(TraderActivity.this, this);
+                logout.logout();
                 break;
 
         }
@@ -118,37 +124,5 @@ public class TraderActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void alertLogOut(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(TraderActivity.this);
-        alert.setMessage(R.string.log_out_question).setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logOut();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = alert.create();
-        alert.setTitle("Log out");
-        alertDialog.show();
-
-    }
-
-    public void logOut() {
-        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("IS_LOGEDIN", false);
-        editor.putString("USER", null);
-        editor.commit();
-        Intent intent = new Intent(TraderActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

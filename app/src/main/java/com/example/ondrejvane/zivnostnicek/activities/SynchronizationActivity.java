@@ -18,6 +18,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
 public class SynchronizationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +48,9 @@ public class SynchronizationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Header header = new Header( navigationView, this);
+        header.setTextToHeader();
     }
 
     @Override
@@ -111,7 +116,8 @@ public class SynchronizationActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                alertLogOut();
+                Logout logout = new Logout(SynchronizationActivity.this, this);
+                logout.logout();
                 break;
 
         }
@@ -119,37 +125,5 @@ public class SynchronizationActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void alertLogOut(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(SynchronizationActivity.this);
-        alert.setMessage(R.string.log_out_question).setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logOut();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = alert.create();
-        alert.setTitle("Log out");
-        alertDialog.show();
-
-    }
-
-    public void logOut() {
-        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("IS_LOGEDIN", false);
-        editor.putString("USER", null);
-        editor.commit();
-        Intent intent = new Intent(SynchronizationActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

@@ -17,11 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.RegisterActivity" />
-        <!--
-        <activity
-            android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />-->
+
         <activity
             android:name=".activities.HomeActivity"
             android:label="@string/title_activity_home"
@@ -49,7 +45,7 @@
         <activity
             android:name=".activities.SynchronizationActivity"
             android:label="@string/title_activity_synchronization"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -1,12 +1,10 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,13 +12,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView headerFullName;
+    private TextView headerEmailAddress;
+
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +53,11 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Header header = new Header( navigationView, this);
+        header.setTextToHeader();
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -109,7 +120,8 @@ public class HomeActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                alertLogOut();
+                Logout logout = new Logout(HomeActivity.this, this);
+                logout.logout();
                 break;
 
         }
@@ -118,37 +130,4 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    public void alertLogOut(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(HomeActivity.this);
-        alert.setMessage(R.string.log_out_question).setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        logOut();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = alert.create();
-        alert.setTitle("Log out");
-        alertDialog.show();
-
-    }
-
-    public void logOut() {
-        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("IS_LOGEDIN", false);
-        editor.putString("USER", null);
-        editor.commit();
-        Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 }

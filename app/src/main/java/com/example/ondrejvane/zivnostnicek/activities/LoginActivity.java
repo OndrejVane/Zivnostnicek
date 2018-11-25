@@ -125,14 +125,19 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void stayLogIn(){
         String userAddress = userAddressET.getText().toString();
+        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
 
         if(rememberMeBox.isChecked()){
-                SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putBoolean("IS_LOGEDIN", true);
-                editor.putString("USER", userAddress);
-                editor.commit();
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("IS_LOGEDIN", true);
+            editor.putString("USER", userAddress);
+            editor.commit();
 
+        }else {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("IS_LOGEDIN", false);
+            editor.putString("USER", userAddress);
+            editor.commit();
         }
 
     }
