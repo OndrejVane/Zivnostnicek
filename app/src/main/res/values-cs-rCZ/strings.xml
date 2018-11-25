@@ -20,6 +20,7 @@
     <string name="email_is_not_valid">E-mailová adresa je ve špatném tvaru</string>
     <string name="wrong_password_or_address">Špatné heslo nebo e-mailová adresa</string>
     <string name="you_are_succesful_login">Úspěšně přihlášen</string>
+    <string name="user_is_created">Uživatel je založen</string>
     <string name="logout">Odhlásit se</string>
     <string name="home">Přehled</string>
     <string name="income">Příjmy</string>
