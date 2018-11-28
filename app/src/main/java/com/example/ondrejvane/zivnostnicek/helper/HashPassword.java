@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Třída která generuje hash hesla. Hash je následně ukládán do
- * databáze pro větší bezpečnost. Použitá hashovací funkce je SHA-512
+ * databáze pro větší bezpečnost. Použitá hashovací funkce je SHA-512.
  */
 public class HashPassword {
 
@@ -13,6 +13,12 @@ public class HashPassword {
     private final String algorithm = "SHA-512";
     private final char[] hexArray = "0123456789ABCDEF".toCharArray();
 
+    /**
+     * Metoda, která převede jednotlivé byty na hexadecimální znakový řetězec.
+     *
+     * @param bytes vstupní pole bytů
+     * @return řetězec v hecadecimálním tvaru
+     */
     private String bytesToStringHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
         for ( int j = 0; j < bytes.length; j++ ) {
@@ -23,6 +29,13 @@ public class HashPassword {
         return new String(hexChars);
     }
 
+    /**
+     * Metoda, která převede vstupní řetězec pomocí příslušného algoritmu na hash.
+     * Algoritmus je definovaný v konstantě algorithm.
+     *
+     * @param data  vstupní řetězec
+     * @return  výsledný hash vstupního řetězce v bytech
+     */
     public String hashPassword(String data){
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
