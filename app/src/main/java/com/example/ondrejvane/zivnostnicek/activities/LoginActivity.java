@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox rememberMeBox;
 
     private DatabaseHelper databaseHelper;
+    private HashPassword hashPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordET = findViewById(R.id.userPassword);
         rememberMeBox = findViewById(R.id.checkBox);
         databaseHelper = new DatabaseHelper(LoginActivity.this);
+        hashPassword = new HashPassword();
     }
 
     /**
@@ -103,7 +106,9 @@ public class LoginActivity extends AppCompatActivity {
 
         if (checkIfIsAllFilled() == true){
 
-            if(databaseHelper.checkUser(userAddressET.getText().toString(),passwordET.getText().toString())){
+            String hashedPassword = hashPassword.hashPassword(passwordET.getText().toString());
+
+            if(databaseHelper.checkUser(userAddressET.getText().toString(),hashedPassword)){
                 String message = getString(R.string.you_are_succesful_login);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -121,7 +126,8 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Pokud uživatel zvolí možnost "Zůstat přihlášen", tak se do shared preferences
-     * uloží
+     * uloží jeho emailová adresa a nastaví se hodnota IS_LOGEDIN na true. Pokud nezvolí
+     * zústat přihlášen ,tak se nastaví hodnota IS_LOGEDIN na false.
      */
     private void stayLogIn(){
         String userAddress = userAddressET.getText().toString();

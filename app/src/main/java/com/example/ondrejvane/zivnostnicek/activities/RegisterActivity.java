@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private User user;
+    private HashPassword hashPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         password2ET = findViewById(R.id.userConfirmPassword);
         databaseHelper = new DatabaseHelper(RegisterActivity.this);
         user = new User();
+        hashPassword = new HashPassword();
     }
 
 
@@ -71,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (checkIfIsAllFilled() && !isUserExists()){
             user.setFullName(nameET.getText().toString());
             user.setEmail(userAddressET.getText().toString());
-            user.setPassword(password1ET.getText().toString());
+            user.setPassword(hashPassword.hashPassword(password1ET.getText().toString()));
 
             databaseHelper.addUser(user);
 
