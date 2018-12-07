@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -113,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 stayLogIn();
+                loadAllInformation();
                 startActivity(intent);
                 finish();
             }else {
@@ -156,5 +159,15 @@ public class LoginActivity extends AppCompatActivity {
             return logedIn;
         }
         return logedIn;
+    }
+
+    private void loadAllInformation(){
+        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
+        String emailAddress = sp.getString("USER", "NULL");
+        User user = databaseHelper.getUserByEmailAddress(emailAddress);
+        UserInformation userInformation = UserInformation.getInstance();
+        userInformation.setMail(user.getEmail());
+        userInformation.setFullName(user.getFullName());
+        userInformation.setUserId(user.getId());
     }
 }
