@@ -39,4 +39,21 @@
     <string name="log_out_question">Opravdu se chcete odhlásit?</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
+    <string name="title_activity_trader_new">Přidej obchodníka</string>
+    <string name="add_trader">Přidej obchodníka</string>
+    <string name="fill_information_about_trader">Vyplňte údaje o obchodníkovi</string>
+    <string name="trader_name">*Název obchodníka</string>
+    <string name="telephone">Telefonní číslo</string>
+    <string name="contact_person">Kontaktní osoba</string>
+    <string name="identification_number">IČO</string>
+    <string name="tax_identification_number">DIČ</string>
+    <string name="trader_address">Adresa obchodníka</string>
+    <string name="house_number">Číslo popisné</string>
+    <string name="mandatory_information">* Povinné údaje</string>
+    <string name="city">Město</string>
+    <string name="street">Ulice</string>
+    <string name="company_name_is_empty">Název obchodníka je prázdný</string>
+    <string name="telephone_has_wrong_format">Špatný formát telefoního čísla</string>
+    <string name="wrong_id_number">Špatný formát IČ</string>
+    <string name="wrong_format_of_tid">Špatný formát DIČ</string>
 </resources>

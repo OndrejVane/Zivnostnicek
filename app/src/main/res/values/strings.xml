@@ -47,4 +47,27 @@
     <string name="log_out_question">Are you really want to log out?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="title_activity_trader_new">Add trader</string>
+    <string name="add_trader">Add trader</string>
+    <string name="name">Name</string>
+    <string name="contact_person">Contact person</string>
+    <string name="phone_number">Phone number</string>
+    <string name="identification_number">Identification number</string>
+    <string name="tax_identification_number">Tax identification number</string>
+    <string name="city">City</string>
+    <string name="street">Street</string>
+    <string name="post_number">Post number</string>
+    <string name="fill_information_about_trader">Fill information about trader</string>
+    <string name="trader_name">*Trader name</string>
+    <string name="telephone">Telephone number</string>
+    <string name="trader_address">Trader address</string>
+    <string name="house_number">House number</string>
+    <string name="mandatory_information">* Mandatory information</string>
+    <string name="company_name_is_empty">Company name is empty</string>
+    <string name="telephone_has_wrong_format">Telephone has wrong format</string>
+    <string name="wrong_id_number">Wrong format of identification number</string>
+    <string name="wrong_format_of_tid">Wrong format of TID</string>
+    <string name="trader_is_created">Trader is created</string>
+
+
 </resources>

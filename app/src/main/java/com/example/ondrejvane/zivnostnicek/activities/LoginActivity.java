@@ -114,8 +114,8 @@ public class LoginActivity extends AppCompatActivity {
                 String message = getString(R.string.you_are_succesful_login);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                stayLogIn();
                 loadAllInformation();
+                stayLogIn();
                 startActivity(intent);
                 finish();
             }else {
@@ -156,12 +156,14 @@ public class LoginActivity extends AppCompatActivity {
         boolean logedIn = sp.getBoolean("IS_LOGEDIN", false);
 
         if (logedIn == true){
+            loadAllInformation();
             return logedIn;
         }
         return logedIn;
     }
 
     private void loadAllInformation(){
+
         SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
         String emailAddress = sp.getString("USER", "NULL");
         User user = databaseHelper.getUserByEmailAddress(emailAddress);
@@ -169,5 +171,6 @@ public class LoginActivity extends AppCompatActivity {
         userInformation.setMail(user.getEmail());
         userInformation.setFullName(user.getFullName());
         userInformation.setUserId(user.getId());
+
     }
 }

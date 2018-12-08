@@ -6,33 +6,59 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.User;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    // Database Version
-    private static final int DATABASE_VERSION = 1;
+    // Verze databáze
+    private static final int DATABASE_VERSION = 2;
 
-    // Database Name
-    private static final String DATABASE_NAME = "User.db";
+    // Název databáze
+    private static final String DATABASE_NAME = "Zivnostnicek.db";
 
-    // User table name
+    // Názvy jednotlivých tabulke
     private static final String TABLE_USER = "user";
+    private static final String TABLE_TRADER = "trader";
 
-    // User Table Columns names
-    private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_USER_FULL_NAME = "user_full_name";
-    private static final String COLUMN_USER_EMAIL = "user_email";
-    private static final String COLUMN_USER_PASSWORD = "user_password";
+    // Názvy atributů v tabulce user
+    private static final String COLUMN_USER_ID = "user_id";                                 //Primární klíč
+    private static final String COLUMN_USER_FULL_NAME = "user_full_name";                   //Jméno uživatele
+    private static final String COLUMN_USER_EMAIL = "user_email";                           //Mail uživatele
+    private static final String COLUMN_USER_PASSWORD = "user_password";                     //Heslo uživatele
 
-    // create table sql query
+    //Názvy atributů v tabulce trader
+    private static final String COLUMN_TRADER_ID = "trader_id";                             //Primární klíč
+    private static final String COLUMN_TRADER_USER_ID = "trader_user_id";                   //Cizí klíč
+    private static final String COLUMN_TRADER_NAME = "trader_name";                         //Název firmy
+    private static final String COLUMN_TRADER_PHONE_NUMBER = "trader_phone_number";         //Telefoní číslo
+    private static final String COLUMN_TRADER_CONTACT_PERSON = "trader_contact_person";     //Kontaktní osoba
+    private static final String COLUMN_TRADER_IN = "trader_in";                             //IČO
+    private static final String COLUMN_TRADER_TIN = "trader_tin";                           //DIČ
+    private static final String COLUMN_TRADER_CITY = "trader_city";                         //Město obchodníka
+    private static final String COLUMN_TRADER_STREET = "trader_street";                     //Ulice obchodníka
+    private static final String COLUMN_TRADER_HOUSE_NUMBER = "trader_house_number";         //Číslo popisné obchodníka
+
+    //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FULL_NAME + " TEXT,"
             + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
 
-    // drop table sql query
+    //SQL pro vytvoření tabulky Trader
+    private String CREATE_TRADER_TABLE = "CREATE TABLE " + TABLE_TRADER + "("
+            + COLUMN_TRADER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_TRADER_USER_ID + " INTEGER,"
+            + COLUMN_TRADER_NAME + " TEXT," + COLUMN_TRADER_PHONE_NUMBER + " TEXT," + COLUMN_TRADER_CONTACT_PERSON + " TEXT,"
+            + COLUMN_TRADER_IN + " TEXT," + COLUMN_TRADER_TIN + " TEXT," + COLUMN_TRADER_CITY + " TEXT,"
+            + COLUMN_TRADER_STREET + " TEXT," + COLUMN_TRADER_HOUSE_NUMBER + " INTEGER" + ")";
+
+
+    // drop table user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
+
+    // drop table trader
+    private String DROP_TRADER_TABLE = "DROP TABLE IF EXISTS " + TABLE_TRADER;
 
     /**
      * Constructor
@@ -46,6 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
+        db.execSQL(CREATE_TRADER_TABLE);
     }
 
 
@@ -54,6 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Drop User Table if exist
         db.execSQL(DROP_USER_TABLE);
+        db.execSQL(DROP_TRADER_TABLE);
 
         // Create tables again
         onCreate(db);
@@ -74,6 +102,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Inserting Row
         db.insert(TABLE_USER, null, values);
+        db.close();
+    }
+
+    public void addTrader(Trader trader){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        UserInformation userInformation = UserInformation.getInstance();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());     //cizí klíč
+        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
+        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
+        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
+        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
+        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
+        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
+        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
+        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
+        db.insert(TABLE_TRADER, null, values);
         db.close();
     }
 
@@ -176,10 +223,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor != null){
             cursor.moveToFirst();
         }
+
             user.setId(Integer.parseInt(cursor.getString(0)));
             user.setFullName(cursor.getString(1));
             user.setEmail(cursor.getString(2));
 
+            db.close();
+            cursor.close();
         return user;
     }
 
