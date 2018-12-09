@@ -220,17 +220,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null,                       //filter by row groups
                 null);
 
-        if (cursor != null){
-            cursor.moveToFirst();
-        }
 
-            user.setId(Integer.parseInt(cursor.getString(0)));
-            user.setFullName(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
+            if (cursor.moveToFirst()){
+                user.setId(cursor.getInt(0));
+                user.setFullName(cursor.getString(1));
+                user.setEmail(cursor.getString(2));
+            }
 
             db.close();
             cursor.close();
         return user;
+    }
+
+    public String[][] getTradersData(int userID){
+        String data[][];
+
+        String[] columns = { COLUMN_TRADER_ID, COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_TRADER_USER_ID + " = ?";
+
+        String orderBy = COLUMN_TRADER_NAME + " ASC";
+
+        // selection arguments
+        String[] selectionArgs = {Integer.toString(userID)};
+
+        Cursor cursor = db.query(TABLE_TRADER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                orderBy);
+        int count = cursor.getCount();
+        data = new String[3][count];
+        int i = 0;
+
+        if (cursor.moveToFirst()){
+            do{
+                data[0][i] = cursor.getString(0);
+                data[1][i] = cursor.getString(1);
+                data[2][i] = cursor.getString(2);
+                i++;
+            }while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+
+        return data;
     }
 
 

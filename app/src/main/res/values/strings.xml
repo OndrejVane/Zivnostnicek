@@ -68,6 +68,7 @@
     <string name="wrong_id_number">Wrong format of identification number</string>
     <string name="wrong_format_of_tid">Wrong format of TID</string>
     <string name="trader_is_created">Trader is created</string>
+    <string name="search">Search</string>
 
 
 </resources>

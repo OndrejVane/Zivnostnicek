@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -34,6 +35,8 @@ public class TraderNewActivity extends AppCompatActivity
     private TextInputLayout inputLayoutIdentificationNumber, inputLayoutTaxIdentificationNumber;
 
     private DatabaseHelper databaseHelper;
+    private Handler mHandler;
+
     private Trader trader;
 
     @Override
@@ -74,6 +77,8 @@ public class TraderNewActivity extends AppCompatActivity
         inputLayoutIdentificationNumber = findViewById(R.id.textInputLayoutIdentificationNumber);
         inputLayoutTaxIdentificationNumber = findViewById(R.id.textInputLayoutTaxIdentificationNumber);
         databaseHelper = new DatabaseHelper(TraderNewActivity.this);
+        mHandler = new Handler();
+
     }
 
 
@@ -85,6 +90,9 @@ public class TraderNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        Intent income = new Intent(TraderNewActivity.this, TraderActivity.class);
+        startActivity(income);
+        finish();
     }
 
 
@@ -193,8 +201,13 @@ public class TraderNewActivity extends AppCompatActivity
 
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        Intent income = new Intent(TraderNewActivity.this, TraderActivity.class);
+        startActivity(income);
         finish();
+
     }
+
+
 
     /**
      * Metoda, která validuje DIČ.
