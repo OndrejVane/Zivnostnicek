@@ -59,4 +59,6 @@
     <string name="search">Hledat</string>
     <string name="no_result">Žádné výsledky</string>
     <string name="title_activity_trader_show"> Náhled obchodníka</string>
+    <string name="trader_name_show">Název obchodníka</string>
+    <string name="trader_is_created">Obchodník přidán</string>
 </resources>

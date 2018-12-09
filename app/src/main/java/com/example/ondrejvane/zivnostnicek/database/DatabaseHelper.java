@@ -224,17 +224,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null);
 
 
-            System.out.println("COUNT OF : "+cursor.getCount());
-            if (cursor.moveToFirst()){
-                user.setId(cursor.getInt(0));
-                user.setFullName(cursor.getString(1));
-                user.setEmail(cursor.getString(2));
-            }else {
-                System.out.println("!!!!!ERROR!!!!");
-            }
+        if (cursor.moveToFirst()){
+            user.setId(cursor.getInt(0));
+            user.setFullName(cursor.getString(1));
+            user.setEmail(cursor.getString(2));
+        }
 
-            db.close();
-            cursor.close();
+        db.close();
+        cursor.close();
+
         return user;
     }
 
@@ -275,6 +273,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
 
         return data;
+    }
+
+    public Trader getTraderByTraderId(int traderId){
+
+        Trader trader = new Trader();
+
+        String[] columns = {COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON,
+                COLUMN_TRADER_PHONE_NUMBER, COLUMN_TRADER_IN, COLUMN_TRADER_TIN,
+                COLUMN_TRADER_CITY, COLUMN_TRADER_STREET, COLUMN_TRADER_HOUSE_NUMBER};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_TRADER_ID + " = ?";
+
+        String[] selectionArgs = {Integer.toString(traderId)};
+
+        Cursor cursor = db.query(TABLE_TRADER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if(cursor.moveToFirst()){
+            trader.setTraderName(cursor.getString(0));
+            trader.setTraderContactPerson(cursor.getString(1));
+            trader.setTraderPhoneNumber(cursor.getString(2));
+            trader.setTraderIN(cursor.getString(3));
+            trader.setTraderTIN(cursor.getString(4));
+            trader.setTraderCity(cursor.getString(5));
+            trader.setTraderStreet(cursor.getString(6));
+            trader.setTraderHouseNumber(cursor.getString(7));
+        }
+
+        db.close();
+        cursor.close();
+
+        return trader;
+
     }
 
 

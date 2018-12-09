@@ -52,7 +52,7 @@
         <activity
             android:name=".activities.TraderShowActivity"
             android:label="@string/title_activity_trader_show"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

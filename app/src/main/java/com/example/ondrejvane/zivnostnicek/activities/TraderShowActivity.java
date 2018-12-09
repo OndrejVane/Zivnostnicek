@@ -1,11 +1,15 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -16,9 +20,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -26,7 +32,14 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 public class TraderShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView textView;
+    private DatabaseHelper databaseHelper;
+    private int traderID;
+    private Trader trader;
+
+    private EditText inputCompanyNameShow, inputContactPersonShow, inputTelephoneNumberShow;
+    private EditText inputIdentificationNumberShow, inputTaxIdentificationNumberShow;
+    private EditText inputCityShow, inputStreetShow, inputHouseNumberShow;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +60,34 @@ public class TraderShowActivity extends AppCompatActivity
         Header header = new Header( navigationView, this);
         header.setTextToHeader();
 
+        initActivity();
 
-        textView = findViewById(R.id.textViewTraderShow);
-        String temp = getIntent().getExtras().get("TRADER_ID").toString();
-        textView.setText(temp);
+        inputCompanyNameShow.setText(trader.getTraderName());
+        inputContactPersonShow.setText(trader.getTraderContactPerson());
+        inputTelephoneNumberShow.setText(trader.getTraderPhoneNumber());
+        inputIdentificationNumberShow.setText(trader.getTraderIN());
+        inputTaxIdentificationNumberShow.setText(trader.getTraderTIN());
+        inputCityShow.setText(trader.getTraderCity());
+        inputStreetShow.setText(trader.getTraderStreet());
+        inputHouseNumberShow.setText(trader.getTraderHouseNumber());
+
+
     }
+
+    private void initActivity() {
+        databaseHelper = new DatabaseHelper(TraderShowActivity.this);
+        traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        trader = databaseHelper.getTraderByTraderId(traderID);
+        inputCompanyNameShow = findViewById(R.id.textInputEditTextCompanyNameShow);
+        inputContactPersonShow = findViewById(R.id.textInputEditTextContactPersonShow);
+        inputTelephoneNumberShow = findViewById(R.id.textInputEditTextTelephoneNumberShow);
+        inputIdentificationNumberShow = findViewById(R.id.textInputEditTextIdentificationNumberShow);
+        inputTaxIdentificationNumberShow = findViewById(R.id.textInputEditTextTaxIdentificationNumberShow);
+        inputCityShow = findViewById(R.id.textInputEditTextCityShow);
+        inputStreetShow = findViewById(R.id.textInputEditTextStreetShow);
+        inputHouseNumberShow = findViewById(R.id.textInputEditTextHouseNumberShow);
+    }
+
 
     @Override
     public void onBackPressed() {
