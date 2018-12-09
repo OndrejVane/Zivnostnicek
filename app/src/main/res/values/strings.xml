@@ -70,6 +70,7 @@
     <string name="trader_is_created">Trader is created</string>
     <string name="search">Search</string>
     <string name="no_result">No result</string>
+    <string name="title_activity_trader_show">Show trader</string>
 
 
 </resources>

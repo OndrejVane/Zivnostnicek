@@ -40,7 +40,7 @@
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
     <string name="title_activity_trader_new">Přidej obchodníka</string>
-    <string name="add_trader">Přidej obchodníka</string>
+    <string name="add_trader">Přidejte obchodníka</string>
     <string name="fill_information_about_trader">Vyplňte údaje o obchodníkovi</string>
     <string name="trader_name">*Název obchodníka</string>
     <string name="telephone">Telefonní číslo</string>
@@ -56,4 +56,7 @@
     <string name="telephone_has_wrong_format">Špatný formát telefoního čísla</string>
     <string name="wrong_id_number">Špatný formát IČ</string>
     <string name="wrong_format_of_tid">Špatný formát DIČ</string>
+    <string name="search">Hledat</string>
+    <string name="no_result">Žádné výsledky</string>
+    <string name="title_activity_trader_show"> Náhled obchodníka</string>
 </resources>

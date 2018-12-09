@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -72,6 +73,17 @@ public class TraderActivity extends AppCompatActivity
 
         initView();
 
+        listViewTrader.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                globalPosition = position;
+                Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
+                intent.putExtra("TRADER_ID", ID[globalPosition]);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         /**
          * Ojektu editText přidáme addTextChangedListener
          */
@@ -121,7 +133,7 @@ public class TraderActivity extends AppCompatActivity
                         found = true;
                     }
                 }
-                if (found == true){
+                if (found){
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewAdapter = new ListViewAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewAdapter);
