@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.Settings;
 
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -14,7 +15,7 @@ import com.example.ondrejvane.zivnostnicek.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Verze databáze
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Název databáze
     private static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -191,6 +192,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         int cursorCount = cursor.getCount();
 
+
+
         cursor.close();
         db.close();
         if (cursorCount > 0) {
@@ -221,10 +224,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null);
 
 
+            System.out.println("COUNT OF : "+cursor.getCount());
             if (cursor.moveToFirst()){
                 user.setId(cursor.getInt(0));
                 user.setFullName(cursor.getString(1));
                 user.setEmail(cursor.getString(2));
+            }else {
+                System.out.println("!!!!!ERROR!!!!");
             }
 
             db.close();

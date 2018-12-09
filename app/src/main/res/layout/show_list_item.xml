@@ -22,7 +22,7 @@
         android:id="@+id/textViewTradeContactPerson"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+        android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textSize="15sp"
         android:textColor="#ed232323" />
 

@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                 String message = getString(R.string.you_are_succesful_login);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                loadAllInformation();
+                loadAllInformation(userAddressET.getText().toString());
                 stayLogIn();
                 startActivity(intent);
                 finish();
@@ -153,13 +153,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean checkIfYouAreLogIn(){
         SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-        boolean logedIn = sp.getBoolean("IS_LOGEDIN", false);
+        boolean logeIn = sp.getBoolean("IS_LOGEDIN", false);
 
-        if (logedIn == true){
+        if (logeIn == true){
             loadAllInformation();
-            return logedIn;
+            return logeIn;
         }
-        return logedIn;
+        return logeIn;
     }
 
     private void loadAllInformation(){
@@ -172,5 +172,13 @@ public class LoginActivity extends AppCompatActivity {
         userInformation.setFullName(user.getFullName());
         userInformation.setUserId(user.getId());
 
+    }
+
+    private void loadAllInformation(String emailAddress){
+        User user = databaseHelper.getUserByEmailAddress(emailAddress);
+        UserInformation userInformation = UserInformation.getInstance();
+        userInformation.setMail(user.getEmail());
+        userInformation.setFullName(user.getFullName());
+        userInformation.setUserId(user.getId());
     }
 }

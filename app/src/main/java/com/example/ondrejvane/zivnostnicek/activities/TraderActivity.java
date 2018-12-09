@@ -93,10 +93,24 @@ public class TraderActivity extends AppCompatActivity
              */
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                String tempTraderName[]=new String [traderName.length];
-                String tempTraderContactPerson[]=new String [traderContactPerson.length];
+                String tempTraderName[];
+                String tempTraderContactPerson[];
+                if (traderName.length == 0){
+                    tempTraderName = new String [1];
+                    tempTraderContactPerson = new String [1];
+                    tempTraderName[0]=getString(R.string.no_result);;
+                    tempTraderContactPerson[0]=getString(R.string.no_result);
+                    listViewTrader = findViewById(R.id.listViewTrader);
+                    listViewAdapter = new ListViewAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
+                    listViewTrader.setAdapter(listViewAdapter);
+                    return;
+
+                }else {
+                    tempTraderName = new String [traderName.length];
+                    tempTraderContactPerson = new String [traderContactPerson.length];
+                }
                 int tempI=0;
-                boolean foudn = false;
+                boolean found = false;
                 String findingString = inputSearch.getText().toString().toLowerCase();
 
                 for (int i = 0; i<traderName.length;i++){
@@ -104,17 +118,17 @@ public class TraderActivity extends AppCompatActivity
                         tempTraderName[tempI] = traderName[i];
                         tempTraderContactPerson[tempI] = traderContactPerson[i];
                         tempI++;
-                        foudn = true;
+                        found = true;
                     }
                 }
-                if (foudn == true){
-                    listViewTrader = (ListView) findViewById(R.id.listViewTrader);
+                if (found == true){
+                    listViewTrader = findViewById(R.id.listViewTrader);
                     listViewAdapter = new ListViewAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewAdapter);
                 }
                 else {
-                    tempTraderName[0]="Nenalezeno";
-                    tempTraderContactPerson[0]="Nenalezeno";
+                    tempTraderName[0]=getString(R.string.no_result);
+                    tempTraderContactPerson[0] = getString(R.string.no_result);
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewAdapter = new ListViewAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewAdapter);
