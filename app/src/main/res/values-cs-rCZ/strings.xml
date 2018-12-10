@@ -70,4 +70,18 @@
     <string name="title_activity_trader_edit">Editace obchodníka</string>
     <string name="save">Uložit změny</string>
     <string name="edit_information_about_trader">Editujte údaje o obchodníkovi</string>
+    <string name="title_activity_trader_new_note">Přidat hodnocení</string>
+    <string name="title">Název</string>
+    <string name="note">Poznámka</string>
+    <string name="rating">Hodnocení</string>
+    <string name="note_title_is_empty">Nadpis je prázdný</string>
+    <string name="note_is_empty">Poznámka je prázdná</string>
+    <string name="note_has_been_added">Hodnocení bylo přidáno</string>
+    <string name="title_activity_trader_show_note">TraderShowNoteActivity</string>
+    <string name="date">Datum</string>
+    <string name="note_delete_message">Hodnocení bylo smazáno</string>
+    <string name="note_not_deleted_message">Hodnocení nebylo smazáno</string>
+    <string name="note_delete_question">Opravdu chcete smazat toto hodnocení?</string>
+    <string name="title_activity_trader_edit_note">Editace hodnocení</string>
+    <string name="note_update_message">Hodnocení bylo aktualizováno</string>
 </resources>

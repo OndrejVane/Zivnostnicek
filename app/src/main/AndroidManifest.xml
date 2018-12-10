@@ -30,7 +30,7 @@
             android:label="@string/title_activity_expense"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderActivity"
+            android:name=".activities.trader.TraderActivity"
             android:label="@string/title_activity_trader"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -46,16 +46,32 @@
             android:label="@string/title_activity_synchronization"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderNewActivity"
+            android:name=".activities.trader.TraderNewActivity"
             android:label="@string/title_activity_trader_new"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderShowActivity"
+            android:name=".activities.trader.TraderShowActivity"
             android:label="@string/title_activity_trader_show"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderEditActivity"
+            android:name=".activities.trader.TraderEditActivity"
             android:label="@string/title_activity_trader_edit"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderNoteActivity"
+            android:label="@string/title_activity_trader_show"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderNewNoteActivity"
+            android:label="@string/title_activity_trader_new_note"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderShowNoteActivity"
+            android:label="@string/title_activity_trader_show_note"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderEditNoteActivity"
+            android:label="@string/title_activity_trader_edit_note"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

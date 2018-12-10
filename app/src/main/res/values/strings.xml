@@ -81,6 +81,21 @@
     <string name="title_activity_trader_edit">Edit trader</string>
     <string name="save">Save</string>
     <string name="edit_information_about_trader">Edit information about trader</string>
+    <string name="title_activity_trader_note">TraderNoteActivity</string>
+    <string name="title_activity_trader_new_note">Add rating</string>
+    <string name="title">Title</string>
+    <string name="note">Note</string>
+    <string name="rating">Rating</string>
+    <string name="note_title_is_empty">Note title is empty</string>
+    <string name="note_is_empty">Note is empty</string>
+    <string name="note_has_been_added">Note has been added</string>
+    <string name="title_activity_trader_show_note">TraderShowNoteActivity</string>
+    <string name="date">Date</string>
+    <string name="note_delete_message">Note has been deleted</string>
+    <string name="note_not_deleted_message">Note not has been deleted</string>
+    <string name="note_delete_question">Are you really want to delete this note?</string>
+    <string name="title_activity_trader_edit_note">TraderEditNoteActivity</string>
+    <string name="note_update_message">Note has been updated</string>
 
 
 </resources>

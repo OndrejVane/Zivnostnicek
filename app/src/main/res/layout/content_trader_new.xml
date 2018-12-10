@@ -12,7 +12,7 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    tools:context=".activities.TraderNewActivity"
+    tools:context=".activities.trader.TraderNewActivity"
     tools:showIn="@layout/app_bar_trader_new">
 
     <android.support.v7.widget.LinearLayoutCompat

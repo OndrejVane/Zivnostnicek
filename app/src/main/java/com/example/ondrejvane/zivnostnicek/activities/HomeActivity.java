@@ -1,7 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,10 +15,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
-import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

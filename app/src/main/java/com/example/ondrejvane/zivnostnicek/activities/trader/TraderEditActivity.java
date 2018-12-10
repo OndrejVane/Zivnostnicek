@@ -1,86 +1,96 @@
-package com.example.ondrejvane.zivnostnicek.activities;
+package com.example.ondrejvane.zivnostnicek.activities.trader;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.WindowManager;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.ExpenseActivity;
+import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
+import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
-public class TraderNewActivity extends AppCompatActivity
+public class TraderEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private EditText inputCompanyName, inputContactPerson, inputTelephoneNumber;
-    private EditText inputIdentificationNumber, inputTaxIdentificationNumber;
-    private EditText inputCity, inputStreet, inputHouseNumber;
-    private TextInputLayout inputLayoutCompanyName, inputLayoutTelephoneNumber;
-    private TextInputLayout inputLayoutIdentificationNumber, inputLayoutTaxIdentificationNumber;
-
+    private int traderID;
     private DatabaseHelper databaseHelper;
-    private Handler mHandler;
-
     private Trader trader;
+
+    private EditText inputCompanyNameEdit, inputContactPersonEdit, inputTelephoneNumberEdit;
+    private EditText inputIdentificationNumberEdit, inputTaxIdentificationNumberEdit;
+    private EditText inputCityEdit, inputStreetEdit, inputHouseNumberEdit;
+    private TextInputLayout inputLayoutCompanyNameEdit, inputLayoutTelephoneNumberEdit;
+    private TextInputLayout inputLayoutIdentificationNumberEdit, inputLayoutTaxIdentificationNumberEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trader_new);
+        setContentView(R.layout.activity_trader_edit);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Header header = new Header( navigationView, this);
         header.setTextToHeader();
 
-        initView();
+        initActivity();
+
+        setTextToActivity();
     }
 
-    private void initView() {
-        inputCompanyName = findViewById(R.id.textInputEditTextCompanyName);
-        inputContactPerson = findViewById(R.id.textInputEditTextContactPerson);
-        inputTelephoneNumber = findViewById(R.id.textInputEditTextTelephoneNumber);
-        inputIdentificationNumber = findViewById(R.id.textInputEditTextIdentificationNumber);
-        inputTaxIdentificationNumber = findViewById(R.id.textInputEditTextTaxIdentificationNumber);
-        inputCity = findViewById(R.id.textInputEditTextCity);
-        inputStreet = findViewById(R.id.textInputEditTextStreet);
-        inputHouseNumber = findViewById(R.id.textInputEditTextHouseNumber);
-        inputLayoutCompanyName = findViewById(R.id.textInputLayoutCompanyName);
-        inputLayoutTelephoneNumber = findViewById(R.id.textInputLayoutTelephoneNumber);
-        inputLayoutIdentificationNumber = findViewById(R.id.textInputLayoutIdentificationNumber);
-        inputLayoutTaxIdentificationNumber = findViewById(R.id.textInputLayoutTaxIdentificationNumber);
-        databaseHelper = new DatabaseHelper(TraderNewActivity.this);
-        mHandler = new Handler();
-
+    private void setTextToActivity() {
+        inputCompanyNameEdit.setText(trader.getTraderName());
+        inputContactPersonEdit.setText(trader.getTraderContactPerson());
+        inputTelephoneNumberEdit.setText(trader.getTraderPhoneNumber());
+        inputIdentificationNumberEdit.setText(trader.getTraderIN());
+        inputTaxIdentificationNumberEdit.setText(trader.getTraderTIN());
+        inputCityEdit.setText(trader.getTraderCity());
+        inputStreetEdit.setText(trader.getTraderStreet());
+        inputHouseNumberEdit.setText(trader.getTraderHouseNumber());
     }
 
+    private void initActivity() {
+        traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        databaseHelper = new DatabaseHelper(TraderEditActivity.this);
+        trader = databaseHelper.getTraderById(traderID);
+        inputCompanyNameEdit = findViewById(R.id.textInputEditTextCompanyNameEdit);
+        inputContactPersonEdit = findViewById(R.id.textInputEditTextContactPersonEdit);
+        inputTelephoneNumberEdit = findViewById(R.id.textInputEditTextTelephoneNumberEdit);
+        inputIdentificationNumberEdit = findViewById(R.id.textInputEditTextIdentificationNumberEdit);
+        inputTaxIdentificationNumberEdit = findViewById(R.id.textInputEditTextTaxIdentificationNumberEdit);
+        inputCityEdit = findViewById(R.id.textInputEditTextCityEdit);
+        inputStreetEdit = findViewById(R.id.textInputEditTextStreetEdit);
+        inputHouseNumberEdit = findViewById(R.id.textInputEditTextHouseNumberEdit);
+        inputLayoutCompanyNameEdit = findViewById(R.id.textInputLayoutCompanyNameEdit);
+        inputLayoutTelephoneNumberEdit = findViewById(R.id.textInputLayoutTelephoneNumberEdit);
+        inputLayoutIdentificationNumberEdit = findViewById(R.id.textInputLayoutIdentificationNumberEdit);
+        inputLayoutTaxIdentificationNumberEdit = findViewById(R.id.textInputLayoutTaxIdentificationNumberEdit);
+    }
 
     @Override
     public void onBackPressed() {
@@ -90,8 +100,9 @@ public class TraderNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent income = new Intent(TraderNewActivity.this, TraderActivity.class);
-        startActivity(income);
+        Intent intent = new Intent(TraderEditActivity.this, TraderShowActivity.class);
+        intent.putExtra("TRADER_ID", traderID);
+        startActivity(intent);
         finish();
     }
 
@@ -102,107 +113,112 @@ public class TraderNewActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
         switch (id){
 
             case R.id.nav_home:
-                Intent home = new Intent(TraderNewActivity.this, HomeActivity.class);
+                Intent home = new Intent(TraderEditActivity.this, HomeActivity.class);
                 startActivity(home);
                 finish();
                 break;
 
             case R.id.nav_income:
-                Intent income = new Intent(TraderNewActivity.this, IncomeActivity.class);
+                Intent income = new Intent(TraderEditActivity.this, IncomeActivity.class);
                 startActivity(income);
                 finish();
                 break;
 
             case R.id.nav_expense:
-                Intent expense = new Intent(TraderNewActivity.this, ExpenseActivity.class);
+                Intent expense = new Intent(TraderEditActivity.this, ExpenseActivity.class);
                 startActivity(expense);
                 finish();
                 break;
 
             case R.id.nav_traders:
-                Intent traders = new Intent(TraderNewActivity.this, TraderActivity.class);
+                Intent traders = new Intent(TraderEditActivity.this, TraderActivity.class);
                 startActivity(traders);
                 finish();
                 break;
 
             case R.id.nav_storage:
-                Intent storage = new Intent(TraderNewActivity.this, StorageActivity.class);
+                Intent storage = new Intent(TraderEditActivity.this, StorageActivity.class);
                 startActivity(storage);
                 finish();
                 break;
 
             case R.id.nav_info:
-                Intent info = new Intent(TraderNewActivity.this, InfoActivity.class);
+                Intent info = new Intent(TraderEditActivity.this, InfoActivity.class);
                 startActivity(info);
                 finish();
                 break;
 
             case R.id.nav_sync:
-                Intent sync = new Intent(TraderNewActivity.this, SynchronizationActivity.class);
+                Intent sync = new Intent(TraderEditActivity.this, SynchronizationActivity.class);
                 startActivity(sync);
                 finish();
                 break;
 
             case R.id.nav_logout:
-                Logout logout = new Logout(TraderNewActivity.this, this);
+                Logout logout = new Logout(TraderEditActivity.this, this);
                 logout.logout();
                 break;
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
     //TODO komentáře
-    public void submitTraderForm(View view) {
+    public void editInformationAboutTrader(View view) {
         if(!validateCompanyName()){
             String message = getString(R.string.company_name_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutCompanyName.setError(getString(R.string.company_name_is_empty));
+            inputLayoutCompanyNameEdit.setError(getString(R.string.company_name_is_empty));
             return;
         }
 
         if(!validatePhoneNumber()){
             String message = getString(R.string.telephone_has_wrong_format);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutTelephoneNumber.setError(getString(R.string.telephone_has_wrong_format));
+            inputLayoutTelephoneNumberEdit.setError(getString(R.string.telephone_has_wrong_format));
             return;
         }
 
         if(!validateIdentificationNumber()){
             String message = getString(R.string.wrong_id_number);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutIdentificationNumber.setError(getString(R.string.wrong_id_number));
+            inputLayoutIdentificationNumberEdit.setError(getString(R.string.wrong_id_number));
             return;
         }
 
         if(!validateTaxIdentificationNumber()){
             String message = getString(R.string.wrong_format_of_tid);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
+            inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));
             return;
         }
 
         trader = new Trader();
-        trader.setTraderName(inputCompanyName.getText().toString());
-        trader.setTraderContactPerson(inputContactPerson.getText().toString());
-        trader.setTraderPhoneNumber(inputTelephoneNumber.getText().toString());
-        trader.setTraderIN(inputIdentificationNumber.getText().toString());
-        trader.setTraderTIN(inputTaxIdentificationNumber.getText().toString());
-        trader.setTraderCity(inputCity.getText().toString());
-        trader.setTraderStreet(inputStreet.getText().toString());
-        trader.setTraderHouseNumber(inputHouseNumber.getText().toString());
+        trader.setId(traderID);
+        trader.setTraderName(inputCompanyNameEdit.getText().toString());
+        System.out.println(trader.getTraderName());
+        trader.setTraderContactPerson(inputContactPersonEdit.getText().toString());
+        trader.setTraderPhoneNumber(inputTelephoneNumberEdit.getText().toString());
+        trader.setTraderIN(inputIdentificationNumberEdit.getText().toString());
+        trader.setTraderTIN(inputTaxIdentificationNumberEdit.getText().toString());
+        trader.setTraderCity(inputCityEdit.getText().toString());
+        trader.setTraderStreet(inputStreetEdit.getText().toString());
+        trader.setTraderHouseNumber(inputHouseNumberEdit.getText().toString());
 
-        databaseHelper.addTrader(trader);
-
+        databaseHelper.updateTraderById(trader);
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Intent income = new Intent(TraderNewActivity.this, TraderActivity.class);
-        startActivity(income);
+        Intent intent = new Intent(TraderEditActivity.this, TraderShowActivity.class);
+        intent.putExtra("TRADER_ID", traderID);
+        startActivity(intent);
         finish();
 
     }
@@ -214,7 +230,7 @@ public class TraderNewActivity extends AppCompatActivity
      * @return
      */
     private boolean validateTaxIdentificationNumber() {
-        String taxIdentificationNumber = inputTaxIdentificationNumber.getText().toString();
+        String taxIdentificationNumber = inputTaxIdentificationNumberEdit.getText().toString();
         int inputLength = taxIdentificationNumber.length();
         if (taxIdentificationNumber.isEmpty()){
             return true;
@@ -240,7 +256,7 @@ public class TraderNewActivity extends AppCompatActivity
      * @return
      */
     private boolean validateIdentificationNumber() {
-        String identificationNumber= inputIdentificationNumber.getText().toString();
+        String identificationNumber= inputIdentificationNumberEdit.getText().toString();
         int temp = 0;
         int a, c;
         if(identificationNumber.isEmpty()){
@@ -282,7 +298,7 @@ public class TraderNewActivity extends AppCompatActivity
      * @return boolean
      */
     private boolean validatePhoneNumber() {
-        String telephoneNumber = inputTelephoneNumber.getText().toString();
+        String telephoneNumber = inputTelephoneNumberEdit.getText().toString();
         if(telephoneNumber.isEmpty()){
             return true;
         }else {
@@ -310,10 +326,9 @@ public class TraderNewActivity extends AppCompatActivity
      * @return
      */
     private boolean validateCompanyName(){
-        if(inputCompanyName.getText().toString().isEmpty()){
+        if(inputCompanyNameEdit.getText().toString().isEmpty()){
             return false;
         }
         return true;
     }
-
 }

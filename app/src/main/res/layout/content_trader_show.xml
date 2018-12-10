@@ -12,13 +12,35 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    tools:context=".activities.TraderShowActivity"
+    tools:context=".activities.trader.TraderShowActivity"
     tools:showIn="@layout/app_bar_trader_show">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@color/grey"
+                android:text="Informace" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:onClick="goToTraderNoteActivity"
+                android:text="Hodnocení" />
+
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutCompanyName"

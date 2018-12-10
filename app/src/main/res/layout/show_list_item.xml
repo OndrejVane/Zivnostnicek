@@ -10,11 +10,10 @@
         android:layout_height="wrap_content"
         android:textSize="23sp"
         android:textColor="@color/grey"
-        android:shadowColor="@color/colorAccent"
+
         android:shadowRadius="1.5"
         android:paddingStart="15dp"
-        android:shadowDx="1"
-        android:shadowDy="1"
+
         android:textStyle="bold"
         />
 
@@ -24,7 +23,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textSize="15sp"
-        android:textColor="#ed232323" />
+        android:textColor="@color/grey" />
 
 
 </LinearLayout>
