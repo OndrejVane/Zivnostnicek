@@ -67,4 +67,7 @@
     <string name="delete_trader_question">Opravdu chcete smazat tohoto obchodníka?</string>
     <string name="trader_deleted_message">Obchodník byl smazán</string>
     <string name="trader_not_deleted_message">Obchodníl nebyl smazán</string>
+    <string name="title_activity_trader_edit">Editace obchodníka</string>
+    <string name="save">Uložit změny</string>
+    <string name="edit_information_about_trader">Editujte údaje o obchodníkovi</string>
 </resources>

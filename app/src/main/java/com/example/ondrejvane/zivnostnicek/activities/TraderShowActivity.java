@@ -1,17 +1,9 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
@@ -63,14 +54,7 @@ public class TraderShowActivity extends AppCompatActivity
 
         initActivity();
 
-        inputCompanyNameShow.setText(trader.getTraderName());
-        inputContactPersonShow.setText(trader.getTraderContactPerson());
-        inputTelephoneNumberShow.setText(trader.getTraderPhoneNumber());
-        inputIdentificationNumberShow.setText(trader.getTraderIN());
-        inputTaxIdentificationNumberShow.setText(trader.getTraderTIN());
-        inputCityShow.setText(trader.getTraderCity());
-        inputStreetShow.setText(trader.getTraderStreet());
-        inputHouseNumberShow.setText(trader.getTraderHouseNumber());
+        setTextToActivity();
 
 
     }
@@ -87,6 +71,17 @@ public class TraderShowActivity extends AppCompatActivity
         inputCityShow = findViewById(R.id.textInputEditTextCityShow);
         inputStreetShow = findViewById(R.id.textInputEditTextStreetShow);
         inputHouseNumberShow = findViewById(R.id.textInputEditTextHouseNumberShow);
+    }
+
+    private void setTextToActivity(){
+        inputCompanyNameShow.setText(trader.getTraderName());
+        inputContactPersonShow.setText(trader.getTraderContactPerson());
+        inputTelephoneNumberShow.setText(trader.getTraderPhoneNumber());
+        inputIdentificationNumberShow.setText(trader.getTraderIN());
+        inputTaxIdentificationNumberShow.setText(trader.getTraderTIN());
+        inputCityShow.setText(trader.getTraderCity());
+        inputStreetShow.setText(trader.getTraderStreet());
+        inputHouseNumberShow.setText(trader.getTraderHouseNumber());
     }
 
 
@@ -114,7 +109,10 @@ public class TraderShowActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.option_menu_trader_show_edit:
-                Toast.makeText(this, "You have selected EDIT", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(TraderShowActivity.this, TraderEditActivity.class);
+                intent.putExtra("TRADER_ID", traderID);
+                startActivity(intent);
+                finish();
                 return true;
             case R.id.option_menu_trader_show_add_note:
                 Toast.makeText(this, "You have selected ADD NOTE", Toast.LENGTH_SHORT).show();

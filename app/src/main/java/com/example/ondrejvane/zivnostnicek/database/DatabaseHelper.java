@@ -330,4 +330,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public void updateTraderById(Trader trader){
+
+        String where = COLUMN_TRADER_ID + " = ?";
+
+        String[] updateArgs = {Integer.toString(trader.getId())};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
+        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
+        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
+        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
+        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
+        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
+        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
+        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
+
+        db.update(TABLE_TRADER, values, where, updateArgs);
+
+    }
+
 }

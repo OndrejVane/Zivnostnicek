@@ -52,6 +52,10 @@
         <activity
             android:name=".activities.TraderShowActivity"
             android:label="@string/title_activity_trader_show"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TraderEditActivity"
+            android:label="@string/title_activity_trader_edit"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

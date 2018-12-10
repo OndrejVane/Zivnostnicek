@@ -78,6 +78,9 @@
     <string name="delete_trader_question">Are you really want to delete this trader?</string>
     <string name="trader_deleted_message">Trader has been deleted</string>
     <string name="trader_not_deleted_message">Trader has not been deleted</string>
+    <string name="title_activity_trader_edit">Edit trader</string>
+    <string name="save">Save</string>
+    <string name="edit_information_about_trader">Edit information about trader</string>
 
 
 </resources>
