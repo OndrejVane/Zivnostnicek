@@ -275,7 +275,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public Trader getTraderByTraderId(int traderId){
+    public Trader getTraderById(int traderId){
 
         Trader trader = new Trader();
 
@@ -315,6 +315,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public boolean deleteTraderById(int traderId){
 
+        boolean result;
+
+        String where = COLUMN_TRADER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(traderId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        result = db.delete(TABLE_TRADER, where, deleteArgs) > 0;
+
+        return result;
+    }
 
 }

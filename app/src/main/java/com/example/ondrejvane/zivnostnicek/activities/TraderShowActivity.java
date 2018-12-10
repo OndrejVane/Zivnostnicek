@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
@@ -77,7 +78,7 @@ public class TraderShowActivity extends AppCompatActivity
     private void initActivity() {
         databaseHelper = new DatabaseHelper(TraderShowActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        trader = databaseHelper.getTraderByTraderId(traderID);
+        trader = databaseHelper.getTraderById(traderID);
         inputCompanyNameShow = findViewById(R.id.textInputEditTextCompanyNameShow);
         inputContactPersonShow = findViewById(R.id.textInputEditTextContactPersonShow);
         inputTelephoneNumberShow = findViewById(R.id.textInputEditTextTelephoneNumberShow);
@@ -100,6 +101,30 @@ public class TraderShowActivity extends AppCompatActivity
         Intent home = new Intent(TraderShowActivity.this, TraderActivity.class);
         startActivity(home);
         finish();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.trader_show, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.option_menu_trader_show_edit:
+                Toast.makeText(this, "You have selected EDIT", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option_menu_trader_show_add_note:
+                Toast.makeText(this, "You have selected ADD NOTE", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.option_menu_trader_show_edit_delete:
+                alertDelete();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -163,5 +188,38 @@ public class TraderShowActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void alertDelete(){
+        AlertDialog.Builder alert = new AlertDialog.Builder(TraderShowActivity.this);
+        alert.setMessage(R.string.delete_trader_question).setCancelable(false)
+                .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteTrader();
+                    }
+                });
+        AlertDialog alertDialog = alert.create();
+        alert.setTitle(R.string.logout);
+        alertDialog.show();
+
+    }
+
+    private void deleteTrader(){
+        boolean result = databaseHelper.deleteTraderById(traderID);
+        if(result){
+            Toast.makeText(this, R.string.trader_deleted_message, Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, R.string.trader_not_deleted_message, Toast.LENGTH_SHORT).show();
+        }
+        Intent intent = new Intent(TraderShowActivity.this, TraderActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

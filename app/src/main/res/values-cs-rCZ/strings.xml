@@ -61,4 +61,10 @@
     <string name="title_activity_trader_show"> Náhled obchodníka</string>
     <string name="trader_name_show">Název obchodníka</string>
     <string name="trader_is_created">Obchodník přidán</string>
+    <string name="edit">Editovat</string>
+    <string name="add_rating">Přidat hodnocení</string>
+    <string name="delete">Smazat</string>
+    <string name="delete_trader_question">Opravdu chcete smazat tohoto obchodníka?</string>
+    <string name="trader_deleted_message">Obchodník byl smazán</string>
+    <string name="trader_not_deleted_message">Obchodníl nebyl smazán</string>
 </resources>

@@ -72,6 +72,12 @@
     <string name="no_result">No result</string>
     <string name="title_activity_trader_show">Show trader</string>
     <string name="trader_name_show">Trader name</string>
+    <string name="edit">Edit</string>
+    <string name="add_rating">Add rating</string>
+    <string name="delete">Delete</string>
+    <string name="delete_trader_question">Are you really want to delete this trader?</string>
+    <string name="trader_deleted_message">Trader has been deleted</string>
+    <string name="trader_not_deleted_message">Trader has not been deleted</string>
 
 
 </resources>
