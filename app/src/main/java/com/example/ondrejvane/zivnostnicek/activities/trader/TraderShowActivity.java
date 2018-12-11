@@ -23,9 +23,9 @@ import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.activities.TraderNewNoteActivity;
-import com.example.ondrejvane.zivnostnicek.activities.TraderNoteActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.activities.note.NoteNewActivity;
+import com.example.ondrejvane.zivnostnicek.activities.note.NoteActivity;
+import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -33,7 +33,7 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 public class TraderShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private DatabaseHelper databaseHelper;
+    private TraderDatabaseHelper traderDatabaseHelper;
     private int traderID;
     private Trader trader;
 
@@ -69,9 +69,9 @@ public class TraderShowActivity extends AppCompatActivity
     }
 
     private void initActivity() {
-        databaseHelper = new DatabaseHelper(TraderShowActivity.this);
+        traderDatabaseHelper = new TraderDatabaseHelper(TraderShowActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        trader = databaseHelper.getTraderById(traderID);
+        trader = traderDatabaseHelper.getTraderById(traderID);
         inputCompanyNameShow = findViewById(R.id.textInputEditTextCompanyNameShow);
         inputContactPersonShow = findViewById(R.id.textInputEditTextContactPersonShow);
         inputTelephoneNumberShow = findViewById(R.id.textInputEditTextTelephoneNumberShow);
@@ -125,7 +125,7 @@ public class TraderShowActivity extends AppCompatActivity
                 finish();
                 return true;
             case R.id.option_menu_trader_show_add_note:
-                intent = new Intent(TraderShowActivity.this, TraderNewNoteActivity.class);
+                intent = new Intent(TraderShowActivity.this, NoteNewActivity.class);
                 intent.putExtra("TRADER_ID", traderID);
                 startActivity(intent);
                 finish();
@@ -223,7 +223,7 @@ public class TraderShowActivity extends AppCompatActivity
     }
 
     private void deleteTrader(){
-        boolean result = databaseHelper.deleteTraderById(traderID);
+        boolean result = traderDatabaseHelper.deleteTraderById(traderID);
         if(result){
             Toast.makeText(this, R.string.trader_deleted_message, Toast.LENGTH_SHORT).show();
         }else {
@@ -235,7 +235,7 @@ public class TraderShowActivity extends AppCompatActivity
     }
 
     public void goToTraderNoteActivity(View view) {
-        Intent intent = new Intent(TraderShowActivity.this, TraderNoteActivity.class);
+        Intent intent = new Intent(TraderShowActivity.this, NoteActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();

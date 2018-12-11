@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.model.User;
 
@@ -20,7 +20,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password1ET;
     private EditText password2ET;
 
-    private DatabaseHelper databaseHelper;
+    private UserDatabaseHelper userDatabaseHelper;
     private User user;
     private HashPassword hashPassword;
 
@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         userAddressET = findViewById(R.id.userAddress);
         password1ET = findViewById(R.id.userPassword);
         password2ET = findViewById(R.id.userConfirmPassword);
-        databaseHelper = new DatabaseHelper(RegisterActivity.this);
+        userDatabaseHelper = new UserDatabaseHelper(RegisterActivity.this);
         user = new User();
         hashPassword = new HashPassword();
     }
@@ -76,7 +76,8 @@ public class RegisterActivity extends AppCompatActivity {
             user.setEmail(userAddressET.getText().toString());
             user.setPassword(hashPassword.hashPassword(password1ET.getText().toString()));
 
-            databaseHelper.addUser(user);
+            userDatabaseHelper.addUser(user);
+
 
             String message = getString(R.string.user_is_created);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -88,12 +89,12 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Metoda, která se zjistí zda uživatel se zadanou e-mailovou
      * adresou již existuje nebo neexistuje.
-     * @return  true/false
+     * @return  boolean
      */
     private boolean isUserExists() {
         String userAddress = userAddressET.getText().toString();
 
-        if(databaseHelper.checkUser(userAddress)){
+        if(userDatabaseHelper.checkUser(userAddress)){
             String message = getString(R.string.user_already_exists);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return true;
@@ -105,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Metoda, která zkontroluje zda jsou všechna pole registračního
      * formuláře korektně vyplněna.
      *
-     * @return true/false
+     * @return boolean
      */
     private boolean checkIfIsAllFilled() {
 

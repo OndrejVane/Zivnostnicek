@@ -21,7 +21,7 @@ import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -30,7 +30,7 @@ public class TraderEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private int traderID;
-    private DatabaseHelper databaseHelper;
+    private TraderDatabaseHelper traderDatabaseHelper;
     private Trader trader;
 
     private EditText inputCompanyNameEdit, inputContactPersonEdit, inputTelephoneNumberEdit;
@@ -76,8 +76,8 @@ public class TraderEditActivity extends AppCompatActivity
 
     private void initActivity() {
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        databaseHelper = new DatabaseHelper(TraderEditActivity.this);
-        trader = databaseHelper.getTraderById(traderID);
+        traderDatabaseHelper = new TraderDatabaseHelper(TraderEditActivity.this);
+        trader = traderDatabaseHelper.getTraderById(traderID);
         inputCompanyNameEdit = findViewById(R.id.textInputEditTextCompanyNameEdit);
         inputContactPersonEdit = findViewById(R.id.textInputEditTextContactPersonEdit);
         inputTelephoneNumberEdit = findViewById(R.id.textInputEditTextTelephoneNumberEdit);
@@ -213,7 +213,7 @@ public class TraderEditActivity extends AppCompatActivity
         trader.setTraderStreet(inputStreetEdit.getText().toString());
         trader.setTraderHouseNumber(inputHouseNumberEdit.getText().toString());
 
-        databaseHelper.updateTraderById(trader);
+        traderDatabaseHelper.updateTraderById(trader);
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(TraderEditActivity.this, TraderShowActivity.class);

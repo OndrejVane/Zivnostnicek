@@ -25,7 +25,7 @@ import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.ListViewAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
@@ -37,7 +37,7 @@ public class TraderActivity extends AppCompatActivity
     private ListView listViewTrader;
     private ListViewAdapter listViewAdapter;
     private EditText inputSearch;
-    private DatabaseHelper databaseHelper;
+    private TraderDatabaseHelper traderDatabaseHelper;
     private String[] traderName;
     private String[] traderContactPerson;
     private int[] ID;
@@ -72,7 +72,7 @@ public class TraderActivity extends AppCompatActivity
         Header header = new Header( navigationView, this);
         header.setTextToHeader();
 
-        initView();
+        initActivity();
 
         //skryje klávesnici při startu aplikace
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -160,11 +160,11 @@ public class TraderActivity extends AppCompatActivity
         });
     }
 
-    private void initView() {
+    private void initActivity() {
         String temp[][];
         UserInformation userInformation = UserInformation.getInstance();
-        databaseHelper = new DatabaseHelper(TraderActivity.this);
-        temp = databaseHelper.getTradersData(userInformation.getUserId());
+        traderDatabaseHelper = new TraderDatabaseHelper(TraderActivity.this);
+        temp = traderDatabaseHelper.getTradersData(userInformation.getUserId());
         ID = arrayStringToInteger(temp[0]);
         traderName = temp[1];
         traderContactPerson = temp[2];

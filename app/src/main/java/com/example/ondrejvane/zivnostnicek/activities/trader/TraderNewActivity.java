@@ -23,6 +23,7 @@ import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -36,7 +37,8 @@ public class TraderNewActivity extends AppCompatActivity
     private TextInputLayout inputLayoutCompanyName, inputLayoutTelephoneNumber;
     private TextInputLayout inputLayoutIdentificationNumber, inputLayoutTaxIdentificationNumber;
 
-    private DatabaseHelper databaseHelper;
+    //private DatabaseHelper databaseHelper;
+    private TraderDatabaseHelper traderDatabaseHelper;
     private Handler mHandler;
 
     private Trader trader;
@@ -78,7 +80,7 @@ public class TraderNewActivity extends AppCompatActivity
         inputLayoutTelephoneNumber = findViewById(R.id.textInputLayoutTelephoneNumber);
         inputLayoutIdentificationNumber = findViewById(R.id.textInputLayoutIdentificationNumber);
         inputLayoutTaxIdentificationNumber = findViewById(R.id.textInputLayoutTaxIdentificationNumber);
-        databaseHelper = new DatabaseHelper(TraderNewActivity.this);
+        traderDatabaseHelper = new TraderDatabaseHelper(TraderNewActivity.this);
         mHandler = new Handler();
 
     }
@@ -199,7 +201,7 @@ public class TraderNewActivity extends AppCompatActivity
         trader.setTraderStreet(inputStreet.getText().toString());
         trader.setTraderHouseNumber(inputHouseNumber.getText().toString());
 
-        databaseHelper.addTrader(trader);
+        traderDatabaseHelper.addTrader(trader);
 
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

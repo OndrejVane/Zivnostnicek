@@ -12,8 +12,8 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    tools:context=".activities.TraderEditNoteActivity"
-    tools:showIn="@layout/app_bar_trader_edit_note">
+    tools:context=".activities.note.NoteEditActivity"
+    tools:showIn="@layout/app_bar_note_edit">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"

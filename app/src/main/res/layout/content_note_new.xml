@@ -12,8 +12,8 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    tools:context=".activities.TraderShowNoteActivity"
-    tools:showIn="@layout/app_bar_trader_show_note">
+    tools:context=".activities.note.NoteNewActivity"
+    tools:showIn="@layout/app_bar_note_new">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -29,13 +29,12 @@
             android:textSize="16sp" />
 
         <RatingBar
-            android:id="@+id/traderShowNoteRatingBar"
+            android:id="@+id/traderRatingBar"
             android:layout_marginTop="20dp"
             android:theme="@style/RatingBar"
             android:rating="1"
             android:numStars="5"
             android:stepSize="1"
-            android:isIndicator="true"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -47,32 +46,13 @@
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextShowNoteTitle"
+                android:id="@+id/textInputEditTextNoteTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/title"
                 android:inputType="text"
                 android:maxLines="1"
-                android:enabled="false"
                 android:drawableStart="@drawable/ic_note_title"
-                android:textColor="@color/black" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutShowNoteDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextShowNoteDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/date"
-                android:inputType="text"
-                android:maxLines="1"
-                android:enabled="false"
-                android:drawableStart="@drawable/ic_calendar"
                 android:textColor="@color/black" />
         </android.support.design.widget.TextInputLayout>
 
@@ -83,20 +63,31 @@
             android:layout_marginTop="10dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextShowNote"
+                android:id="@+id/textInputEditTextNote"
                 android:inputType="textMultiLine"
                 android:lines="8"
                 android:minLines="6"
                 android:gravity="top|left"
                 android:maxLines="10"
                 android:hint="@string/note"
-                android:enabled="false"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:drawableStart="@drawable/ic_note"
                 android:scrollbars="vertical"
-                android:textColor="@color/black" />
-
+                />
         </android.support.design.widget.TextInputLayout>
+
+
+        <Button
+            android:id="@+id/buttonAddNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:onClick="submitNoteForm"
+            android:text="@string/add_rating"/>
+
     </android.support.v7.widget.LinearLayoutCompat>
 </android.support.v4.widget.NestedScrollView>

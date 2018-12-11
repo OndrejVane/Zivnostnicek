@@ -5,15 +5,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
@@ -24,8 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userAddressET;
     private EditText passwordET;
     private CheckBox rememberMeBox;
-
     private DatabaseHelper databaseHelper;
+
+    private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
 
     @Override
@@ -61,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         userAddressET = findViewById(R.id.userAddress);
         passwordET = findViewById(R.id.userPassword);
         rememberMeBox = findViewById(R.id.checkBox);
-        databaseHelper = new DatabaseHelper(LoginActivity.this);
+        userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
+        //databaseHelper = new DatabaseHelper(LoginActivity.this);
         hashPassword = new HashPassword();
     }
 
@@ -110,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
             String hashedPassword = hashPassword.hashPassword(passwordET.getText().toString());
 
-            if(databaseHelper.checkUser(userAddressET.getText().toString(),hashedPassword)){
+            if(userDatabaseHelper.checkUser(userAddressET.getText().toString(),hashedPassword)){
                 String message = getString(R.string.you_are_succesful_login);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -166,7 +167,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
         String emailAddress = sp.getString("USER", "NULL");
-        User user = databaseHelper.getUserByEmailAddress(emailAddress);
+        User user = userDatabaseHelper.getUserByEmailAddress(emailAddress);
         UserInformation userInformation = UserInformation.getInstance();
         userInformation.setMail(user.getEmail());
         userInformation.setFullName(user.getFullName());
@@ -175,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loadAllInformation(String emailAddress){
-        User user = databaseHelper.getUserByEmailAddress(emailAddress);
+        User user = userDatabaseHelper.getUserByEmailAddress(emailAddress);
         UserInformation userInformation = UserInformation.getInstance();
         userInformation.setMail(user.getEmail());
         userInformation.setFullName(user.getFullName());

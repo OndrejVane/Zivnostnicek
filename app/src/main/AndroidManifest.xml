@@ -58,19 +58,19 @@
             android:label="@string/title_activity_trader_edit"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderNoteActivity"
+            android:name=".activities.note.NoteActivity"
             android:label="@string/title_activity_trader_show"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderNewNoteActivity"
+            android:name=".activities.note.NoteNewActivity"
             android:label="@string/title_activity_trader_new_note"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderShowNoteActivity"
+            android:name=".activities.note.NoteShowActivity"
             android:label="@string/title_activity_trader_show_note"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.TraderEditNoteActivity"
+            android:name=".activities.note.NoteEditActivity"
             android:label="@string/title_activity_trader_edit_note"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>

@@ -16,10 +16,10 @@ import com.example.ondrejvane.zivnostnicek.model.User;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Verze databáze
-    private static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 4;
 
     // Název databáze
-    private static final String DATABASE_NAME = "Zivnostnicek.db";
+    public static final String DATABASE_NAME = "Zivnostnicek.db";
 
     // Názvy jednotlivých tabulke
     private static final String TABLE_USER = "user";
@@ -110,41 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    /**
-     *
-     * @param user
-     */
-    public void addUser(User user) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_FULL_NAME, user.getFullName());
-        values.put(COLUMN_USER_EMAIL, user.getEmail());
-        values.put(COLUMN_USER_PASSWORD, user.getPassword());
-
-        // Inserting Row
-        db.insert(TABLE_USER, null, values);
-        db.close();
-    }
-
-    public void addTrader(Trader trader){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        UserInformation userInformation = UserInformation.getInstance();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());     //cizí klíč
-        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
-        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
-        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
-        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
-        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
-        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
-        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
-        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
-        db.insert(TABLE_TRADER, null, values);
-        db.close();
-    }
 
     public void addNote(Note note){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -159,155 +125,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean checkUser(String email) {
-
-        // array of columns to fetch
-        String[] columns = {
-                COLUMN_USER_ID
-        };
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        // selection criteria
-        String selection = COLUMN_USER_EMAIL + " = ?";
-
-        // selection argument
-        String[] selectionArgs = {email};
-
-        // query user table with condition
-        /**
-         * Here query function is used to fetch records from user table this function works like we use sql query.
-         * SQL query equivalent to this query function is
-         * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com';
-         */
-        Cursor cursor = db.query(TABLE_USER, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                      //filter by row groups
-                null);                      //The sort order
-        int cursorCount = cursor.getCount();
-        cursor.close();
-        db.close();
-
-        if (cursorCount > 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean checkUser(String email, String password) {
-
-        // array of columns to fetch
-        String[] columns = {
-                COLUMN_USER_ID
-        };
-        SQLiteDatabase db = this.getReadableDatabase();
-        // selection criteria
-        String selection = COLUMN_USER_EMAIL + " = ?" + " AND " + COLUMN_USER_PASSWORD + " = ?";
-
-        // selection arguments
-        String[] selectionArgs = {email, password};
-
-        // query user table with conditions
-        /**
-         * Here query function is used to fetch records from user table this function works like we use sql query.
-         * SQL query equivalent to this query function is
-         * SELECT user_id FROM user WHERE user_email = 'jack@androidtutorialshub.com' AND user_password = 'qwerty';
-         */
-        Cursor cursor = db.query(TABLE_USER, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                null);                      //The sort order
-
-        int cursorCount = cursor.getCount();
-
-
-
-        cursor.close();
-        db.close();
-        if (cursorCount > 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public User getUserByEmailAddress(String emailAddress){
-
-        User user = new User();
-
-        String[] columns = { COLUMN_USER_ID, COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selection = COLUMN_USER_EMAIL + " = ?";
-
-        String[] selectionArgs = {emailAddress};
-
-        Cursor cursor = db.query(TABLE_USER, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                null);
-
-
-        if (cursor.moveToFirst()){
-            user.setId(cursor.getInt(0));
-            user.setFullName(cursor.getString(1));
-            user.setEmail(cursor.getString(2));
-        }
-
-        db.close();
-        cursor.close();
-
-        return user;
-    }
-
-    public String[][] getTradersData(int userID){
-        String data[][];
-
-        String[] columns = { COLUMN_TRADER_ID, COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        // selection criteria
-        String selection = COLUMN_TRADER_USER_ID + " = ?";
-
-        String orderBy = COLUMN_TRADER_NAME + " ASC";
-
-        // selection arguments
-        String[] selectionArgs = {Integer.toString(userID)};
-
-        Cursor cursor = db.query(TABLE_TRADER, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                orderBy);
-        int count = cursor.getCount();
-        data = new String[3][count];
-        int i = 0;
-
-        if (cursor.moveToFirst()){
-            do{
-                data[0][i] = cursor.getString(0);
-                data[1][i] = cursor.getString(1);
-                data[2][i] = cursor.getString(2);
-                i++;
-            }while (cursor.moveToNext());
-        }
-        db.close();
-        cursor.close();
-
-        return data;
-    }
 
     public String[][] getNotesData(int traderID){
         String data[][];
@@ -348,45 +165,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public Trader getTraderById(int traderId){
-
-        Trader trader = new Trader();
-
-        String[] columns = {COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON,
-                COLUMN_TRADER_PHONE_NUMBER, COLUMN_TRADER_IN, COLUMN_TRADER_TIN,
-                COLUMN_TRADER_CITY, COLUMN_TRADER_STREET, COLUMN_TRADER_HOUSE_NUMBER};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selection = COLUMN_TRADER_ID + " = ?";
-
-        String[] selectionArgs = {Integer.toString(traderId)};
-
-        Cursor cursor = db.query(TABLE_TRADER, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                null);
-
-        if(cursor.moveToFirst()){
-            trader.setTraderName(cursor.getString(0));
-            trader.setTraderContactPerson(cursor.getString(1));
-            trader.setTraderPhoneNumber(cursor.getString(2));
-            trader.setTraderIN(cursor.getString(3));
-            trader.setTraderTIN(cursor.getString(4));
-            trader.setTraderCity(cursor.getString(5));
-            trader.setTraderStreet(cursor.getString(6));
-            trader.setTraderHouseNumber(cursor.getString(7));
-        }
-
-        db.close();
-        cursor.close();
-
-        return trader;
-
-    }
 
     public Note getNoteById(int noteId){
 
@@ -434,43 +212,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
 
         return result;
-    }
-    public boolean deleteTraderById(int traderId){
-
-        boolean result;
-
-        String where = COLUMN_TRADER_ID + " = ?";
-
-        String[] deleteArgs = {Integer.toString(traderId)};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        result = db.delete(TABLE_TRADER, where, deleteArgs) > 0;
-
-        return result;
-    }
-
-    public void updateTraderById(Trader trader){
-
-        String where = COLUMN_TRADER_ID + " = ?";
-
-        String[] updateArgs = {Integer.toString(trader.getId())};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
-        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
-        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
-        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
-        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
-        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
-        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
-        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
-
-        db.update(TABLE_TRADER, values, where, updateArgs);
-        db.close();
-
     }
 
     public void updateNoteById(Note note){

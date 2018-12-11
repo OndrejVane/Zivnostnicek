@@ -1,9 +1,7 @@
-package com.example.ondrejvane.zivnostnicek.activities;
+package com.example.ondrejvane.zivnostnicek.activities.note;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -19,30 +17,34 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.ExpenseActivity;
+import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
+import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TraderNewNoteActivity extends AppCompatActivity
+public class NoteNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private int traderID;
     private TextInputLayout inputLayoutNoteTitle, inputLayoutNote;
     private EditText inputNoteTitle, inputNote;
-    private DatabaseHelper databaseHelper;
+    private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trader_new_note);
+        setContentView(R.layout.activity_note_new);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,7 +68,7 @@ public class TraderNewNoteActivity extends AppCompatActivity
     }
 
     private void initActivity() {
-        databaseHelper = new DatabaseHelper(TraderNewNoteActivity.this);
+        noteDatabaseHelper = new NoteDatabaseHelper(NoteNewActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
         inputLayoutNoteTitle = findViewById(R.id.textInputLayoutNoteTitle);
         inputLayoutNote = findViewById(R.id.textInputLayoutNote);
@@ -83,7 +85,7 @@ public class TraderNewNoteActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent intent = new Intent(TraderNewNoteActivity.this, TraderNoteActivity.class);
+        Intent intent = new Intent(NoteNewActivity.this, NoteActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
@@ -99,49 +101,49 @@ public class TraderNewNoteActivity extends AppCompatActivity
         switch (id){
 
             case R.id.nav_home:
-                Intent home = new Intent(TraderNewNoteActivity.this, HomeActivity.class);
+                Intent home = new Intent(NoteNewActivity.this, HomeActivity.class);
                 startActivity(home);
                 finish();
                 break;
 
             case R.id.nav_income:
-                Intent income = new Intent(TraderNewNoteActivity.this, IncomeActivity.class);
+                Intent income = new Intent(NoteNewActivity.this, IncomeActivity.class);
                 startActivity(income);
                 finish();
                 break;
 
             case R.id.nav_expense:
-                Intent expense = new Intent(TraderNewNoteActivity.this, ExpenseActivity.class);
+                Intent expense = new Intent(NoteNewActivity.this, ExpenseActivity.class);
                 startActivity(expense);
                 finish();
                 break;
 
             case R.id.nav_traders:
-                Intent traders = new Intent(TraderNewNoteActivity.this, TraderActivity.class);
+                Intent traders = new Intent(NoteNewActivity.this, TraderActivity.class);
                 startActivity(traders);
                 finish();
                 break;
 
             case R.id.nav_storage:
-                Intent storage = new Intent(TraderNewNoteActivity.this, StorageActivity.class);
+                Intent storage = new Intent(NoteNewActivity.this, StorageActivity.class);
                 startActivity(storage);
                 finish();
                 break;
 
             case R.id.nav_info:
-                Intent info = new Intent(TraderNewNoteActivity.this, InfoActivity.class);
+                Intent info = new Intent(NoteNewActivity.this, InfoActivity.class);
                 startActivity(info);
                 finish();
                 break;
 
             case R.id.nav_sync:
-                Intent sync = new Intent(TraderNewNoteActivity.this, SynchronizationActivity.class);
+                Intent sync = new Intent(NoteNewActivity.this, SynchronizationActivity.class);
                 startActivity(sync);
                 finish();
                 break;
 
             case R.id.nav_logout:
-                Logout logout = new Logout(TraderNewNoteActivity.this, this);
+                Logout logout = new Logout(NoteNewActivity.this, this);
                 logout.logout();
                 break;
 
@@ -191,10 +193,10 @@ public class TraderNewNoteActivity extends AppCompatActivity
         note.setRating(Math.round(ratingBar.getRating()));
         note.setDate(dateFormat1.format(date));
 
-        databaseHelper.addNote(note);
+        noteDatabaseHelper.addNote(note);
 
         Toast.makeText(this, R.string.note_has_been_added, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(TraderNewNoteActivity.this, TraderNoteActivity.class);
+        Intent intent = new Intent(NoteNewActivity.this, NoteActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();

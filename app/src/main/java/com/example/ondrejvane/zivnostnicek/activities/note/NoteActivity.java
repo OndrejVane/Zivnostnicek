@@ -1,8 +1,9 @@
-package com.example.ondrejvane.zivnostnicek.activities;
+package com.example.ondrejvane.zivnostnicek.activities.note;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.View;
@@ -20,21 +21,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.ExpenseActivity;
+import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.IncomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
+import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderEditActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.ListViewAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
-public class TraderNoteActivity extends AppCompatActivity
+public class NoteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView listViewNote;
     private ListViewAdapter listViewAdapter;
     private int traderID;
-    private DatabaseHelper databaseHelper;
+    private TraderDatabaseHelper traderDatabaseHelper;
+    private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar ratingBar;
     private TextView averageRating;
     private String[] noteTitle;
@@ -45,9 +54,20 @@ public class TraderNoteActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trader_note);
+        setContentView(R.layout.activity_note);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NoteActivity.this, NoteNewActivity.class);
+                intent.putExtra("TRADER_ID", traderID);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,7 +87,7 @@ public class TraderNoteActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 globalPosition = position;
-                Intent intent = new Intent(TraderNoteActivity.this, TraderShowNoteActivity.class);
+                Intent intent = new Intent(NoteActivity.this, NoteShowActivity.class);
                 intent.putExtra("NOTE_ID", ID[globalPosition]);
                 intent.putExtra("TRADER_ID", traderID);
                 startActivity(intent);
@@ -79,11 +99,12 @@ public class TraderNoteActivity extends AppCompatActivity
 
     private void initActivity() {
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        databaseHelper = new DatabaseHelper(TraderNoteActivity.this);
+        noteDatabaseHelper = new NoteDatabaseHelper(NoteActivity.this);
+        traderDatabaseHelper = new TraderDatabaseHelper(NoteActivity.this);
         ratingBar = findViewById(R.id.noteShowRatingBar);
         averageRating = findViewById(R.id.textViewNoteAvarageRating);
         String temp[][];
-        temp = databaseHelper.getNotesData(traderID);
+        temp = noteDatabaseHelper.getNotesData(traderID);
         ID = arrayStringToInteger(temp[0]);
         noteTitle = temp[1];
         noteRating = temp[2];
@@ -124,7 +145,7 @@ public class TraderNoteActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent intent = new Intent(TraderNoteActivity.this, TraderActivity.class);
+        Intent intent = new Intent(NoteActivity.this, TraderActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
@@ -141,13 +162,13 @@ public class TraderNoteActivity extends AppCompatActivity
         Intent intent;
         switch (item.getItemId()) {
             case R.id.option_menu_trader_show_edit:
-                intent = new Intent(TraderNoteActivity.this, TraderEditActivity.class);
+                intent = new Intent(NoteActivity.this, TraderEditActivity.class);
                 intent.putExtra("TRADER_ID", traderID);
                 startActivity(intent);
                 finish();
                 return true;
             case R.id.option_menu_trader_show_add_note:
-                intent = new Intent(TraderNoteActivity.this, TraderNewNoteActivity.class);
+                intent = new Intent(NoteActivity.this, NoteNewActivity.class);
                 intent.putExtra("TRADER_ID", traderID);
                 startActivity(intent);
                 finish();
@@ -170,49 +191,49 @@ public class TraderNoteActivity extends AppCompatActivity
         switch (id){
 
             case R.id.nav_home:
-                Intent home = new Intent(TraderNoteActivity.this, HomeActivity.class);
+                Intent home = new Intent(NoteActivity.this, HomeActivity.class);
                 startActivity(home);
                 finish();
                 break;
 
             case R.id.nav_income:
-                Intent income = new Intent(TraderNoteActivity.this, IncomeActivity.class);
+                Intent income = new Intent(NoteActivity.this, IncomeActivity.class);
                 startActivity(income);
                 finish();
                 break;
 
             case R.id.nav_expense:
-                Intent expense = new Intent(TraderNoteActivity.this, ExpenseActivity.class);
+                Intent expense = new Intent(NoteActivity.this, ExpenseActivity.class);
                 startActivity(expense);
                 finish();
                 break;
 
             case R.id.nav_traders:
-                Intent traders = new Intent(TraderNoteActivity.this, TraderActivity.class);
+                Intent traders = new Intent(NoteActivity.this, TraderActivity.class);
                 startActivity(traders);
                 finish();
                 break;
 
             case R.id.nav_storage:
-                Intent storage = new Intent(TraderNoteActivity.this, StorageActivity.class);
+                Intent storage = new Intent(NoteActivity.this, StorageActivity.class);
                 startActivity(storage);
                 finish();
                 break;
 
             case R.id.nav_info:
-                Intent info = new Intent(TraderNoteActivity.this, InfoActivity.class);
+                Intent info = new Intent(NoteActivity.this, InfoActivity.class);
                 startActivity(info);
                 finish();
                 break;
 
             case R.id.nav_sync:
-                Intent sync = new Intent(TraderNoteActivity.this, SynchronizationActivity.class);
+                Intent sync = new Intent(NoteActivity.this, SynchronizationActivity.class);
                 startActivity(sync);
                 finish();
                 break;
 
             case R.id.nav_logout:
-                Logout logout = new Logout(TraderNoteActivity.this, this);
+                Logout logout = new Logout(NoteActivity.this, this);
                 logout.logout();
                 break;
 
@@ -224,14 +245,14 @@ public class TraderNoteActivity extends AppCompatActivity
     }
 
     public void goToTraderShowActivity(View view) {
-        Intent intent = new Intent(TraderNoteActivity.this, TraderShowActivity.class);
+        Intent intent = new Intent(NoteActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
     }
 
     public void alertDelete(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(TraderNoteActivity.this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(NoteActivity.this);
         alert.setMessage(R.string.delete_trader_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
@@ -252,13 +273,13 @@ public class TraderNoteActivity extends AppCompatActivity
     }
 
     private void deleteTrader(){
-        boolean result = databaseHelper.deleteTraderById(traderID);
+        boolean result = traderDatabaseHelper.deleteTraderById(traderID);
         if(result){
             Toast.makeText(this, R.string.trader_deleted_message, Toast.LENGTH_SHORT).show();
         }else {
             Toast.makeText(this, R.string.trader_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
-        Intent intent = new Intent(TraderNoteActivity.this, TraderActivity.class);
+        Intent intent = new Intent(NoteActivity.this, TraderActivity.class);
         startActivity(intent);
         finish();
     }
