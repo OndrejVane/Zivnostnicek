@@ -36,7 +36,10 @@ public class Trader {
     }
 
     public void setTraderName(String traderName) {
-        this.traderName = traderName;
+        String temp = "";
+        temp = temp + traderName.substring( 0, 1).toUpperCase();
+        temp = temp + traderName.substring(1);
+        this.traderName = temp;
     }
 
     public String getTraderPhoneNumber() {
