@@ -22,11 +22,11 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.IncomeActivity"
+            android:name=".activities.income.IncomeActivity"
             android:label="@string/title_activity_income"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.ExpenseActivity"
+            android:name=".activities.expense.ExpenseActivity"
             android:label="@string/title_activity_expense"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -72,7 +72,15 @@
         <activity
             android:name=".activities.note.NoteEditActivity"
             android:label="@string/title_activity_trader_edit_note"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.income.IncomeNewActivity"
+            android:label="@string/title_activity_income_new"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.expense.ExpenseNewActivity"
+            android:label="@string/title_activity_expense_new"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

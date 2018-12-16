@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity"
+    tools:context=".activities.income.IncomeNewActivity"
     tools:showIn="@layout/app_bar_home">
 
 
@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="150dp"
         android:gravity="center"
-        android:text="@string/income"
+        android:text="Přidej příjem"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="162dp"
         tools:layout_editor_absoluteY="246dp"
