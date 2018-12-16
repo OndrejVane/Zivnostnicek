@@ -30,6 +30,9 @@ import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
+/**
+ * Aktivita, která se stará o zobrazení vybraného obchodníka.
+ */
 public class TraderShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,6 +45,11 @@ public class TraderShowActivity extends AppCompatActivity
     private EditText inputCityShow, inputStreetShow, inputHouseNumberShow;
 
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +76,10 @@ public class TraderShowActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity
+     */
     private void initActivity() {
         traderDatabaseHelper = new TraderDatabaseHelper(TraderShowActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
@@ -82,6 +94,10 @@ public class TraderShowActivity extends AppCompatActivity
         inputHouseNumberShow = findViewById(R.id.textInputEditTextHouseNumberShow);
     }
 
+    /**
+     * Procerdura, která nastaví text do všech políček
+     * activity, které se načetli z databáze.
+     */
     private void setTextToActivity(){
         inputCompanyNameShow.setText(trader.getTraderName());
         inputContactPersonShow.setText(trader.getTraderContactPerson());
@@ -93,10 +109,13 @@ public class TraderShowActivity extends AppCompatActivity
         inputHouseNumberShow.setText(trader.getTraderHouseNumber());
     }
 
-
+    /**
+     * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
+     * aktivitu a přiloží potřebné informace.
+     */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -108,12 +127,24 @@ public class TraderShowActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která vytvoří boční navigační menu po
+     * zahájení atcitivity.
+     * @param menu  bočnínavigační menu
+     * @return      boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.trader_show_menu, menu);
         return true;
     }
 
+    /**
+     * Metoda, která se stará o boční navigační menu a přechod
+     * mezi aktivitami
+     * @param item  vybraný item z menu
+     * @return      boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
@@ -138,69 +169,12 @@ public class TraderShowActivity extends AppCompatActivity
         }
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        switch (id){
-
-            case R.id.nav_home:
-                Intent home = new Intent(TraderShowActivity.this, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(TraderShowActivity.this, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(TraderShowActivity.this, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(TraderShowActivity.this, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(TraderShowActivity.this, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(TraderShowActivity.this, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(TraderShowActivity.this, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(TraderShowActivity.this, this);
-                logout.logout();
-                break;
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
+    /**
+     * Procedura, která vykreslí upozornění. Dotáže se
+     * uživatele, zda si je opravdu jistý smazáním obchodníka.
+     * Pokud ano zavolá proceduru deteleTrader. Pokdu ne, upozorněné se zavře
+     * a nic se nestane.
+     */
     public void alertDelete(){
         AlertDialog.Builder alert = new AlertDialog.Builder(TraderShowActivity.this);
         alert.setMessage(R.string.delete_trader_question).setCancelable(false)
@@ -222,6 +196,10 @@ public class TraderShowActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která odstraní z databáze obchodníka podle ID
+     * a přepne intent do předchozí aktivity.
+     */
     private void deleteTrader(){
         boolean result = traderDatabaseHelper.deleteTraderById(traderID);
         if(result){
@@ -234,10 +212,85 @@ public class TraderShowActivity extends AppCompatActivity
         finish();
     }
 
+    /**
+     * Metoda, která změní aktivitu na Note Activity. Přiloží
+     * id obchodníka, aby bylo možné zobrazit a následně přidávat
+     * poznámky k příslušnému obchodníkovi.
+     * @param view  view příslušné aktivity
+     */
     public void goToTraderNoteActivity(View view) {
         Intent intent = new Intent(TraderShowActivity.this, NoteActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace
+     * a přechod mezi hlavními aktivitami.
+     * @param item  vybraná položka v menu
+     * @return      boolean
+     */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        TraderShowActivity thisActivity = TraderShowActivity.this;
+
+        switch (id){
+
+            case R.id.nav_home:
+                Intent home = new Intent(thisActivity, HomeActivity.class);
+                startActivity(home);
+                finish();
+                break;
+
+            case R.id.nav_income:
+                Intent income = new Intent(thisActivity, IncomeActivity.class);
+                startActivity(income);
+                finish();
+                break;
+
+            case R.id.nav_expense:
+                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
+                startActivity(expense);
+                finish();
+                break;
+
+            case R.id.nav_traders:
+                Intent traders = new Intent(thisActivity, TraderActivity.class);
+                startActivity(traders);
+                finish();
+                break;
+
+            case R.id.nav_storage:
+                Intent storage = new Intent(thisActivity, StorageActivity.class);
+                startActivity(storage);
+                finish();
+                break;
+
+            case R.id.nav_info:
+                Intent info = new Intent(thisActivity, InfoActivity.class);
+                startActivity(info);
+                finish();
+                break;
+
+            case R.id.nav_sync:
+                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
+                startActivity(sync);
+                finish();
+                break;
+
+            case R.id.nav_logout:
+                Logout logout = new Logout(thisActivity, this);
+                logout.logout();
+                break;
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

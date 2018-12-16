@@ -31,6 +31,10 @@ import com.example.ondrejvane.zivnostnicek.helper.ListViewAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 
+/**
+ * Aktivita, která zobrazí všechny obchodníky příslušného uživatele.
+ *
+ */
 public class TraderActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,6 +47,11 @@ public class TraderActivity extends AppCompatActivity
     private int[] ID;
     private int globalPosition;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a porovede nezbytné
+     * úkony ke správnému fungování aktivity.
+     * @param savedInstanceState    savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +59,7 @@ public class TraderActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //stará se o přechod do nové aplikace po stisknutí tlačítk přidat
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,10 +84,10 @@ public class TraderActivity extends AppCompatActivity
 
         initActivity();
 
-        //skryje klávesnici při startu aplikace
+        //skryje klávesnici při startu aktivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-
+        //po stisknutí objektu v listview překne do activity, která zobrazí info o obchodníkovi
         listViewTrader.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -89,9 +99,6 @@ public class TraderActivity extends AppCompatActivity
             }
         });
 
-        /**
-         * Ojektu editText přidáme addTextChangedListener
-         */
         inputSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,10 +110,10 @@ public class TraderActivity extends AppCompatActivity
              * Při shodě se zapíše obsah porovnávaného prvku v původním poli do nově vytvořeného pole.
              * Pokud dojde alespoň k jedné shodě, změní se obsah listView.
              * Pokud ke shodě nedojde, listView se vykreslí pouze s jedním zápisem a to nenalezeno nenalezeno
-             * @param cs
-             * @param arg1
-             * @param arg2
-             * @param arg3
+             * @param cs    CharSequence
+             * @param arg1  int
+             * @param arg2  int
+             * @param arg3  int
              */
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
@@ -115,7 +122,7 @@ public class TraderActivity extends AppCompatActivity
                 if (traderName.length == 0){
                     tempTraderName = new String [1];
                     tempTraderContactPerson = new String [1];
-                    tempTraderName[0]=getString(R.string.no_result);;
+                    tempTraderName[0]=getString(R.string.no_result);
                     tempTraderContactPerson[0]=getString(R.string.no_result);
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewAdapter = new ListViewAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
@@ -160,6 +167,10 @@ public class TraderActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity
+     */
     private void initActivity() {
         String temp[][];
         UserInformation userInformation = UserInformation.getInstance();
@@ -175,6 +186,11 @@ public class TraderActivity extends AppCompatActivity
         listViewTrader.setAdapter(listViewAdapter);
     }
 
+    /**
+     * Metoda, která převede pole strngu(čísel) na pole integeru.
+     * @param strings   String[]    pole stringu(čísel)
+     * @return          int[]       pole integeru
+     */
     private int[] arrayStringToInteger(String[] strings) {
         int[] integers = new int[strings.length];
         for (int i = 0; i<strings.length; i++){
@@ -184,9 +200,13 @@ public class TraderActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
+     * aktivitu a přiloží potřebné informace.
+     */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -195,64 +215,71 @@ public class TraderActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace
+     * a přechod mezi hlavními aktivitami.
+     * @param item  vybraná položka v menu
+     * @return  boolean
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        TraderActivity thisActivity = TraderActivity.this;
 
         switch (id){
 
             case R.id.nav_home:
-                Intent home = new Intent(TraderActivity.this, HomeActivity.class);
+                Intent home = new Intent(thisActivity, HomeActivity.class);
                 startActivity(home);
                 finish();
                 break;
 
             case R.id.nav_income:
-                Intent income = new Intent(TraderActivity.this, IncomeActivity.class);
+                Intent income = new Intent(thisActivity, IncomeActivity.class);
                 startActivity(income);
                 finish();
                 break;
 
             case R.id.nav_expense:
-                Intent expense = new Intent(TraderActivity.this, ExpenseActivity.class);
+                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
                 startActivity(expense);
                 finish();
                 break;
 
             case R.id.nav_traders:
-                Intent traders = new Intent(TraderActivity.this, TraderActivity.class);
+                Intent traders = new Intent(thisActivity, TraderActivity.class);
                 startActivity(traders);
                 finish();
                 break;
 
             case R.id.nav_storage:
-                Intent storage = new Intent(TraderActivity.this, StorageActivity.class);
+                Intent storage = new Intent(thisActivity, StorageActivity.class);
                 startActivity(storage);
                 finish();
                 break;
 
             case R.id.nav_info:
-                Intent info = new Intent(TraderActivity.this, InfoActivity.class);
+                Intent info = new Intent(thisActivity, InfoActivity.class);
                 startActivity(info);
                 finish();
                 break;
 
             case R.id.nav_sync:
-                Intent sync = new Intent(TraderActivity.this, SynchronizationActivity.class);
+                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
                 startActivity(sync);
                 finish();
                 break;
 
             case R.id.nav_logout:
-                Logout logout = new Logout(TraderActivity.this, this);
+                Logout logout = new Logout(thisActivity, this);
                 logout.logout();
                 break;
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
