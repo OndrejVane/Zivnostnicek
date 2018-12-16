@@ -26,12 +26,16 @@ import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 
 import java.text.DateFormat;
 import java.util.Date;
 
+/**
+ * Aktivita, která edituje poznámku obchodníka.
+ */
 public class NoteEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -42,6 +46,11 @@ public class NoteEditActivity extends AppCompatActivity
     private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar noteRatingBarEdit;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     * @param savedInstanceState    savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +79,10 @@ public class NoteEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procerdura, která nastaví text do všech políček
+     * activity, které se načetli z databáze.
+     */
     private void setTextToActivity() {
         Note note = noteDatabaseHelper.getNoteById(noteID);
         System.out.println("Note rating: "+ note.getRating());
@@ -78,6 +91,10 @@ public class NoteEditActivity extends AppCompatActivity
         inputNoteEdit.setText(note.getNote());
     }
 
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity.
+     */
     private void initActivity() {
         noteDatabaseHelper = new NoteDatabaseHelper(NoteEditActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
@@ -89,6 +106,10 @@ public class NoteEditActivity extends AppCompatActivity
         noteRatingBarEdit = findViewById(R.id.traderRatingBarEdit);
     }
 
+    /**
+     * Procedura, která po stisknutí tlačítka zpět nastartuje příslušnou
+     * aktivitu a přiloží potřebné informace.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -104,92 +125,20 @@ public class NoteEditActivity extends AppCompatActivity
         finish();
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        switch (id){
-
-            case R.id.nav_home:
-                Intent home = new Intent(NoteEditActivity.this, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(NoteEditActivity.this, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(NoteEditActivity.this, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(NoteEditActivity.this, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(NoteEditActivity.this, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(NoteEditActivity.this, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(NoteEditActivity.this, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(NoteEditActivity.this, this);
-                logout.logout();
-                break;
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public boolean validateNoteTitle(){
-        if(inputNoteTitleEdit.getText().toString().isEmpty()){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean validateNote(){
-        if(inputNoteEdit.getText().toString().isEmpty()){
-            return false;
-        }
-        return true;
-    }
-
+    /**
+     * Metoda, která načte data od uživatele a zjistí zda jsou validní.
+     * Po té edituje poznámku a uloží jí do databáze.
+     * @param view
+     */
     public void updateNoteForm(View view) {
-        if(!validateNoteTitle()){
+        if(!InputValidation.validateNote(inputNoteTitleEdit.getText().toString())){
             String message = getString(R.string.note_title_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteTitleEdit.setError(message);
             return;
         }
 
-        if(!validateNote()){
+        if(!InputValidation.validateNote(inputNoteEdit.getText().toString())){
             String message = getString(R.string.note_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteEdit.setError(message);
@@ -215,5 +164,74 @@ public class NoteEditActivity extends AppCompatActivity
         intent.putExtra("NOTE_ID", noteID);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace
+     * a přechod mezi hlavními aktivitami.
+     * @param item  vybraná položka v menu
+     * @return      boolean
+     */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        NoteEditActivity thisActivity = NoteEditActivity.this;
+
+        switch (id){
+
+            case R.id.nav_home:
+                Intent home = new Intent(thisActivity, HomeActivity.class);
+                startActivity(home);
+                finish();
+                break;
+
+            case R.id.nav_income:
+                Intent income = new Intent(thisActivity, IncomeActivity.class);
+                startActivity(income);
+                finish();
+                break;
+
+            case R.id.nav_expense:
+                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
+                startActivity(expense);
+                finish();
+                break;
+
+            case R.id.nav_traders:
+                Intent traders = new Intent(thisActivity, TraderActivity.class);
+                startActivity(traders);
+                finish();
+                break;
+
+            case R.id.nav_storage:
+                Intent storage = new Intent(thisActivity, StorageActivity.class);
+                startActivity(storage);
+                finish();
+                break;
+
+            case R.id.nav_info:
+                Intent info = new Intent(thisActivity, InfoActivity.class);
+                startActivity(info);
+                finish();
+                break;
+
+            case R.id.nav_sync:
+                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
+                startActivity(sync);
+                finish();
+                break;
+
+            case R.id.nav_logout:
+                Logout logout = new Logout(thisActivity, this);
+                logout.logout();
+                break;
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

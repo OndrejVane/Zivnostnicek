@@ -26,12 +26,16 @@ import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 
 import java.text.DateFormat;
 import java.util.Date;
 
+/**
+ * Aktivita, která přidává poznámku k vybranému obchodníkovi.
+ */
 public class NoteNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -41,6 +45,11 @@ public class NoteNewActivity extends AppCompatActivity
     private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar ratingBar;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     * @param savedInstanceState    savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +76,10 @@ public class NoteNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity.
+     */
     private void initActivity() {
         noteDatabaseHelper = new NoteDatabaseHelper(NoteNewActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
@@ -77,6 +90,10 @@ public class NoteNewActivity extends AppCompatActivity
         ratingBar = findViewById(R.id.traderRatingBar);
     }
 
+    /**
+     * Procedura, která po stisknutí tlačítka zpět nastartuje příslušnou
+     * aktivitu a přiloží potřebné informace.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -91,92 +108,20 @@ public class NoteNewActivity extends AppCompatActivity
         finish();
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        switch (id){
-
-            case R.id.nav_home:
-                Intent home = new Intent(NoteNewActivity.this, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(NoteNewActivity.this, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(NoteNewActivity.this, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(NoteNewActivity.this, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(NoteNewActivity.this, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(NoteNewActivity.this, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(NoteNewActivity.this, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(NoteNewActivity.this, this);
-                logout.logout();
-                break;
-
-        }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    public boolean validateNoteTitle(){
-        if(inputNoteTitle.getText().toString().isEmpty()){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean validateNote(){
-        if(inputNote.getText().toString().isEmpty()){
-            return false;
-        }
-        return true;
-    }
-
+    /**
+     * Procedura, která načte vložená data od uživatele. Zkontroluje, zda jsou
+     * data validní a následně je vloží do databáze.
+     * @param view
+     */
     public void submitNoteForm(View view) {
-        if(!validateNoteTitle()){
+        if(!InputValidation.validateNote(inputNoteTitle.getText().toString())){
             String message = getString(R.string.note_title_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteTitle.setError(message);
             return;
         }
 
-        if(!validateNote()){
+        if(!InputValidation.validateNote(inputNote.getText().toString())){
             String message = getString(R.string.note_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNote.setError(message);
@@ -200,5 +145,74 @@ public class NoteNewActivity extends AppCompatActivity
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace
+     * a přechod mezi hlavními aktivitami.
+     * @param item  vybraná položka v menu
+     * @return      boolean
+     */
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        NoteNewActivity thisActivity = NoteNewActivity.this;
+
+        switch (id){
+
+            case R.id.nav_home:
+                Intent home = new Intent(thisActivity, HomeActivity.class);
+                startActivity(home);
+                finish();
+                break;
+
+            case R.id.nav_income:
+                Intent income = new Intent(thisActivity, IncomeActivity.class);
+                startActivity(income);
+                finish();
+                break;
+
+            case R.id.nav_expense:
+                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
+                startActivity(expense);
+                finish();
+                break;
+
+            case R.id.nav_traders:
+                Intent traders = new Intent(thisActivity, TraderActivity.class);
+                startActivity(traders);
+                finish();
+                break;
+
+            case R.id.nav_storage:
+                Intent storage = new Intent(thisActivity, StorageActivity.class);
+                startActivity(storage);
+                finish();
+                break;
+
+            case R.id.nav_info:
+                Intent info = new Intent(thisActivity, InfoActivity.class);
+                startActivity(info);
+                finish();
+                break;
+
+            case R.id.nav_sync:
+                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
+                startActivity(sync);
+                finish();
+                break;
+
+            case R.id.nav_logout:
+                Logout logout = new Logout(thisActivity, this);
+                logout.logout();
+                break;
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
