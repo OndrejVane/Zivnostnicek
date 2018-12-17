@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ondrejvane.zivnostnicek.activities.InfoActivity"
+    tools:context="com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity"
     tools:showIn="@layout/app_bar_info"
     android:id="@+id/ll">
 
@@ -27,7 +27,8 @@
              android:layout_width="160dp"
              android:layout_height="190dp"
              android:layout_margin="10dp"
-             android:focusable="true">
+             android:focusable="true"
+             android:onClick="goToInfoCurrencyActivity">
              <LinearLayout
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
@@ -44,7 +45,7 @@
                      android:layout_height="wrap_content"
                      android:textStyle="bold"
                      android:layout_marginTop="10dp"
-                     android:text="Pokus 1"/>
+                     android:text="@string/valuty_list"/>
                  <View
                      android:layout_width="match_parent"
                      android:layout_height="1dp"
@@ -54,7 +55,7 @@
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:gravity="center"
-                     android:text="Pokus pokus"
+                     android:text="@string/basic_currency"
                      android:padding="5dp"
                      android:textColor="@android:color/darker_gray"/>
 

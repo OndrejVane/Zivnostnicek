@@ -98,6 +98,38 @@
     <string name="note_update_message">Note has been updated</string>
     <string name="title_activity_income_new">IncomeNewActivity</string>
     <string name="title_activity_expense_new">ExpenseNewActivity</string>
+    <string name="fill_information_about_expense">Fill information about expense</string>
+    <string name="number_of_bill_name">*Number of bill(Name)</string>
+    <string name="amount">*Amount</string>
+    <string name="VAT">VAT</string>
+    <string name="valuty_list">Exchange Rates</string>
+    <string name="basic_currency">Basic currency</string>
+    <string name="title_activity_info_currency">Info currency</string>
+    <string name="europe">European Union</string>
+    <string name="eur">EUR</string>
+    <string name="dot">...</string>
+    <string name="usa">USA</string>
+    <string name="usd">USD</string>
+    <string name="great_britain">Great Britain</string>
+    <string name="gbp">GBP</string>
+    <string name="canada">Canada</string>
+    <string name="cad">CAD</string>
+    <string name="sweden">Sweden</string>
+    <string name="sek">SEK</string>
+    <string name="source_cnb">www.cnb.cz</string>
+    <string name="source">Source</string>
+    <string name="country">Country</string>
+    <string name="code">Code</string>
+    <string name="kurz">Kurz</string>
+    <string name="add_expense">Add expense</string>
+
+    <string-array name="vat_amount">
+        <item>21%</item>
+        <item>15%</item>
+        <item>10%</item>
+        <item>0%</item>
+    </string-array>
+
 
 
 </resources>

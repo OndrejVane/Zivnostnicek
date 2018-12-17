@@ -23,7 +23,7 @@ public class NoteDatabaseHelper extends DatabaseHelper{
     /**
      * Constructor
      *
-     * @param context
+     * @param context context
      */
     public NoteDatabaseHelper(Context context) {
         super(context);
@@ -54,6 +54,22 @@ public class NoteDatabaseHelper extends DatabaseHelper{
         result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
 
         return result;
+    }
+
+    public boolean deleteNotesByTraderId(int traderId){
+        boolean result;
+
+        String where = COLUMN_NOTE_TRADER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(traderId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
+
+        return result;
+
+
     }
 
     public void updateNoteById(Note note){

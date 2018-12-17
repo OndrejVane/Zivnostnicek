@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderNewActivity;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
@@ -28,7 +29,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     /**
      * Constructor
      *
-     * @param context
+     * @param context context
      */
     public TraderDatabaseHelper(Context context) {
         super(context);
@@ -141,6 +142,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         String[] deleteArgs = {Integer.toString(traderId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
+
+        NoteDatabaseHelper noteDatabaseHelper =  new NoteDatabaseHelper(getContext());
+        noteDatabaseHelper.deleteNotesByTraderId(traderId);
 
         result = db.delete(TABLE_TRADER, where, deleteArgs) > 0;
 

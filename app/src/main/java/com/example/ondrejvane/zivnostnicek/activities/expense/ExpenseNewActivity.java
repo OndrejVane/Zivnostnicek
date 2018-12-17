@@ -1,7 +1,13 @@
 package com.example.ondrejvane.zivnostnicek.activities.expense;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,11 +15,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.InfoActivity;
+import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
@@ -21,8 +30,17 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
+import java.util.Calendar;
+
+/**
+ * Aktivita, která se stará o vytvoření nového výdaje
+ */
 public class ExpenseNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView mDisplayDate;
+    private ImageView photoView;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +61,45 @@ public class ExpenseNewActivity extends AppCompatActivity
 
         Header header = new Header( navigationView, this);
         header.setTextToHeader();
+
+        initActivity();
+    }
+
+    /**
+     * Procedura, která inicializuje potřebné prvky aktivity.
+     */
+    private void initActivity() {
+        mDisplayDate = findViewById(R.id.editTextDate);
+        photoView = findViewById(R.id.photoView);
+    }
+
+    /**
+     * Procedura, která zobrazí date picker a nechá uživatele vybrat
+     * datum. Následně datum vloží do pole datum.
+     * @param view
+     */
+    public void showDateDialog(View view) {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        mDisplayDate.setText(day + "." + month + "." + year );
+
+        DatePickerDialog dialog = new DatePickerDialog(ExpenseNewActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListener,
+                year,month,day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = day + "." + month + "." + year;
+                mDisplayDate.setText(date);
+            }
+        };
     }
 
     @Override
@@ -59,6 +116,26 @@ public class ExpenseNewActivity extends AppCompatActivity
     }
 
 
+    public void goToCameraActivity(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+            photoView.setImageBitmap(bitmap);
+        }catch (NullPointerException e){
+            System.out.println("Picture is empty");
+        }
+    }
+
+    //TODO Tady jsem skončil.....=> tady musím ještě udělat načítání obchodníků z databáze
+    //TODO a uložení celého výdaje do databáze
+
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace
      * a přechod mezi hlavními aktivitami.
@@ -67,7 +144,7 @@ public class ExpenseNewActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         ExpenseNewActivity thisActivity = ExpenseNewActivity.this;

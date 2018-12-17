@@ -1,6 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
-import java.util.Date;
+
 
 public class Note {
 

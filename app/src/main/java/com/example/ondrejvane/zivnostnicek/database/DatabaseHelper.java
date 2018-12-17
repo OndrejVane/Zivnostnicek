@@ -1,19 +1,13 @@
 package com.example.ondrejvane.zivnostnicek.database;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.provider.Settings;
-
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.Note;
-import com.example.ondrejvane.zivnostnicek.model.Trader;
-import com.example.ondrejvane.zivnostnicek.model.User;
 
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private Context context;
 
     // Verze databáze
     public static final int DATABASE_VERSION = 4;
@@ -25,6 +19,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_USER = "user";
     private static final String TABLE_TRADER = "trader";
     private static final String TABLE_NOTE = "note";
+    private static final String TABLE_BILL = "bill";
+    private static final String TABLE_TYPE = "type";
 
     // Názvy atributů v tabulce user
     private static final String COLUMN_USER_ID = "user_id";                                 //Primární klíč
@@ -52,6 +48,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_NOTE_DATE = "note_date";                             //datum založení poznámky
     private static final String COLUMN_NOTE_RATING = "note_rating";                         //hodnocení obchodníka
 
+    //názvy atributů v tabulce bill(faktura)
+    private static final String COLUMN_BILL_ID = "bill_id";                                 //primární klíč
+    private static final String COLUMN_BILL_NUMBER = "bill_number";                         //název nebo číslo faktury
+    private static final String COLUMN_BILL_AMOUNT = "bill_amount";                         //částka na faktuře
+    private static final String COLUMN_BILL_VAT = "bill_vat";                               //částka DPH
+    private static final String COLUMN_BILL_TRADER_ID = "bill_trader_id";                   //cizí klíč obchodníka (faktura od nebo pro)
+    private static final String COLUMN_BILL_DATE = "bill_date";                             //datum vystavení faktury
+    private static final String COLUMN_BILL_PHOTO = "bill_photo";                           //foto faktury
+    private static final String COLUMN_BILL_PLACE = "bill_place";                           //místo, kde byla faktura vydána
+    private static final String COLUMN_BILL_TYPE_ID = "bill_type_id";                       //cizí klíč do tabulky typ faktury
+    private static final String COLUMN_BILL_USER_ID = "bill_user_id";                       //cizí klíč do tabulky uživatele
+    private static final String COLUMN_BILL_IS_EXPENSE = "bill_is_expense";                 //atribut, který určuje, zda se jedná o P=0/V=1
+
+    //názvy atributů tabulky druhů faktur
+    private static final String COLUMN_TYPE_ID = "type_id";
+    private static final String COLUMN_TYPE_NAME = "type_name";
+
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FULL_NAME + " TEXT,"
@@ -70,6 +83,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_NOTE_TITLE + " TEXT," + COLUMN_NOTE_NOTE + " TEXT,"
             + COLUMN_NOTE_DATE +  " TEXT," + COLUMN_NOTE_RATING + " INTEGER" + ")";
 
+    //SQL pro vytvoření tabulky Bill
+    private String CREATE_BILL_TABLE = "CREATE TABLE " + TABLE_BILL + "("
+            + COLUMN_BILL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_BILL_NUMBER + " TEXT,"
+            + COLUMN_BILL_AMOUNT + " REAL," + COLUMN_BILL_VAT + " INTEGER,"
+            + COLUMN_BILL_TRADER_ID +  " INTEGER," + COLUMN_BILL_DATE + " TEXT,"
+            + COLUMN_BILL_PHOTO +  " BLOB," + COLUMN_BILL_PLACE + " TEXT,"
+            + COLUMN_BILL_TYPE_ID +  " INTEGER," + COLUMN_BILL_USER_ID + " INTEGER,"
+            + COLUMN_BILL_IS_EXPENSE +  " INTEGER" + ")";
+
+    //SQL pro vytvoření tabulky type
+    private String CREATE_TYPE_TABLE = "CREATE TABLE " + TABLE_TYPE + "("
+            + COLUMN_TYPE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_TYPE_NAME + " TEXT" + ")";
+
 
     // drop table user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -80,6 +107,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // drop table note
     private String DROP_NOTE_TABLE = "DROP TABLE IF EXISTS " + TABLE_NOTE;
 
+    //drop table Bill
+    private String DROP_TABLE_BILL = "DROP TABLE IF EXISTS " + TABLE_BILL;
+
+    //drop table type
+    private String DROP_TABLE_TYPE = "DROP TABLE IF EXISTS " + TABLE_TYPE;
     /**
      * Constructor
      *
@@ -87,6 +119,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
+    }
+
+    public Context getContext(){
+        return this.context;
     }
 
     @Override
@@ -94,6 +131,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_TRADER_TABLE);
         db.execSQL(CREATE_NOTE_TABLE);
+        db.execSQL(CREATE_BILL_TABLE);
+        db.execSQL(CREATE_TYPE_TABLE);
     }
 
 
@@ -104,131 +143,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_USER_TABLE);
         db.execSQL(DROP_TRADER_TABLE);
         db.execSQL(DROP_NOTE_TABLE);
+        db.execSQL(DROP_TABLE_BILL);
+        db.execSQL(DROP_TABLE_TYPE);
 
         // Create tables again
         onCreate(db);
 
     }
-
-
-
-    public void addNote(Note note){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NOTE_TRADER_ID, note.getTrader_id());
-        values.put(COLUMN_NOTE_TITLE, note.getTitle());
-        values.put(COLUMN_NOTE_NOTE, note.getNote());
-        values.put(COLUMN_NOTE_DATE, note.getDate());
-        values.put(COLUMN_NOTE_RATING, note.getRating());
-        db.insert(TABLE_NOTE, null, values);
-        db.close();
-    }
-
-
-    public String[][] getNotesData(int traderID){
-        String data[][];
-
-        String[] columns = { COLUMN_NOTE_ID, COLUMN_NOTE_TITLE, COLUMN_NOTE_RATING};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        // selection criteria
-        String selection = COLUMN_NOTE_TRADER_ID + " = ?";
-
-        String orderBy = COLUMN_NOTE_TITLE + " ASC";
-
-        // selection arguments
-        String[] selectionArgs = {Integer.toString(traderID)};
-
-        Cursor cursor = db.query(TABLE_NOTE, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                orderBy);
-        int count = cursor.getCount();
-        data = new String[3][count];
-        int i = 0;
-
-        if (cursor.moveToFirst()){
-            do{
-                data[0][i] = cursor.getString(0);
-                data[1][i] = cursor.getString(1);
-                data[2][i] = cursor.getString(2);
-                i++;
-            }while (cursor.moveToNext());
-        }
-        db.close();
-        cursor.close();
-
-        return data;
-    }
-
-
-    public Note getNoteById(int noteId){
-
-        Note note = new Note();
-
-        String[] columns = {COLUMN_NOTE_TITLE, COLUMN_NOTE_DATE, COLUMN_NOTE_RATING, COLUMN_NOTE_NOTE};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selection = COLUMN_NOTE_ID + " = ?";
-
-        String[] selectionArgs = {Integer.toString(noteId)};
-
-        Cursor cursor = db.query(TABLE_NOTE, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
-                null,                       //group the rows
-                null,                       //filter by row groups
-                null);
-
-        if(cursor.moveToFirst()){
-
-            note.setTitle(cursor.getString(0));
-            note.setDate(cursor.getString(1));
-            note.setRating(Integer.parseInt(cursor.getString(2)));
-            note.setNote(cursor.getString(3));
-        }
-
-        db.close();
-        cursor.close();
-
-        return note;
-    }
-
-    public boolean deleteNoteById(int noteId){
-        boolean result;
-
-        String where = COLUMN_NOTE_ID + " = ?";
-
-        String[] deleteArgs = {Integer.toString(noteId)};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
-
-        return result;
-    }
-
-    public void updateNoteById(Note note){
-        String where = COLUMN_NOTE_ID + " = ?";
-
-        String[] updateArgs = {Integer.toString(note.getId())};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NOTE_TITLE, note.getTitle());
-        values.put(COLUMN_NOTE_NOTE, note.getNote());
-        values.put(COLUMN_NOTE_RATING, note.getRating());
-        values.put(COLUMN_NOTE_DATE, note.getDate());
-
-        db.update(TABLE_NOTE, values, where, updateArgs);
-        db.close();
-    }
-
 }

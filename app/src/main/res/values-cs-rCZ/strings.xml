@@ -84,4 +84,29 @@
     <string name="note_delete_question">Opravdu chcete smazat toto hodnocení?</string>
     <string name="title_activity_trader_edit_note">Editace hodnocení</string>
     <string name="note_update_message">Hodnocení bylo aktualizováno</string>
+    <string name="title_activity_expense_new">Přidejte výdaj</string>
+    <string name="fill_information_about_expense">Vyplňte údaje o výdaji</string>
+    <string name="number_of_bill_name">*Číslo faktury (název)</string>
+    <string name="amount">*Částka</string>
+    <string name="VAT">DPH</string>
+    <string name="valuty_list">Kurzovní lístek</string>
+    <string name="basic_currency">Základní měny</string>
+    <string name="title_activity_info_currency">Kurzovní lístek</string>
+    <string name="europe">Evropská unie</string>
+    <string name="eur">EUR</string>
+    <string name="dot">...</string>
+    <string name="usa">USA</string>
+    <string name="usd">USD</string>
+    <string name="great_britain">Velká Británie</string>
+    <string name="gbp">GBP</string>
+    <string name="canada">Kanada</string>
+    <string name="cad">CAD</string>
+    <string name="sweden">Švédsko</string>
+    <string name="sek">SEK</string>
+    <string name="source_cnb">www.cnb.cz</string>
+    <string name="source">Zdroj</string>
+    <string name="country">Země</string>
+    <string name="code">Kód</string>
+    <string name="kurz">Kurz</string>
+
 </resources>
