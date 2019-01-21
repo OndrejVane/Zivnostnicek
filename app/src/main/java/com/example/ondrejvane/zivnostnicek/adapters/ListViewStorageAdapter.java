@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.helper;
+package com.example.ondrejvane.zivnostnicek.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

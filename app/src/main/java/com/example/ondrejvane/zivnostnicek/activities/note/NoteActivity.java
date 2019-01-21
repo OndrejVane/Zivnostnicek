@@ -33,7 +33,7 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.ListViewTraderAdapter;
+import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
 /**

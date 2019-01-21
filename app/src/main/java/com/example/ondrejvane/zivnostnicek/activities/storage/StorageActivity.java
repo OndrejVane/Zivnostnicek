@@ -18,7 +18,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
@@ -27,18 +26,14 @@ import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.ListViewStorageAdapter;
-import com.example.ondrejvane.zivnostnicek.helper.ListViewTraderAdapter;
+import com.example.ondrejvane.zivnostnicek.adapters.ListViewStorageAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
 import java.util.ArrayList;
-
-import static android.widget.Toast.LENGTH_SHORT;
 
 public class StorageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
