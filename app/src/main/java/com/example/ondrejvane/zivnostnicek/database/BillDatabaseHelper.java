@@ -1,6 +1,11 @@
 package com.example.ondrejvane.zivnostnicek.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Bill;
 
 public class BillDatabaseHelper extends DatabaseHelper{
 
@@ -30,5 +35,20 @@ public class BillDatabaseHelper extends DatabaseHelper{
     }
 
 
+    public void addBill(Bill bill){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
+        values.put(COLUMN_BILL_AMOUNT, bill.getBillAmount());
+        values.put(COLUMN_BILL_VAT, bill.getBillVAT());
+        values.put(COLUMN_BILL_TRADER_ID, bill.getBillTraderId());
+        values.put(COLUMN_BILL_DATE, bill.getBillDate());
+        values.put(COLUMN_BILL_PHOTO, DbBitmapUtility.getBytes(bill.getBillPhoto()));
+        values.put(COLUMN_BILL_USER_ID, UserInformation.getInstance().getUserId());
+        values.put(COLUMN_BILL_IS_EXPENSE, bill.getBillIsExpense());
+        db.insert(TABLE_BILL, null, values);
+        db.close();
+    }
 
 }

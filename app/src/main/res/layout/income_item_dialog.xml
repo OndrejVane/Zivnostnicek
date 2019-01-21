@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/add_item"
+        android:textSize="25sp"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/itemLayoutDailogName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/itemDailogName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/item_name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:drawableStart="@drawable/ic_item_name"
+            android:textColor="@color/black" />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/itemLayoutDailogQuantity"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/itemDailogaQuantity"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="@string/Quantity"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:drawableStart="@drawable/ic_quantity"
+                android:textColor="@color/black" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="70dp"
+            android:layout_marginTop="25dp"
+            android:layout_height="wrap_content"
+            android:text="@string/unit"/>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/spinnerUnit"
+            android:layout_marginTop="25dp"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:entries="@array/units"
+            android:prompt="@string/VAT"
+            style="@style/Widget.AppCompat.Spinner.Underlined" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonAddItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:text="@string/add_item"/>
+
+
+</LinearLayout>

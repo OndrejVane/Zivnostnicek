@@ -25,7 +25,7 @@ import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderEditActivity;
@@ -33,7 +33,7 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.ListViewAdapter;
+import com.example.ondrejvane.zivnostnicek.helper.ListViewTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
 /**
@@ -43,7 +43,7 @@ public class NoteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ListView listViewNote;
-    private ListViewAdapter listViewAdapter;
+    private ListViewTraderAdapter listViewTraderAdapter;
     private int traderID;
     private TraderDatabaseHelper traderDatabaseHelper;
     private NoteDatabaseHelper noteDatabaseHelper;
@@ -124,8 +124,8 @@ public class NoteActivity extends AppCompatActivity
         noteRating = temp[2];
 
         listViewNote = findViewById(R.id.listViewTrader);
-        listViewAdapter = new ListViewAdapter(this, noteTitle, noteRating);
-        listViewNote.setAdapter(listViewAdapter);
+        listViewTraderAdapter = new ListViewTraderAdapter(this, noteTitle, noteRating);
+        listViewNote.setAdapter(listViewTraderAdapter);
 
         ratingBar.setRating(countAverageRating());
         averageRating.append(Float.toString(countAverageRating()));

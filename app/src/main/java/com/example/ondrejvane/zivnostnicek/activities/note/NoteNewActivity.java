@@ -21,7 +21,7 @@ import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;

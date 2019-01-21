@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;

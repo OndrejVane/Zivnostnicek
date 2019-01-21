@@ -1,7 +1,8 @@
-package com.example.ondrejvane.zivnostnicek.activities.trader;
+package com.example.ondrejvane.zivnostnicek.activities.storage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,55 +18,53 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
+import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
+import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.helper.ListViewStorageAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.ListViewTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
-/**
- * Aktivita, která zobrazí všechny obchodníky příslušného uživatele.
- *
- */
-public class TraderActivity extends AppCompatActivity
+import java.util.ArrayList;
+
+import static android.widget.Toast.LENGTH_SHORT;
+
+public class StorageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ListView listViewTrader;
-    private ListViewTraderAdapter listViewTraderAdapter;
+    private ListView listViewStorageItem;
+    private ListViewStorageAdapter listViewStorageAdapter;
     private EditText inputSearch;
-    private TraderDatabaseHelper traderDatabaseHelper;
-    private String[] traderName;
-    private String[] traderContactPerson;
+    private String[] storageItemName;
+    private float[] storageItemQuantity;
+    private String[] storageItemUnit;
     private int[] ID;
     private int globalPosition;
 
-    /**
-     * Metoda, která se provede při spuštění akctivity a porovede nezbytné
-     * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState    savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trader);
+        setContentView(R.layout.activity_storage);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //stará se o přechod do nové aplikace po stisknutí tlačítk přidat
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent income = new Intent(TraderActivity.this, TraderNewActivity.class);
-                startActivity(income);
+                Intent intent = new Intent(StorageActivity.this, StorageNewActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -87,19 +86,21 @@ public class TraderActivity extends AppCompatActivity
         //skryje klávesnici při startu aktivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        //po stisknutí objektu v listview překne do activity, která zobrazí info o obchodníkovi
-        listViewTrader.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //po stisknutí objektu v listview překne do activity, která zobrazí info o skladové položce
+        listViewStorageItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 globalPosition = position;
-                Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
-                intent.putExtra("TRADER_ID", ID[globalPosition]);
+                Intent intent = new Intent(StorageActivity.this, StorageShowActivity.class);
+                intent.putExtra("STORAGE_ITEM_ID", ID[globalPosition]);
                 startActivity(intent);
                 finish();
+
             }
         });
 
         inputSearch.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -117,45 +118,48 @@ public class TraderActivity extends AppCompatActivity
              */
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
-                String tempTraderName[];
-                String tempTraderContactPerson[];
-                if (traderName.length == 0){
-                    tempTraderName = new String [1];
-                    tempTraderContactPerson = new String [1];
-                    tempTraderName[0]=getString(R.string.no_result);
-                    tempTraderContactPerson[0]=getString(R.string.no_result);
-                    listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
-                    listViewTrader.setAdapter(listViewTraderAdapter);
+                String tempStorageItemName[];
+                float tempStorageItemQuantity[];
+                String tempStorageItemUnit[];
+                if (storageItemName.length == 0){
+                    tempStorageItemName = new String [1];
+                    tempStorageItemQuantity = new float[1];
+                    tempStorageItemUnit = new String[1];
+                    tempStorageItemName[0]=getString(R.string.no_result);
+                    tempStorageItemQuantity[0] = (float) 0.0;
+                    tempStorageItemUnit[0] = "";
+                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this, tempStorageItemName, tempStorageItemQuantity, tempStorageItemUnit);
+                    listViewStorageItem.setAdapter(listViewStorageAdapter);
                     return;
 
                 }else {
-                    tempTraderName = new String [traderName.length];
-                    tempTraderContactPerson = new String [traderContactPerson.length];
+                    tempStorageItemName = new String [storageItemName.length];
+                    tempStorageItemQuantity = new float [storageItemQuantity.length];
+                    tempStorageItemUnit = new String[storageItemUnit.length];
                 }
                 int tempI=0;
                 boolean found = false;
                 String findingString = inputSearch.getText().toString().toLowerCase();
 
-                for (int i = 0; i<traderName.length;i++){
-                    if (traderName[i].toLowerCase().contains(findingString) ||  traderContactPerson[i].toLowerCase().contains(findingString)){
-                        tempTraderName[tempI] = traderName[i];
-                        tempTraderContactPerson[tempI] = traderContactPerson[i];
+                for (int i = 0; i<storageItemName.length;i++){
+                    if (storageItemName[i].toLowerCase().contains(findingString)){
+                        tempStorageItemName[tempI] = storageItemName[i];
+                        tempStorageItemQuantity[tempI] = storageItemQuantity[i];
+                        tempStorageItemUnit[tempI] = storageItemUnit[i];
                         tempI++;
                         found = true;
                     }
                 }
                 if (found){
-                    listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
-                    listViewTrader.setAdapter(listViewTraderAdapter);
+                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this,tempStorageItemName,tempStorageItemQuantity, tempStorageItemUnit);
+                    listViewStorageItem.setAdapter(listViewStorageAdapter);
                 }
                 else {
-                    tempTraderName[0]=getString(R.string.no_result);
-                    tempTraderContactPerson[0] = getString(R.string.no_result);
-                    listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
-                    listViewTrader.setAdapter(listViewTraderAdapter);
+                    tempStorageItemName[0]=getString(R.string.no_result);
+                    tempStorageItemQuantity[0] = (float) 0.0;
+                    tempStorageItemUnit[0] = "";
+                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this,tempStorageItemName,tempStorageItemQuantity, tempStorageItemUnit);
+                    listViewStorageItem.setAdapter(listViewStorageAdapter);
                 }
 
             }
@@ -167,43 +171,36 @@ public class TraderActivity extends AppCompatActivity
         });
     }
 
-    /**
-     * Procedura, která inicializuje všechny potřebné prvky
-     * aktivity
-     */
     private void initActivity() {
-        String temp[][];
-        UserInformation userInformation = UserInformation.getInstance();
-        traderDatabaseHelper = new TraderDatabaseHelper(TraderActivity.this);
-        temp = traderDatabaseHelper.getTradersData(userInformation.getUserId());
-        ID = arrayStringToInteger(temp[0]);
-        traderName = temp[1];
-        traderContactPerson = temp[2];
+        ArrayList<StorageItem> listStorageItem;
+        listViewStorageItem = findViewById(R.id.listViewStorage);
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(StorageActivity.this);
+        listStorageItem = storageItemDatabaseHelper.getStorageItemByUserId(UserInformation.getInstance().getUserId());
+        listViewStorageItem = findViewById(R.id.listViewStorage);
+        inputSearch = findViewById(R.id.editTextSearchStorage);
 
-        listViewTrader = findViewById(R.id.listViewTrader);
-        listViewTraderAdapter = new ListViewTraderAdapter(this, traderName, traderContactPerson);
-        inputSearch = findViewById(R.id.editTextSearch);
-        listViewTrader.setAdapter(listViewTraderAdapter);
-    }
+        //inicializace polí pro uložení dat
+        ID = new int[listStorageItem.size()];
+        storageItemName = new String[listStorageItem.size()];
+        storageItemQuantity = new float[listStorageItem.size()];
+        storageItemUnit = new String[listStorageItem.size()];
 
-    /**
-     * Metoda, která převede pole strngu(čísel) na pole integeru.
-     * @param strings   String[]    pole stringu(čísel)
-     * @return          int[]       pole integeru
-     */
-    private int[] arrayStringToInteger(String[] strings) {
-        int[] integers = new int[strings.length];
-        for (int i = 0; i<strings.length; i++){
-            integers[i] = Integer.parseInt(strings[i]);
+
+        //projdu list a získám informace o položkách, které potřebuju
+        for (int i=0; i<listStorageItem.size(); i++){
+            ID[i] = listStorageItem.get(i).getId();
+            storageItemName[i] = listStorageItem.get(i).getName();
+            storageItemQuantity[i] = listStorageItem.get(i).getQuantity();
+            storageItemUnit[i] = listStorageItem.get(i).getUnit();
         }
-        return integers;
+
+        //nastavení adapteru do list view pro zobrazení
+        listViewStorageAdapter = new ListViewStorageAdapter(this, storageItemName, storageItemQuantity, storageItemUnit);
+        listViewStorageItem.setAdapter(listViewStorageAdapter);
+
 
     }
 
-    /**
-     * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
-     * aktivitu a přiloží potřebné informace.
-     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -215,65 +212,58 @@ public class TraderActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Metoda, která se stará o hlavní navigační menu aplikace
-     * a přechod mezi hlavními aktivitami.
-     * @param item  vybraná položka v menu
-     * @return  boolean
-     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        TraderActivity thisActivity = TraderActivity.this;
 
         switch (id){
 
             case R.id.nav_home:
-                Intent home = new Intent(thisActivity, HomeActivity.class);
+                Intent home = new Intent(StorageActivity.this, HomeActivity.class);
                 startActivity(home);
                 finish();
                 break;
 
             case R.id.nav_income:
-                Intent income = new Intent(thisActivity, IncomeActivity.class);
+                Intent income = new Intent(StorageActivity.this, IncomeActivity.class);
                 startActivity(income);
                 finish();
                 break;
 
             case R.id.nav_expense:
-                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
+                Intent expense = new Intent(StorageActivity.this, ExpenseActivity.class);
                 startActivity(expense);
                 finish();
                 break;
 
             case R.id.nav_traders:
-                Intent traders = new Intent(thisActivity, TraderActivity.class);
+                Intent traders = new Intent(StorageActivity.this, TraderActivity.class);
                 startActivity(traders);
                 finish();
                 break;
 
             case R.id.nav_storage:
-                Intent storage = new Intent(thisActivity, StorageActivity.class);
+                Intent storage = new Intent(StorageActivity.this, StorageActivity.class);
                 startActivity(storage);
                 finish();
                 break;
 
             case R.id.nav_info:
-                Intent info = new Intent(thisActivity, InfoActivity.class);
+                Intent info = new Intent(StorageActivity.this, InfoActivity.class);
                 startActivity(info);
                 finish();
                 break;
 
             case R.id.nav_sync:
-                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
+                Intent sync = new Intent(StorageActivity.this, SynchronizationActivity.class);
                 startActivity(sync);
                 finish();
                 break;
 
             case R.id.nav_logout:
-                Logout logout = new Logout(thisActivity, this);
+                Logout logout = new Logout(StorageActivity.this, this);
                 logout.logout();
                 break;
 

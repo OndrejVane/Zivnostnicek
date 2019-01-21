@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,7 @@ import android.view.MenuItem;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.StorageActivity;
+import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
@@ -75,6 +76,18 @@ public class ExpenseActivity extends AppCompatActivity
         }
     }
 
+
+    /**
+     * Metoda, která vytvoří boční navigační menu po
+     * zahájení atcitivity.
+     * @param menu  bočnínavigační menu
+     * @return      boolean
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.expense_activity, menu);
+        return true;
+    }
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace

@@ -9,20 +9,22 @@ import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 
-public class ListViewAdapter extends BaseAdapter {
+public class ListViewStorageAdapter extends BaseAdapter {
     Activity context;
-    String traderName[];
-    String traderContactPerson[];
+    String storageItemName[];
+    float storageItemQuantity[];
+    String storageItemUnit[];
 
-    public ListViewAdapter(Activity context, String[] traderName, String[] traderContactPerson) {
+    public ListViewStorageAdapter(Activity context, String[] storageItemName,float storageItemQuantity[], String[] storageItemUnit) {
         this.context = context;
-        this.traderName = traderName;
-        this.traderContactPerson = traderContactPerson;
+        this.storageItemName = storageItemName;
+        this.storageItemQuantity = storageItemQuantity;
+        this.storageItemUnit = storageItemUnit;
     }
 
     public int getCount() {
         // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
-        return traderName.length;
+        return storageItemName.length;
     }
 
     public Object getItem(int position) {
@@ -39,8 +41,9 @@ public class ListViewAdapter extends BaseAdapter {
      * Tato třída obsahuje textView pro nadpis a text, se kterým se pracuje v metodě getView.
      */
     private class ViewHolder {
-        TextView txtViewTraderName;
-        TextView txtViewTraderContactPerson;
+        TextView txtViewStorageItemName;
+        TextView txtViewStorageItemQuantity;
+        TextView txtViewStorageItemUnit;
     }
 
     /**
@@ -57,10 +60,11 @@ public class ListViewAdapter extends BaseAdapter {
 
         if (convertView == null)
         {
-            convertView = inflater.inflate(R.layout.show_list_item, null);
+            convertView = inflater.inflate(R.layout.show_list_item_storage, null);
             holder = new ViewHolder();
-            holder.txtViewTraderName = convertView.findViewById(R.id.textViewTraderName);
-            holder.txtViewTraderContactPerson = convertView.findViewById(R.id.textViewTradeContactPerson);
+            holder.txtViewStorageItemName = convertView.findViewById(R.id.storageItemName);
+            holder.txtViewStorageItemQuantity = convertView.findViewById(R.id.storageItemQuantity);
+            holder.txtViewStorageItemUnit = convertView.findViewById(R.id.storageItemUnit);
             convertView.setTag(holder);
         }
         else
@@ -68,8 +72,9 @@ public class ListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.txtViewTraderName.setText(traderName[position]);
-        holder.txtViewTraderContactPerson.setText(traderContactPerson[position]);
+        holder.txtViewStorageItemName.setText(storageItemName[position]);
+        holder.txtViewStorageItemQuantity.setText(Float.toString(storageItemQuantity[position]));
+        holder.txtViewStorageItemUnit.setText(storageItemUnit[position]);
 
         return convertView;
     }

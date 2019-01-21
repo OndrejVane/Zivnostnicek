@@ -96,12 +96,12 @@
     <string name="note_delete_question">Are you really want to delete this note?</string>
     <string name="title_activity_trader_edit_note">TraderEditNoteActivity</string>
     <string name="note_update_message">Note has been updated</string>
-    <string name="title_activity_income_new">IncomeNewActivity</string>
+    <string name="title_activity_income_new">Add new income</string>
     <string name="title_activity_expense_new">ExpenseNewActivity</string>
     <string name="fill_information_about_expense">Fill information about expense</string>
     <string name="number_of_bill_name">*Number of bill(Name)</string>
     <string name="amount">*Amount</string>
-    <string name="VAT">VAT</string>
+    <string name="VAT">VAT[%]</string>
     <string name="valuty_list">Exchange Rates</string>
     <string name="basic_currency">Basic currency</string>
     <string name="title_activity_info_currency">Info currency</string>
@@ -122,14 +122,47 @@
     <string name="code">Code</string>
     <string name="kurz">Kurz</string>
     <string name="add_expense">Add expense</string>
+    <string name="take_picture_from">Take picture from </string>
+    <string name="trader">Trader</string>
+    <string name="select_trader">Select trader</string>
+    <string name="add_type">Add type</string>
+    <string name="expense_is_created">Expense is created</string>
+    <string name="expense_items">Expense items</string>
+    <string name="add_income">Add income</string>
+    <string name="add_item">Add item</string>
+    <string name="item_name">*Item name</string>
+    <string name="Quantity">*Quantity</string>
+    <string name="unit">Unit</string>
+    <string name="item_name_is_empty">Item name is empty</string>
+    <string name="quantity_is_empty">Quantity is empty</string>
+    <string name="title_activity_storage_new">Add storage item</string>
+    <string name="fill_information_about_storage_item">Fill information about storage item</string>
+    <string name="storage_item_has_been_added">Storage item has been added</string>
+    <string name="delete_storage_item_question">Are you really want to delete this storage item?</string>
+    <string name="storage_item_has_been_deleted">Storage item has been deleted</string>
+    <string name="item_name_show">Item name</string>
+    <string name="quantity_show">Quantity</string>
 
     <string-array name="vat_amount">
-        <item>21%</item>
-        <item>15%</item>
-        <item>10%</item>
-        <item>0%</item>
+        <item>21</item>
+        <item>15</item>
+        <item>10</item>
+        <item>0</item>
     </string-array>
 
+    <string-array name="photo">
+        <item>gallery</item>
+        <item>camera</item>
+    </string-array>
+
+    <string-array name="units">
+        <item>ks</item>
+        <item>kg</item>
+        <item>m</item>
+        <item>m^2</item>
+        <item>l</item>
+    </string-array>
+    <string name="title_activity_storage_show">StorageShowActivity</string>
 
 
 </resources>

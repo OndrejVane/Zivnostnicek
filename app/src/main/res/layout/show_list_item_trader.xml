@@ -10,10 +10,8 @@
         android:layout_height="wrap_content"
         android:textSize="23sp"
         android:textColor="@color/grey"
-
         android:shadowRadius="1.5"
         android:paddingStart="15dp"
-
         android:textStyle="bold"
         />
 

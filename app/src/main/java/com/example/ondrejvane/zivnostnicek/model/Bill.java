@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
+import android.graphics.Bitmap;
+
 public class Bill {
 
     private int id;
@@ -8,7 +10,7 @@ public class Bill {
     private int billVAT;
     private int billTraderId;
     private String billDate;
-    private String billPhoto;
+    private Bitmap billPhoto;
     private String billPlace;
     private int billTypeId;
     private int billUserId;
@@ -62,11 +64,11 @@ public class Bill {
         this.billDate = billDate;
     }
 
-    public String getBillPhoto() {
+    public Bitmap getBillPhoto() {
         return billPhoto;
     }
 
-    public void setBillPhoto(String billPhoto) {
+    public void setBillPhoto(Bitmap billPhoto) {
         this.billPhoto = billPhoto;
     }
 

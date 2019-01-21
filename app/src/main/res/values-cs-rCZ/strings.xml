@@ -88,7 +88,7 @@
     <string name="fill_information_about_expense">Vyplňte údaje o výdaji</string>
     <string name="number_of_bill_name">*Číslo faktury (název)</string>
     <string name="amount">*Částka</string>
-    <string name="VAT">DPH</string>
+    <string name="VAT">DPH[%]</string>
     <string name="valuty_list">Kurzovní lístek</string>
     <string name="basic_currency">Základní měny</string>
     <string name="title_activity_info_currency">Kurzovní lístek</string>
@@ -108,5 +108,32 @@
     <string name="country">Země</string>
     <string name="code">Kód</string>
     <string name="kurz">Kurz</string>
+    <string name="take_picture_from">Použít fotku z </string>
+    <string name="trader">Obchodník</string>
+    <string name="select_trader">Vyberte obchodníka</string>
+    <string name="add_type">Přidejte druh</string>
+    <string name="expense_is_created">Výdaj přidán</string>
+    <string name="title_activity_income_new">Přidejte příjem</string>
+    <string name="expense_items">Položky faktury</string>
+    <string name="add_expense">Přidat výdaj</string>
+    <string name="add_income">Přidat příjem</string>
+    <string name="add_item">Přidejte položku</string>
+    <string name="item_name">*Název položky</string>
+    <string name="Quantity">*Množství</string>
+    <string name="unit">*Jednotky</string>
+    <string name="item_name_is_empty">Název položky je prázdný</string>
+    <string name="quantity_is_empty">Množství je prázdné</string>
+    <string name="title_activity_storage_new">Přidat skladovou položku</string>
+    <string name="fill_information_about_storage_item">Vyplňte údaje o skladové položce</string>
+    <string name="storage_item_has_been_added">Skladová položka byla přidána</string>
+    <string name="delete_storage_item_question">Opravdu chcete smazat tuto skladovou položku?</string>
+    <string name="storage_item_has_been_deleted">Skladová položka byla smazána</string>
+    <string name="item_name_show">Název položky</string>
+    <string name="quantity_show">Množství</string>
+
+    <string-array name="photo">
+        <item>galerie</item>
+        <item>fotoaparátu</item>
+    </string-array>
 
 </resources>

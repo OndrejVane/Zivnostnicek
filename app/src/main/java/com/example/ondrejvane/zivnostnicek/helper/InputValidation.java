@@ -129,4 +129,16 @@ public class InputValidation {
         }
         return true;
     }
+
+    /**
+     * Metoda, která validuje, zda je string prázdný.
+     * @return
+     */
+    public static boolean validateIsEmpty(String input){
+        if(input.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
 }

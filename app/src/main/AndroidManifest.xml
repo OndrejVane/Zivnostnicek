@@ -3,6 +3,7 @@
     package="com.example.ondrejvane.zivnostnicek">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -36,7 +37,7 @@
             android:label="@string/title_activity_trader"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.StorageActivity"
+            android:name=".activities.storage.StorageActivity"
             android:label="@string/title_activity_storage"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -86,6 +87,14 @@
         <activity
             android:name=".activities.info.InfoCurrencyActivity"
             android:label="@string/title_activity_info_currency"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.storage.StorageNewActivity"
+            android:label="@string/title_activity_storage_new"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.storage.StorageShowActivity"
+            android:label="@string/title_activity_storage_show"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
