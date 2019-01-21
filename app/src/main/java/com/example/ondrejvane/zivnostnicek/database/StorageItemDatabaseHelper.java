@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 import java.util.ArrayList;
 
@@ -130,6 +131,30 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         result = db.delete(TABLE_STORAGE_ITEM, where, deleteArgs) > 0;
 
         return result;
+    }
+
+    public void updateStorageItemById(StorageItem storageItem){
+
+        String where = COLUMN_STORAGE_ITEM_ID + " = ?";
+
+        String[] updateArgs = {Integer.toString(storageItem.getId())};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        System.out.println(storageItem.getId());
+        System.out.println(storageItem.getQuantity());
+        System.out.println(storageItem.getUnit());
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
+        values.put(COLUMN_STORAGE_ITEM_QUANTITY, storageItem.getQuantity());
+        values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());
+        values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
+
+        int result = db.update(TABLE_STORAGE_ITEM, values, where, updateArgs);
+        System.out.print(result);
+        db.close();
+
     }
 
 }

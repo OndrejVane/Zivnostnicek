@@ -130,6 +130,10 @@
     <string name="storage_item_has_been_deleted">Skladová položka byla smazána</string>
     <string name="item_name_show">Název položky</string>
     <string name="quantity_show">Množství</string>
+    <string name="title_activity_storage_show">Náhled skladové položky</string>
+    <string name="title_activity_storage_edit">Editce skladové položky</string>
+    <string name="edit_information_about_storage_item">Editujte informace o skladové položce</string>
+    <string name="storage_item_has_been_edited">Skladová položka byla aktualizována</string>
 
     <string-array name="photo">
         <item>galerie</item>

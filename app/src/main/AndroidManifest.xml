@@ -95,6 +95,10 @@
         <activity
             android:name=".activities.storage.StorageShowActivity"
             android:label="@string/title_activity_storage_show"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.storage.StorageEditActivity"
+            android:label="@string/title_activity_storage_edit"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

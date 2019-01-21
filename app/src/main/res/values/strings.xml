@@ -142,6 +142,10 @@
     <string name="storage_item_has_been_deleted">Storage item has been deleted</string>
     <string name="item_name_show">Item name</string>
     <string name="quantity_show">Quantity</string>
+    <string name="title_activity_storage_show">Show storage item</string>
+    <string name="title_activity_storage_edit">Edit storage item</string>
+    <string name="edit_information_about_storage_item">Edit information about storage item</string>
+    <string name="storage_item_has_been_edited">Storage item has been edited</string>
 
     <string-array name="vat_amount">
         <item>21</item>
@@ -162,7 +166,7 @@
         <item>m^2</item>
         <item>l</item>
     </string-array>
-    <string name="title_activity_storage_show">StorageShowActivity</string>
+
 
 
 </resources>
