@@ -17,10 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewIncomeAdapter;
-import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.ArrayUtility;
 import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
@@ -36,10 +33,9 @@ public class IncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Spinner spinnerIncomeYear;
-    private Spinner spinnerincomeMonth;
+    private Spinner spinnerIncomeMonth;
     private ListView listViewIncome;
     private ListViewIncomeAdapter listViewIncomeAdapter;
-    private BillDatabaseHelper billDatabaseHelper;
 
     //proměnné, které obsahují všechny příjmy načtené z databáze
     private String[] incomeName;
@@ -95,14 +91,14 @@ public class IncomeActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int incomeId = ID[position];
+                /*
                 if(incomeId != -1){
-                    /*
                     Intent intent = new Intent(IncomeActivity.this, IncomeShowActivity.class);
                     intent.putExtra("BILL_ID", incomeId);
                     startActivity(intent);
                     finish();
-                    */
                 }
+                */
             }
         });
 
@@ -187,7 +183,7 @@ public class IncomeActivity extends AppCompatActivity
             }
         });
 
-        spinnerincomeMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerIncomeMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -254,7 +250,6 @@ public class IncomeActivity extends AppCompatActivity
                         ID = tempId;
                         listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYearAndMonth, tempIncomeDateYearAndMonth, tempIncomeAmountYearAndMonth);
                         listViewIncome.setAdapter(listViewIncomeAdapter);
-                        return;
                     }
                 }else {
                     ID = tempIdYear;
@@ -274,7 +269,7 @@ public class IncomeActivity extends AppCompatActivity
     private void initActivity() {
         String[][] temp;
         spinnerIncomeYear = findViewById(R.id.spinnerIncomeYear);
-        spinnerincomeMonth = findViewById(R.id.spinnerIncomeMonth);
+        spinnerIncomeMonth = findViewById(R.id.spinnerIncomeMonth);
         listViewIncome = findViewById(R.id.listViewIncome);
 
 
@@ -285,7 +280,7 @@ public class IncomeActivity extends AppCompatActivity
         }
 
         //inicializace databáze
-        billDatabaseHelper = new BillDatabaseHelper(IncomeActivity.this);
+        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(IncomeActivity.this);
         //načtení příslušných dat z databáze
         temp = billDatabaseHelper.getBillData(UserInformation.getInstance().getUserId(), 0); // 0 = hledám pouze příjmy
         ID = ArrayUtility.arrayStringToInteger(temp[0]);
