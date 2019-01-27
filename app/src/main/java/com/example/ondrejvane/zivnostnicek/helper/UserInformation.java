@@ -44,6 +44,10 @@ public class UserInformation {
         this.FullName = name;
     }
 
+    public void resetInstace(){
+        self = null;
+    }
+
 
     
 }

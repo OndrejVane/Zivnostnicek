@@ -2,28 +2,14 @@ package com.example.ondrejvane.zivnostnicek.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 
 public class BillDatabaseHelper extends DatabaseHelper{
-
-    //názve tabulky faktury
-    private static final String TABLE_BILL = "bill";
-
-    //názvy atributů
-    private static final String COLUMN_BILL_ID = "bill_id";                                 //primární klíč
-    private static final String COLUMN_BILL_NUMBER = "bill_number";                         //název nebo číslo faktury
-    private static final String COLUMN_BILL_AMOUNT = "bill_amount";                         //částka na faktuře
-    private static final String COLUMN_BILL_VAT = "bill_vat";                               //částka DPH
-    private static final String COLUMN_BILL_TRADER_ID = "bill_trader_id";                   //cizí klíč obchodníka (faktura od nebo pro)
-    private static final String COLUMN_BILL_DATE = "bill_date";                             //datum vystavení faktury
-    private static final String COLUMN_BILL_PHOTO = "bill_photo";                           //foto faktury
-    private static final String COLUMN_BILL_PLACE = "bill_place";                           //místo, kde byla faktura vydána
-    private static final String COLUMN_BILL_TYPE_ID = "bill_type_id";                       //cizí klíč do tabulky typ faktury
-    private static final String COLUMN_BILL_USER_ID = "bill_user_id";                       //cizí klíč do tabulky uživatele
-    private static final String COLUMN_BILL_IS_EXPENSE = "bill_is_expense";                 //atribut, který určuje, zda se jedná o P=0/V=1
 
     /**
      * Constructor
@@ -35,20 +21,69 @@ public class BillDatabaseHelper extends DatabaseHelper{
     }
 
 
-    public void addBill(Bill bill){
+    public long addBill(Bill bill){
         SQLiteDatabase db = this.getWritableDatabase();
+        long billId;
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
-        values.put(COLUMN_BILL_AMOUNT, bill.getBillAmount());
-        values.put(COLUMN_BILL_VAT, bill.getBillVAT());
-        values.put(COLUMN_BILL_TRADER_ID, bill.getBillTraderId());
-        values.put(COLUMN_BILL_DATE, bill.getBillDate());
-        values.put(COLUMN_BILL_PHOTO, DbBitmapUtility.getBytes(bill.getBillPhoto()));
-        values.put(COLUMN_BILL_USER_ID, UserInformation.getInstance().getUserId());
-        values.put(COLUMN_BILL_IS_EXPENSE, bill.getBillIsExpense());
-        db.insert(TABLE_BILL, null, values);
+        values.put(COLUMN_BILL_NUMBER, bill.getName());
+        values.put(COLUMN_BILL_AMOUNT, bill.getAmount());
+        values.put(COLUMN_BILL_VAT, bill.getVAT());
+        values.put(COLUMN_BILL_TRADER_ID, bill.getTraderId());
+        values.put(COLUMN_BILL_DATE, bill.getDate());
+        values.put(COLUMN_BILL_PHOTO, DbBitmapUtility.getBytes(bill.getPhoto()));
+        values.put(COLUMN_BILL_USER_ID, bill.getUserId());
+        values.put(COLUMN_BILL_IS_EXPENSE, bill.getIsExpense());
+        billId = db.insert(TABLE_BILL, null, values);
         db.close();
+
+        return billId;
     }
+
+    public String[][] getBillData(int userID, int isExpense){
+        String data[][];
+
+
+        String[] columns = { COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_DATE, COLUMN_BILL_AMOUNT};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?";
+
+        String orderBy = COLUMN_BILL_NUMBER + " ASC";
+
+        // selection arguments
+        String[] selectionArgs = {Integer.toString(userID), Integer.toString(isExpense)};
+
+        Cursor cursor = db.query(TABLE_BILL,        //Table to query
+                columns,                            //columns to return
+                selection,                          //columns for the WHERE clause
+                selectionArgs,                      //The values for the WHERE clause
+                null,                      //group the rows
+                null,                        //filter by row groups
+                orderBy);
+        int count = cursor.getCount();
+        data = new String[4][count];
+        int i = 0;
+
+        if (cursor.moveToFirst()){
+            do{
+                data[0][i] = cursor.getString(0);
+                data[1][i] = cursor.getString(1);
+                data[2][i] = cursor.getString(2);
+                if(isExpense == 0){
+                    data[3][i] = FormatUtility.formatIncomeAmount(cursor.getString(3));
+                }else {
+                    data[3][i] = FormatUtility.formatExpenseAmount(cursor.getString(3));
+                }
+                i++;
+            }while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+
+        return data;
+    }
+
 
 }

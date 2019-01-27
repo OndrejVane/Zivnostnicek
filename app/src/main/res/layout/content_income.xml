@@ -6,20 +6,68 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity"
-    tools:showIn="@layout/app_bar_home">
+    tools:showIn="@layout/app_bar_income">
 
 
-    <TextView
-        android:id="@+id/textView3"
+    <!--Linear layout pro výber roku a měsíce-->
+    <LinearLayout
+        android:id="@+id/linearLayoutIncome"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:text="@string/year"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="10dp"
+            android:textSize="17sp"/>
+
+        <!--Spinner pro vybrání roku-->
+        <Spinner
+            android:id="@+id/spinnerIncomeYear"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:entries="@array/years"
+            android:layout_marginEnd="15dp"
+            >
+
+        </Spinner>
+
+        <TextView
+            android:layout_width="55dp"
+            android:layout_height="match_parent"
+            android:text="@string/month"
+            android:layout_marginTop="7dp"
+            android:layout_marginStart="5dp"
+            android:textSize="17sp"/>
+
+        <!--Spinner pro vybrání roku-->
+        <Spinner
+            android:id="@+id/spinnerIncomeMonth"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:entries="@array/months">
+
+        </Spinner>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="@color/grey"
+        android:layout_below="@+id/linearLayoutIncome"/>
+
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="150dp"
-        android:gravity="center"
-        android:text="@string/income"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="162dp"
-        tools:layout_editor_absoluteY="246dp"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="match_parent"
+        android:id="@+id/listViewIncome"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linearLayoutIncome"
+        />
+
+
 </RelativeLayout>

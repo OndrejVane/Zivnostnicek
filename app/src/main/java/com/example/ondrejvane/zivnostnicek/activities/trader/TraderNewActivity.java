@@ -15,16 +15,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.helper.Settings;
+import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 /**
@@ -131,17 +127,24 @@ public class TraderNewActivity extends AppCompatActivity
         }
 
         if(!InputValidation.validateIdentificationNumber(inputIdentificationNumber.getText().toString())){
-            String message = getString(R.string.wrong_id_number);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutIdentificationNumber.setError(getString(R.string.wrong_id_number));
-            return;
+            //implementace nastavení
+            if(!Settings.getInstance().isIsForeignIdentificationNumberPossible()){
+                String message = getString(R.string.wrong_id_number);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutIdentificationNumber.setError(getString(R.string.wrong_id_number));
+                return;
+            }
+
         }
 
         if(!InputValidation.validateTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())){
-            String message = getString(R.string.wrong_format_of_tid);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
-            return;
+            //implementace nastavení
+            if(!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()){
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
+                return;
+            }
         }
 
         Trader trader = new Trader();
@@ -164,68 +167,33 @@ public class TraderNewActivity extends AppCompatActivity
 
     }
 
+
     /**
-     * Metoda, která se stará o hlavní navigační menu aplikace
-     * a přechod mezi hlavními aktivitami.
+     * Metoda, která se stará o hlavní navigační menu aplikace.
      * @param item  vybraná položka v menu
      * @return      boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        //id vybrané položky v menu
         int id = item.getItemId();
+
         TraderNewActivity thisActivity = TraderNewActivity.this;
+        Intent newIntent;
 
-        switch (id){
+        //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
+        Menu menu = new Menu(thisActivity);
+        newIntent = menu.getMenu(id);
 
-            case R.id.nav_home:
-                Intent home = new Intent(thisActivity, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(thisActivity, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(thisActivity, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(thisActivity, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(thisActivity, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(thisActivity, this);
-                logout.logout();
-                break;
-
+        //pokud jedná o nějakou aktivitu, tak se spustí
+        if(newIntent != null){
+            startActivity(menu.getMenu(id));
+            finish();
+        }else {
+            //pokud byla stisknuta položka odhlášení
+            Logout logout = new Logout(thisActivity, this);
+            logout.logout();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

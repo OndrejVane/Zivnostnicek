@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <!--  Pole pro název skladové položky -->
+        <TextView
+            android:id="@+id/storageBillItemName"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/grey"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            />
+
+        <!--  Pole pro množství skladové položky -->
+        <TextView
+            android:id="@+id/storageBillItemQuantity"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textColor="@color/grey"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            />
+
+        <!--  Pole pro jednotku skaldové položky -->
+        <TextView
+            android:id="@+id/storageBillItemUnit"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textColor="@color/grey"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="20sp"
+            />
+
+        <!--  Obrázek delete  -->
+        <ImageView
+            android:id="@+id/imgDeleteItem"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textColor="@color/grey"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:src="@drawable/ic_delete"
+            />
+    </LinearLayout>
+
+
+
+</RelativeLayout>

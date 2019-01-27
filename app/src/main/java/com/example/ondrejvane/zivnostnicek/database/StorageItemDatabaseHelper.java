@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -12,16 +13,7 @@ import java.util.ArrayList;
 
 public class StorageItemDatabaseHelper extends DatabaseHelper {
 
-    //název tabulky skladové položky
-    private static final String TABLE_STORAGE_ITEM = "storage_item";
 
-    //názvy atributů v tabulce skladové položky(storage item)
-    private static final String COLUMN_STORAGE_ITEM_ID = "storage_item_id";                 //primární klíč
-    private static final String COLUMN_STORAGE_ITEM_USER_ID = "storage_item_user_id";       //cizí klíč do tabulky uživatelů
-    private static final String COLUMN_STORAGE_ITEM_NAME = "storage_item_name";             //název skladové položky
-    private static final String COLUMN_STORAGE_ITEM_QUANTITY = "storage_item_quantity";     //množství skladové položky
-    private static final String COLUMN_STORAGE_ITEM_UNIT = "storage_item_unit";             //jednotka skladové položky
-    private static final String COLUMN_STORAGE_ITEM_NOTE = "storage_item_note";             //poznámka ke skladové položce
     /**
      * Constructor
      *
@@ -31,17 +23,18 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addStorageItem(StorageItem storageItem){
+    public long addStorageItem(StorageItem storageItem){
         SQLiteDatabase db = this.getWritableDatabase();
+        long returnValue;
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORAGE_ITEM_USER_ID, storageItem.getUserId());
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
-        values.put(COLUMN_STORAGE_ITEM_QUANTITY, storageItem.getQuantity());
         values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());
         values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
-        db.insert(TABLE_STORAGE_ITEM, null, values);
+        returnValue = db.insert(TABLE_STORAGE_ITEM, null, values);
         db.close();
+        return returnValue;
     }
 
 
@@ -49,7 +42,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
         ArrayList<StorageItem> storageItemsList = new ArrayList<>();
 
-        String[] columns = { COLUMN_STORAGE_ITEM_ID, COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_QUANTITY, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
+        String[] columns = { COLUMN_STORAGE_ITEM_ID, COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -73,9 +66,8 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
                 StorageItem storageItem = new StorageItem();
                 storageItem.setId(cursor.getInt(0));
                 storageItem.setName(cursor.getString(1));
-                storageItem.setQuantity(cursor.getFloat(2));
-                storageItem.setUnit(cursor.getString(3));
-                storageItem.setNote(cursor.getString(4));
+                storageItem.setUnit(cursor.getString(2));
+                storageItem.setNote(cursor.getString(3));
                 storageItemsList.add(storageItem);
             }while (cursor.moveToNext());
         }
@@ -86,7 +78,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
     }
 
     public StorageItem getStorageItemById(int storageItemId){
-        String[] columns = { COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_QUANTITY, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
+        String[] columns = { COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -107,9 +99,8 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         if(cursor.moveToFirst()){
             storageItem.setId(storageItemId);
             storageItem.setName(cursor.getString(0));
-            storageItem.setQuantity(cursor.getFloat(1));
-            storageItem.setUnit(cursor.getString(2));
-            storageItem.setNote(cursor.getString(3));
+            storageItem.setUnit(cursor.getString(1));
+            storageItem.setNote(cursor.getString(2));
         }else {
             storageItem = null;
 
@@ -119,7 +110,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageItem;
     }
 
-    public boolean deleteStorageItembyId(int storageItemId){
+    public boolean deleteStorageItemById(int storageItemId){
         boolean result;
 
         String where = COLUMN_STORAGE_ITEM_ID + " = ?";
@@ -141,13 +132,8 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        System.out.println(storageItem.getId());
-        System.out.println(storageItem.getQuantity());
-        System.out.println(storageItem.getUnit());
-
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
-        values.put(COLUMN_STORAGE_ITEM_QUANTITY, storageItem.getQuantity());
         values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());
         values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
 
@@ -155,6 +141,16 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         System.out.print(result);
         db.close();
 
+    }
+
+    public String[][] getStorageItemData(int userId){
+        ArrayList<StorageItem> arrayList = getStorageItemByUserId(userId);
+        String[][] storageData = new String[2][arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) {
+            storageData[0][i] = Integer.toString(arrayList.get(i).getId());
+            storageData[1][i] = arrayList.get(i).getName();
+        }
+        return storageData;
     }
 
 }

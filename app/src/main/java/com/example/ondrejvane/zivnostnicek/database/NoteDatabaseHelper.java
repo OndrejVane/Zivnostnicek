@@ -9,16 +9,6 @@ import com.example.ondrejvane.zivnostnicek.model.Note;
 
 public class NoteDatabaseHelper extends DatabaseHelper{
 
-    // název tabulky hodnocení
-    private static final String TABLE_NOTE = "note";
-
-    //názvy atributů v tabulce note
-    private static final String COLUMN_NOTE_ID = "note_id";                                 //primární klíč
-    private static final String COLUMN_NOTE_TRADER_ID = "note_trader_id";                   //cizí klíč spojuje s tabulkou trader
-    private static final String COLUMN_NOTE_TITLE = "note_title";                           //název poznámky
-    private static final String COLUMN_NOTE_NOTE = "note_note";                             //obsah poznáky
-    private static final String COLUMN_NOTE_DATE = "note_date";                             //datum založení poznámky
-    private static final String COLUMN_NOTE_RATING = "note_rating";                         //hodnocení obchodníka
 
     /**
      * Constructor

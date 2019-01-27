@@ -10,16 +10,6 @@ import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class UserDatabaseHelper extends DatabaseHelper {
 
-    // Názvy tabulky user
-    private static final String TABLE_USER = "user";
-
-    // Názvy atributů v tabulce user
-    private static final String COLUMN_USER_ID = "user_id";                                 //Primární klíč
-    private static final String COLUMN_USER_FULL_NAME = "user_full_name";                   //Jméno uživatele
-    private static final String COLUMN_USER_EMAIL = "user_email";                           //Mail uživatele
-    private static final String COLUMN_USER_PASSWORD = "user_password";                     //hash hesla
-
-
     /**
      * Constructor
      *
@@ -151,7 +141,6 @@ public class UserDatabaseHelper extends DatabaseHelper {
             user.setEmail(cursor.getString(2));
         }
 
-        System.out.println("UserDatabaseHelper");
 
         db.close();
         cursor.close();

@@ -2,7 +2,6 @@ package com.example.ondrejvane.zivnostnicek.activities.storage;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,12 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
+import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewStorageAdapter;
@@ -45,7 +39,7 @@ public class StorageActivity extends AppCompatActivity
     private float[] storageItemQuantity;
     private String[] storageItemUnit;
     private int[] ID;
-    private int globalPosition;
+    private int[] holderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +79,13 @@ public class StorageActivity extends AppCompatActivity
         listViewStorageItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                globalPosition = position;
-                Intent intent = new Intent(StorageActivity.this, StorageShowActivity.class);
-                intent.putExtra("STORAGE_ITEM_ID", ID[globalPosition]);
-                startActivity(intent);
-                finish();
+                int storageItemId = ID[position];
+                if(storageItemId != -1){
+                    Intent intent = new Intent(StorageActivity.this, StorageShowActivity.class);
+                    intent.putExtra("STORAGE_ITEM_ID", storageItemId);
+                    startActivity(intent);
+                    finish();
+                }
 
             }
         });
@@ -116,31 +112,47 @@ public class StorageActivity extends AppCompatActivity
                 String tempStorageItemName[];
                 float tempStorageItemQuantity[];
                 String tempStorageItemUnit[];
+                int tempId[];
+                String findingString = inputSearch.getText().toString().toLowerCase();
+
                 if (storageItemName.length == 0){
                     tempStorageItemName = new String [1];
                     tempStorageItemQuantity = new float[1];
                     tempStorageItemUnit = new String[1];
+                    tempId = new int[1];
                     tempStorageItemName[0]=getString(R.string.no_result);
                     tempStorageItemQuantity[0] = (float) 0.0;
                     tempStorageItemUnit[0] = "";
+                    tempId[0] = -1;
+                    ID = tempId;
                     listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this, tempStorageItemName, tempStorageItemQuantity, tempStorageItemUnit);
                     listViewStorageItem.setAdapter(listViewStorageAdapter);
                     return;
 
                 }else {
-                    tempStorageItemName = new String [storageItemName.length];
-                    tempStorageItemQuantity = new float [storageItemQuantity.length];
-                    tempStorageItemUnit = new String[storageItemUnit.length];
+                    //zjištění počtu nalezených položek a inicializace polí
+                    int foundStorageItems = 0;
+                    for (int i = 0; i<storageItemName.length;i++){
+                        if (storageItemName[i].toLowerCase().contains(findingString)){
+                            foundStorageItems++;
+                        }
+                    }
+                    tempStorageItemName = new String [foundStorageItems];
+                    tempStorageItemQuantity = new float [foundStorageItems];
+                    tempStorageItemUnit = new String[foundStorageItems];
+                    tempId = new int[foundStorageItems];
                 }
+
                 int tempI=0;
                 boolean found = false;
-                String findingString = inputSearch.getText().toString().toLowerCase();
+
 
                 for (int i = 0; i<storageItemName.length;i++){
                     if (storageItemName[i].toLowerCase().contains(findingString)){
                         tempStorageItemName[tempI] = storageItemName[i];
                         tempStorageItemQuantity[tempI] = storageItemQuantity[i];
                         tempStorageItemUnit[tempI] = storageItemUnit[i];
+                        tempId[tempI] = holderId[i];
                         tempI++;
                         found = true;
                     }
@@ -148,12 +160,19 @@ public class StorageActivity extends AppCompatActivity
                 if (found){
                     listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this,tempStorageItemName,tempStorageItemQuantity, tempStorageItemUnit);
                     listViewStorageItem.setAdapter(listViewStorageAdapter);
+                    ID = tempId;
                 }
                 else {
+                    tempStorageItemName = new String [1];
+                    tempStorageItemQuantity = new float[1];
+                    tempStorageItemUnit = new String[1];
+                    tempId = new int[1];
                     tempStorageItemName[0]=getString(R.string.no_result);
                     tempStorageItemQuantity[0] = (float) 0.0;
                     tempStorageItemUnit[0] = "";
-                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this,tempStorageItemName,tempStorageItemQuantity, tempStorageItemUnit);
+                    tempId[0] = -1;
+                    ID = tempId;
+                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this, tempStorageItemName, tempStorageItemQuantity, tempStorageItemUnit);
                     listViewStorageItem.setAdapter(listViewStorageAdapter);
                 }
 
@@ -170,12 +189,14 @@ public class StorageActivity extends AppCompatActivity
         ArrayList<StorageItem> listStorageItem;
         listViewStorageItem = findViewById(R.id.listViewStorage);
         StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(StorageActivity.this);
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(StorageActivity.this);
         listStorageItem = storageItemDatabaseHelper.getStorageItemByUserId(UserInformation.getInstance().getUserId());
         listViewStorageItem = findViewById(R.id.listViewStorage);
         inputSearch = findViewById(R.id.editTextSearchStorage);
 
         //inicializace polí pro uložení dat
         ID = new int[listStorageItem.size()];
+        holderId = new int[listStorageItem.size()];
         storageItemName = new String[listStorageItem.size()];
         storageItemQuantity = new float[listStorageItem.size()];
         storageItemUnit = new String[listStorageItem.size()];
@@ -184,8 +205,9 @@ public class StorageActivity extends AppCompatActivity
         //projdu list a získám informace o položkách, které potřebuju
         for (int i=0; i<listStorageItem.size(); i++){
             ID[i] = listStorageItem.get(i).getId();
+            holderId[i] = listStorageItem.get(i).getId();
             storageItemName[i] = listStorageItem.get(i).getName();
-            storageItemQuantity[i] = listStorageItem.get(i).getQuantity();
+            storageItemQuantity[i] = itemQuantityDatabaseHelper.getQuantityWithStorageItemId(listStorageItem.get(i).getId());
             storageItemUnit[i] = listStorageItem.get(i).getUnit();
         }
 
@@ -207,61 +229,32 @@ public class StorageActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace.
+     * @param item  vybraná položka v menu
+     * @return      boolean
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(MenuItem item) {
+        //id vybrané položky v menu
         int id = item.getItemId();
 
-        switch (id){
+        StorageActivity thisActivity = StorageActivity.this;
+        Intent newIntent;
 
-            case R.id.nav_home:
-                Intent home = new Intent(StorageActivity.this, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
+        //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
+        com.example.ondrejvane.zivnostnicek.menu.Menu menu = new com.example.ondrejvane.zivnostnicek.menu.Menu(thisActivity);
+        newIntent = menu.getMenu(id);
 
-            case R.id.nav_income:
-                Intent income = new Intent(StorageActivity.this, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(StorageActivity.this, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(StorageActivity.this, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(StorageActivity.this, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(StorageActivity.this, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(StorageActivity.this, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(StorageActivity.this, this);
-                logout.logout();
-                break;
-
+        //pokud jedná o nějakou aktivitu, tak se spustí
+        if(newIntent != null){
+            startActivity(menu.getMenu(id));
+            finish();
+        }else {
+            //pokud byla stisknuta položka odhlášení
+            Logout logout = new Logout(thisActivity, this);
+            logout.logout();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

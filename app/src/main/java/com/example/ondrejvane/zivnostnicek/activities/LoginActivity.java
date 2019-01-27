@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
+import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 
@@ -23,10 +23,10 @@ public class LoginActivity extends AppCompatActivity {
     private EditText userAddressET;
     private EditText passwordET;
     private CheckBox rememberMeBox;
-    private DatabaseHelper databaseHelper;
 
     private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
+    private Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +62,10 @@ public class LoginActivity extends AppCompatActivity {
         passwordET = findViewById(R.id.userPassword);
         rememberMeBox = findViewById(R.id.checkBox);
         userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
-        //databaseHelper = new DatabaseHelper(LoginActivity.this);
         hashPassword = new HashPassword();
+        settings = Settings.getInstance();
+
+
     }
 
     /**
@@ -107,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
     public void logIn(View view) {
 
-        if (checkIfIsAllFilled() == true){
+        if (checkIfIsAllFilled()){
 
             String hashedPassword = hashPassword.hashPassword(passwordET.getText().toString());
 
@@ -141,13 +143,13 @@ public class LoginActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean("IS_LOGEDIN", true);
             editor.putString("USER", userAddress);
-            editor.commit();
+            editor.apply();
 
         }else {
             SharedPreferences.Editor editor = sp.edit();
             editor.putBoolean("IS_LOGEDIN", false);
             editor.putString("USER", userAddress);
-            editor.commit();
+            editor.apply();
         }
 
     }
@@ -156,11 +158,12 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
         boolean logeIn = sp.getBoolean("IS_LOGEDIN", false);
 
-        if (logeIn == true){
+        if (logeIn){
             loadAllInformation();
             return logeIn;
+        }else {
+            return logeIn;
         }
-        return logeIn;
     }
 
     private void loadAllInformation(){
@@ -173,6 +176,9 @@ public class LoginActivity extends AppCompatActivity {
         userInformation.setFullName(user.getFullName());
         userInformation.setUserId(user.getId());
 
+        //načtení dat o nstavení aplikace ze shared preferences
+        settings.readSettingsFromSharedPreferences(this);
+
     }
 
     private void loadAllInformation(String emailAddress){
@@ -181,5 +187,8 @@ public class LoginActivity extends AppCompatActivity {
         userInformation.setMail(user.getEmail());
         userInformation.setFullName(user.getFullName());
         userInformation.setUserId(user.getId());
+
+        //načtení dat o nstavení aplikace ze shared preferences
+        settings.readSettingsFromSharedPreferences(this);
     }
 }

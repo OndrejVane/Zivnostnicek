@@ -11,20 +11,6 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 public class TraderDatabaseHelper extends DatabaseHelper {
 
-    private static final String TABLE_TRADER = "trader";
-
-    //Názvy atributů v tabulce trader
-    private static final String COLUMN_TRADER_ID = "trader_id";                             //Primární klíč
-    private static final String COLUMN_TRADER_USER_ID = "trader_user_id";                   //Cizí klíč
-    private static final String COLUMN_TRADER_NAME = "trader_name";                         //Název firmy
-    private static final String COLUMN_TRADER_PHONE_NUMBER = "trader_phone_number";         //Telefoní číslo
-    private static final String COLUMN_TRADER_CONTACT_PERSON = "trader_contact_person";     //Kontaktní osoba
-    private static final String COLUMN_TRADER_IN = "trader_in";                             //IČO
-    private static final String COLUMN_TRADER_TIN = "trader_tin";                           //DIČ
-    private static final String COLUMN_TRADER_CITY = "trader_city";                         //Město obchodníka
-    private static final String COLUMN_TRADER_STREET = "trader_street";                     //Ulice obchodníka
-    private static final String COLUMN_TRADER_HOUSE_NUMBER = "trader_house_number";         //Číslo popisné obchodníka
-
 
     /**
      * Constructor

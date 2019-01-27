@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.example.ondrejvane.zivnostnicek.R;
 
 public class ListViewStorageAdapter extends BaseAdapter {
-    Activity context;
-    String storageItemName[];
-    float storageItemQuantity[];
-    String storageItemUnit[];
+    private Activity context;
+    private String[] storageItemName;
+    private float[] storageItemQuantity;
+    private String[] storageItemUnit;
 
     public ListViewStorageAdapter(Activity context, String[] storageItemName,float storageItemQuantity[], String[] storageItemUnit) {
         this.context = context;
@@ -23,17 +23,14 @@ public class ListViewStorageAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return storageItemName.length;
     }
 
     public Object getItem(int position) {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return null;
     }
 
     public long getItemId(int position) {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return 0;
     }
 

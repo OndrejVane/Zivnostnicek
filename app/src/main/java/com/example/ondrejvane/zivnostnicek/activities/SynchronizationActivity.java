@@ -14,11 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
@@ -65,65 +60,35 @@ public class SynchronizationActivity extends AppCompatActivity
     }
 
 
-
+    /**
+     * Metoda, která se stará o hlavní navigační menu aplikace.
+     * @param item  vybraná položka v menu
+     * @return      boolean
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        //id vybrané položky v menu
         int id = item.getItemId();
 
-        switch (id){
+        SynchronizationActivity thisActivity = SynchronizationActivity.this;
+        Intent newIntent;
 
-            case R.id.nav_home:
-                Intent home = new Intent(SynchronizationActivity.this, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
+        //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
+        com.example.ondrejvane.zivnostnicek.menu.Menu menu = new com.example.ondrejvane.zivnostnicek.menu.Menu(thisActivity);
+        newIntent = menu.getMenu(id);
 
-            case R.id.nav_income:
-                Intent income = new Intent(SynchronizationActivity.this, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(SynchronizationActivity.this, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(SynchronizationActivity.this, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(SynchronizationActivity.this, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(SynchronizationActivity.this, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(SynchronizationActivity.this, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(SynchronizationActivity.this, this);
-                logout.logout();
-                break;
-
+        //pokud jedná o nějakou aktivitu, tak se spustí
+        if(newIntent != null){
+            startActivity(menu.getMenu(id));
+            finish();
+        }else {
+            //pokud byla stisknuta položka odhlášení
+            Logout logout = new Logout(thisActivity, this);
+            logout.logout();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

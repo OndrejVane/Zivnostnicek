@@ -19,17 +19,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.ArrayUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.menu.Menu;
 
 /**
  * Aktivita, která zobrazí všechny obchodníky příslušného uživatele.
@@ -45,7 +41,7 @@ public class TraderActivity extends AppCompatActivity
     private String[] traderName;
     private String[] traderContactPerson;
     private int[] ID;
-    private int globalPosition;
+    private int[] holderId;     //pole všech id nalezených v db
 
     /**
      * Metoda, která se provede při spuštění akctivity a porovede nezbytné
@@ -91,11 +87,13 @@ public class TraderActivity extends AppCompatActivity
         listViewTrader.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                globalPosition = position;
-                Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
-                intent.putExtra("TRADER_ID", ID[globalPosition]);
-                startActivity(intent);
-                finish();
+                int traderId = ID[position];
+                if(traderId != -1){
+                    Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
+                    intent.putExtra("TRADER_ID", traderId);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -119,43 +117,64 @@ public class TraderActivity extends AppCompatActivity
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
                 String tempTraderName[];
                 String tempTraderContactPerson[];
+                int tempId[];
+                String findingString = inputSearch.getText().toString().toLowerCase();
                 if (traderName.length == 0){
                     tempTraderName = new String [1];
                     tempTraderContactPerson = new String [1];
+                    tempId = new int[1];
                     tempTraderName[0]=getString(R.string.no_result);
                     tempTraderContactPerson[0]=getString(R.string.no_result);
+                    tempId[0] = -1;
+                    ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
                     return;
 
                 }else {
-                    tempTraderName = new String [traderName.length];
-                    tempTraderContactPerson = new String [traderContactPerson.length];
+                    //zjištění počtu nalezených obchodníků a vytvoření pole příslušné délky pro data
+                    int foundTraders = 0;
+                    for (int i = 0; i<traderName.length;i++){
+                        if (traderName[i].toLowerCase().contains(findingString) ||  traderContactPerson[i].toLowerCase().contains(findingString)){
+                            foundTraders++;
+                        }
+                    }
+                    tempTraderName = new String [foundTraders];
+                    tempTraderContactPerson = new String [foundTraders];
+                    tempId = new int[foundTraders];
                 }
                 int tempI=0;
                 boolean found = false;
-                String findingString = inputSearch.getText().toString().toLowerCase();
+
 
                 for (int i = 0; i<traderName.length;i++){
                     if (traderName[i].toLowerCase().contains(findingString) ||  traderContactPerson[i].toLowerCase().contains(findingString)){
                         tempTraderName[tempI] = traderName[i];
                         tempTraderContactPerson[tempI] = traderContactPerson[i];
+                        tempId[tempI] = holderId[i];
                         tempI++;
                         found = true;
                     }
                 }
                 if (found){
+                    ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
                 }
                 else {
+                    tempTraderName = new String [1];
+                    tempTraderContactPerson = new String [1];
+                    tempId = new int[1];
                     tempTraderName[0]=getString(R.string.no_result);
-                    tempTraderContactPerson[0] = getString(R.string.no_result);
+                    tempTraderContactPerson[0]=getString(R.string.no_result);
+                    tempId[0] = -1;
+                    ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
                     listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
+                    return;
                 }
 
             }
@@ -176,7 +195,8 @@ public class TraderActivity extends AppCompatActivity
         UserInformation userInformation = UserInformation.getInstance();
         traderDatabaseHelper = new TraderDatabaseHelper(TraderActivity.this);
         temp = traderDatabaseHelper.getTradersData(userInformation.getUserId());
-        ID = arrayStringToInteger(temp[0]);
+        ID = ArrayUtility.arrayStringToInteger(temp[0]);
+        holderId = ArrayUtility.arrayStringToInteger(temp[0]);
         traderName = temp[1];
         traderContactPerson = temp[2];
 
@@ -186,19 +206,6 @@ public class TraderActivity extends AppCompatActivity
         listViewTrader.setAdapter(listViewTraderAdapter);
     }
 
-    /**
-     * Metoda, která převede pole strngu(čísel) na pole integeru.
-     * @param strings   String[]    pole stringu(čísel)
-     * @return          int[]       pole integeru
-     */
-    private int[] arrayStringToInteger(String[] strings) {
-        int[] integers = new int[strings.length];
-        for (int i = 0; i<strings.length; i++){
-            integers[i] = Integer.parseInt(strings[i]);
-        }
-        return integers;
-
-    }
 
     /**
      * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
@@ -216,67 +223,31 @@ public class TraderActivity extends AppCompatActivity
 
 
     /**
-     * Metoda, která se stará o hlavní navigační menu aplikace
-     * a přechod mezi hlavními aktivitami.
+     * Metoda, která se stará o hlavní navigační menu aplikace.
      * @param item  vybraná položka v menu
-     * @return  boolean
+     * @return      boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        //id vybrané položky v menu
         int id = item.getItemId();
+
         TraderActivity thisActivity = TraderActivity.this;
+        Intent newIntent;
 
-        switch (id){
+        //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
+        Menu menu = new Menu(thisActivity);
+        newIntent = menu.getMenu(id);
 
-            case R.id.nav_home:
-                Intent home = new Intent(thisActivity, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(thisActivity, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(thisActivity, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(thisActivity, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(thisActivity, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(thisActivity, this);
-                logout.logout();
-                break;
-
+        //pokud jedná o nějakou aktivitu, tak se spustí
+        if(newIntent != null){
+            startActivity(menu.getMenu(id));
+            finish();
+        }else {
+            //pokud byla stisknuta položka odhlášení
+            Logout logout = new Logout(thisActivity, this);
+            logout.logout();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

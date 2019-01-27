@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.income;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -11,16 +12,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
-import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderActivity;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
+import com.example.ondrejvane.zivnostnicek.adapters.ListViewIncomeAdapter;
+import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
+import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.ArrayUtility;
+import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.helper.Settings;
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 
 /**
  * Aktivity pro zobrazení všech příjmu.
@@ -28,16 +35,36 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 public class IncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private Spinner spinnerIncomeYear;
+    private Spinner spinnerincomeMonth;
+    private ListView listViewIncome;
+    private ListViewIncomeAdapter listViewIncomeAdapter;
+    private BillDatabaseHelper billDatabaseHelper;
+
+    //proměnné, které obsahují všechny příjmy načtené z databáze
+    private String[] incomeName;
+    private String[] incomeDate;
+    private String[] incomeAmount;
+    private int[] ID;
+    private int[] holderId;
+
+    //pomocné proměnné pro vyhledávání
+    int[] tempIdYear;
+    String[] tempIncomeNameYear;
+    String[] tempIncomeDateYear;
+    String[] tempIncomeAmountYear;
+
+
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -61,7 +88,219 @@ public class IncomeActivity extends AppCompatActivity
 
         Header header = new Header( navigationView, this);
         header.setTextToHeader();
+
+        initActivity();
+
+        listViewIncome.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int incomeId = ID[position];
+                if(incomeId != -1){
+                    /*
+                    Intent intent = new Intent(IncomeActivity.this, IncomeShowActivity.class);
+                    intent.putExtra("BILL_ID", incomeId);
+                    startActivity(intent);
+                    finish();
+                    */
+                }
+            }
+        });
+
+
+        spinnerIncomeYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if(position != 0){
+                    String findingYear= spinnerIncomeYear.getSelectedItem().toString();
+                    if(incomeName.length == 0){
+                        tempIncomeNameYear = new String[1];
+                        tempIncomeDateYear = new String[1];
+                        tempIncomeAmountYear = new String[1];
+                        tempIdYear = new int[1];
+                        tempIncomeNameYear[0] = getString(R.string.no_result);
+                        tempIncomeDateYear[0] = getString(R.string.no_result);
+                        tempIncomeAmountYear[0] = "";
+                        tempIdYear[0] = -1;
+                        ID = tempIdYear;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYear, tempIncomeDateYear, tempIncomeAmountYear);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                        return;
+                    }else {
+                        int foundIncomes = 0;
+                        for (int i = 0; i < incomeName.length; i++){
+                            if(FormatUtility.getYearFromDate(incomeDate[i]).equals(findingYear)){
+                                foundIncomes++;
+                            }
+                        }
+                        tempIncomeNameYear = new String[foundIncomes];
+                        tempIncomeDateYear = new String[foundIncomes];
+                        tempIncomeAmountYear = new String[foundIncomes];
+                        tempIdYear = new int[foundIncomes];
+                    }
+
+                    int tempI=0;
+                    boolean found = false;
+
+                    for (int i = 0; i < incomeName.length; i++){
+                        if(FormatUtility.getYearFromDate(incomeDate[i]).equals(findingYear)){
+                            tempIncomeNameYear[tempI] = incomeName[i];
+                            tempIncomeDateYear[tempI] = incomeDate[i];
+                            tempIncomeAmountYear[tempI] = incomeAmount[i];
+                            tempIdYear[tempI] = holderId[i];
+                            tempI++;
+                            found = true;
+                        }
+                    }
+
+                    if(found){
+                        ID = holderId;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYear, tempIncomeDateYear, tempIncomeAmountYear);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                    }else {
+                        tempIncomeNameYear = new String[1];
+                        tempIncomeDateYear = new String[1];
+                        tempIncomeAmountYear = new String[1];
+                        tempIdYear = new int[1];
+                        tempIncomeNameYear[0] = getString(R.string.no_result);
+                        tempIncomeDateYear[0] = getString(R.string.no_result);
+                        tempIncomeAmountYear[0] = "";
+                        tempIdYear[0] = -1;
+                        ID = tempIdYear;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYear, tempIncomeDateYear, tempIncomeAmountYear);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                    }
+                }else {
+                    tempIdYear = holderId;
+                    tempIncomeNameYear = incomeName;
+                    tempIncomeDateYear = incomeDate;
+                    tempIncomeAmountYear = incomeAmount;
+                    //nastavení dat do adapteru pro zobrazení
+                    listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, incomeName, incomeDate, incomeAmount);
+                    listViewIncome.setAdapter(listViewIncomeAdapter);
+                    ID = holderId;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        spinnerincomeMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                int[] tempId;
+                String[] tempIncomeNameYearAndMonth;
+                String[] tempIncomeDateYearAndMonth;
+                String[] tempIncomeAmountYearAndMonth;
+                if(position != 0) {
+                    String findingMonth = Integer.toString(position);
+                    String findingYear = spinnerIncomeYear.getSelectedItem().toString();
+                    if(incomeName.length == 0){
+                        tempIncomeNameYearAndMonth = new String[1];
+                        tempIncomeDateYearAndMonth = new String[1];
+                        tempIncomeAmountYearAndMonth = new String[1];
+                        tempId = new int[1];
+                        tempIncomeNameYearAndMonth[0] = getString(R.string.no_result);
+                        tempIncomeDateYearAndMonth[0] = getString(R.string.no_result);
+                        tempIncomeAmountYearAndMonth[0] = "";
+                        tempId[0] = -1;
+                        ID = tempId;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYearAndMonth, tempIncomeDateYearAndMonth, tempIncomeAmountYearAndMonth);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                        return;
+                    }else {
+                        int foundIncomes = 0;
+                        for (int i = 0; i < incomeName.length; i++){
+                            if(FormatUtility.getYearFromDate(incomeDate[i]).equals(findingYear) && FormatUtility.getMonthFromDate(incomeDate[i]).equals(findingMonth)){
+                                foundIncomes++;
+                            }
+                        }
+                        tempIncomeNameYearAndMonth = new String[foundIncomes];
+                        tempIncomeDateYearAndMonth = new String[foundIncomes];
+                        tempIncomeAmountYearAndMonth = new String[foundIncomes];
+                        tempId = new int[foundIncomes];
+                    }
+
+                    int tempI=0;
+                    boolean found = false;
+
+                    for (int i = 0; i < incomeName.length; i++){
+                        if(FormatUtility.getYearFromDate(incomeDate[i]).equals(findingYear) && FormatUtility.getMonthFromDate(incomeDate[i]).equals(findingMonth)){
+                            tempIncomeNameYearAndMonth[tempI] = incomeName[i];
+                            tempIncomeDateYearAndMonth[tempI] = incomeDate[i];
+                            tempIncomeAmountYearAndMonth[tempI] = incomeAmount[i];
+                            tempId[tempI] = holderId[i];
+                            tempI++;
+                            found = true;
+                        }
+                    }
+
+                    if(found){
+                        ID = holderId;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYearAndMonth, tempIncomeDateYearAndMonth, tempIncomeAmountYearAndMonth);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                    }else {
+                        tempIncomeNameYearAndMonth = new String[1];
+                        tempIncomeDateYearAndMonth = new String[1];
+                        tempIncomeAmountYearAndMonth = new String[1];
+                        tempId = new int[1];
+                        tempIncomeNameYearAndMonth[0] = getString(R.string.no_result);
+                        tempIncomeDateYearAndMonth[0] = getString(R.string.no_result);
+                        tempIncomeAmountYearAndMonth[0] = "";
+                        tempId[0] = -1;
+                        ID = tempId;
+                        listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYearAndMonth, tempIncomeDateYearAndMonth, tempIncomeAmountYearAndMonth);
+                        listViewIncome.setAdapter(listViewIncomeAdapter);
+                        return;
+                    }
+                }else {
+                    ID = tempIdYear;
+                    listViewIncomeAdapter = new ListViewIncomeAdapter(IncomeActivity.this, tempIncomeNameYear, tempIncomeDateYear, tempIncomeAmountYear);
+                    listViewIncome.setAdapter(listViewIncomeAdapter);
+                }
+
+                }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
     }
+
+    private void initActivity() {
+        String[][] temp;
+        spinnerIncomeYear = findViewById(R.id.spinnerIncomeYear);
+        spinnerincomeMonth = findViewById(R.id.spinnerIncomeMonth);
+        listViewIncome = findViewById(R.id.listViewIncome);
+
+
+        //pokud je v nastavení vybrán pouze jeden rok, tak zobrazím do spinneru a zablokuji ho
+        if(Settings.getInstance().isIsPickedOneYear()){
+            spinnerIncomeYear.setEnabled(false);
+            spinnerIncomeYear.setSelection(Settings.getInstance().getArrayYearId());
+        }
+
+        //inicializace databáze
+        billDatabaseHelper = new BillDatabaseHelper(IncomeActivity.this);
+        //načtení příslušných dat z databáze
+        temp = billDatabaseHelper.getBillData(UserInformation.getInstance().getUserId(), 0); // 0 = hledám pouze příjmy
+        ID = ArrayUtility.arrayStringToInteger(temp[0]);
+        holderId = ArrayUtility.arrayStringToInteger(temp[0]);
+        incomeName = temp[1];
+        incomeDate = temp[2];
+        incomeAmount = temp[3];
+
+        //nastavení dat do adapteru pro zobrazení
+        listViewIncomeAdapter = new ListViewIncomeAdapter(this, incomeName, incomeDate, incomeAmount);
+        listViewIncome.setAdapter(listViewIncomeAdapter);
+
+    }
+
+
 
     /**
      * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
@@ -79,67 +318,31 @@ public class IncomeActivity extends AppCompatActivity
 
 
     /**
-     * Metoda, která se stará o hlavní navigační menu aplikace
-     * a přechod mezi hlavními aktivitami.
+     * Metoda, která se stará o hlavní navigační menu aplikace.
      * @param item  vybraná položka v menu
      * @return      boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        //id vybrané položky v menu
         int id = item.getItemId();
+
         IncomeActivity thisActivity = IncomeActivity.this;
+        Intent newIntent;
 
-        switch (id){
+        //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
+        com.example.ondrejvane.zivnostnicek.menu.Menu menu = new com.example.ondrejvane.zivnostnicek.menu.Menu(thisActivity);
+        newIntent = menu.getMenu(id);
 
-            case R.id.nav_home:
-                Intent home = new Intent(thisActivity, HomeActivity.class);
-                startActivity(home);
-                finish();
-                break;
-
-            case R.id.nav_income:
-                Intent income = new Intent(thisActivity, IncomeActivity.class);
-                startActivity(income);
-                finish();
-                break;
-
-            case R.id.nav_expense:
-                Intent expense = new Intent(thisActivity, ExpenseActivity.class);
-                startActivity(expense);
-                finish();
-                break;
-
-            case R.id.nav_traders:
-                Intent traders = new Intent(thisActivity, TraderActivity.class);
-                startActivity(traders);
-                finish();
-                break;
-
-            case R.id.nav_storage:
-                Intent storage = new Intent(thisActivity, StorageActivity.class);
-                startActivity(storage);
-                finish();
-                break;
-
-            case R.id.nav_info:
-                Intent info = new Intent(thisActivity, InfoActivity.class);
-                startActivity(info);
-                finish();
-                break;
-
-            case R.id.nav_sync:
-                Intent sync = new Intent(thisActivity, SynchronizationActivity.class);
-                startActivity(sync);
-                finish();
-                break;
-
-            case R.id.nav_logout:
-                Logout logout = new Logout(thisActivity, this);
-                logout.logout();
-                break;
-
+        //pokud jedná o nějakou aktivitu, tak se spustí
+        if(newIntent != null){
+            startActivity(menu.getMenu(id));
+            finish();
+        }else {
+            //pokud byla stisknuta položka odhlášení
+            Logout logout = new Logout(thisActivity, this);
+            logout.logout();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

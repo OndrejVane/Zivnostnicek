@@ -5,16 +5,13 @@ public class StorageItem {
     private int id;
     private int userId;
     private String name;
-    private float quantity;
     private String unit;
     private String note;
 
-    public StorageItem(int userId, String name, float quantity, String unit, String note){
+    public StorageItem(int userId, String name, String unit){
         this.userId = userId;
         this.name = name;
-        this.quantity = quantity;
         this.unit = unit;
-        this.note = note;
     }
 
     public StorageItem(){
@@ -35,14 +32,6 @@ public class StorageItem {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public float getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(float quantity) {
-        this.quantity = quantity;
     }
 
     public String getUnit() {

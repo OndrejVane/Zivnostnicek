@@ -47,11 +47,17 @@ public class Logout extends AppCompatActivity {
     }
 
     private void logOutActivity() {
+
+        //resetování instací pro user data a pro user nastavení
+        Settings.getInstance().resetInstance();
+        UserInformation.getInstance().resetInstace();
+
+        //aktualizace dat v shared preferences o přihlášeném uživateli
         SharedPreferences sp = context.getSharedPreferences("USER", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putBoolean("IS_LOGEDIN", false);
         editor.putString("USER", null);
-        editor.commit();
+        editor.apply();
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
         ((Activity)context).finish();

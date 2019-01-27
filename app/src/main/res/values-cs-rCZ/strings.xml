@@ -134,10 +134,63 @@
     <string name="title_activity_storage_edit">Editce skladové položky</string>
     <string name="edit_information_about_storage_item">Editujte informace o skladové položce</string>
     <string name="storage_item_has_been_edited">Skladová položka byla aktualizována</string>
+    <string name="add">Přidejte</string>
+    <string name="add_quantity">Přidejte množství</string>
+    <string name="select_storage_item">vyberte skladovou položku</string>
+    <string name="fill_information_about_income">Vyplňte údaje o příjmu</string>
+    <string name="name_of_bill_is_empty">Název faktury je prázdný</string>
+    <string name="amount_is_empty">Částka je prázdná</string>
+    <string name="income_has_been_added">Příjem byl přidán</string>
+    <string name="year">Rok:</string>
+    <string name="month">Měsíc:</string>
+    <string name="settings">Nastavení</string>
+    <string name="allow_foreign_IN">Povolit zahraniční IČ</string>
+    <string name="allow_foreign_TIN">Povolit zahraniční DIČ</string>
+    <string name="display_data_for_selected_year">Zobrazovat data pouze pro vybraný rok</string>
+    <string name="save_settings">Uložit nastavení</string>
+    <string name="settings_saved">Nastavení bylo uloženo</string>
+    <string name="select_year">Vyberte rok</string>
 
     <string-array name="photo">
         <item>galerie</item>
         <item>fotoaparátu</item>
     </string-array>
 
+    <string-array name="income_dialog">
+        <item>novou skladovou položku</item>
+        <item>existující skladovou položku</item>
+    </string-array>
+
+    <string-array name="years">
+        <item>Nevybráno</item>
+        <item>2018</item>
+        <item>2019</item>
+        <item>2020</item>
+        <item>2021</item>
+        <item>2022</item>
+        <item>2023</item>
+        <item>2024</item>
+        <item>2025</item>
+        <item>2026</item>
+        <item>2027</item>
+        <item>2028</item>
+        <item>2029</item>
+        <item>2030</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Nevybráno</item>
+        <item>Leden</item>
+        <item>Únor</item>
+        <item>Březen</item>
+        <item>Duben</item>
+        <item>Květen</item>
+        <item>Červen</item>
+        <item>Červenec</item>
+        <item>Srpen</item>
+        <item>Září</item>
+        <item>Říjen</item>
+        <item>Listopad</item>
+        <item>Prosinec</item>
+    </string-array>
 </resources>

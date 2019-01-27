@@ -15,6 +15,7 @@
     tools:context=".activities.income.IncomeNewActivity"
     tools:showIn="@layout/app_bar_income_new">
 
+
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,17 +27,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="@string/fill_information_about_expense"
+            android:text="@string/fill_information_about_income"
             android:textSize="16sp" />
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutExpenseNumber"
+            android:id="@+id/textInputLayoutIncomeNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextNumber"
+                android:id="@+id/textInputEditName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/number_of_bill_name"
@@ -47,13 +48,13 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/textInputLayoutExpenseAmount"
+            android:id="@+id/textInputLayoutIncomeAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp">
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/textInputEditTextExpenseAmount"
+                android:id="@+id/textInputEditTextAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/amount"
@@ -79,7 +80,7 @@
                     android:text="@string/VAT"/>
 
                 <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/spinnerVAT"
+                    android:id="@+id/spinnerVATincome"
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:entries="@array/vat_amount"
@@ -141,6 +142,14 @@
             android:layout_height="wrap_content"
             android:text="@string/expense_items"/>
 
+        <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+            android:id="@+id/listViewIncomeStorageItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView>
+
+        <!--Tady byl muj předchozí list view-->
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textaIn"
             android:layout_width="match_parent"
@@ -157,7 +166,7 @@
                     android:layout_height="35dp"
                     android:src="@drawable/ic_plus"
                     android:layout_gravity="left"
-                    android:onClick="showItemDialog"
+                    android:onClick="getStorageItem"
                     />
 
                 <TextView
@@ -188,6 +197,7 @@
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:onClick="submitNewIncomeForm"
             android:text="@string/add_income"/>
 
     </android.support.v7.widget.LinearLayoutCompat>

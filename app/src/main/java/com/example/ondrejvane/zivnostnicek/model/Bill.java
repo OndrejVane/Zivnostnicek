@@ -5,16 +5,34 @@ import android.graphics.Bitmap;
 public class Bill {
 
     private int id;
-    private String billNumber;
-    private float billAmount;
-    private int billVAT;
-    private int billTraderId;
-    private String billDate;
-    private Bitmap billPhoto;
-    private String billPlace;
-    private int billTypeId;
-    private int billUserId;
-    private int billIsExpense;
+    private String name;
+    private float amount;
+    private int VAT;
+    private int traderId;
+    private String date;
+    private Bitmap photo;
+    private String place;
+    private int typeId;
+    private int userId;
+    private int isExpense;
+
+
+    public Bill(int id, String name, float amount, int VAT, int traderId, String date, Bitmap photo, String place, int typeId, int userId, int isExpense) {
+        this.id = id;
+        this.name = name;
+        this.amount = amount;
+        this.VAT = VAT;
+        this.traderId = traderId;
+        this.date = date;
+        this.photo = photo;
+        this.place = place;
+        this.typeId = typeId;
+        this.userId = userId;
+        this.isExpense = isExpense;
+    }
+
+    public Bill() {
+    }
 
     public int getId() {
         return id;
@@ -24,83 +42,83 @@ public class Bill {
         this.id = id;
     }
 
-    public String getBillNumber() {
-        return billNumber;
+    public String getName() {
+        return name;
     }
 
-    public void setBillNumber(String billNumber) {
-        this.billNumber = billNumber;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public float getBillAmount() {
-        return billAmount;
+    public float getAmount() {
+        return amount;
     }
 
-    public void setBillAmount(float billAmount) {
-        this.billAmount = billAmount;
+    public void setAmount(float amount) {
+        this.amount = amount;
     }
 
-    public int getBillVAT() {
-        return billVAT;
+    public int getVAT() {
+        return VAT;
     }
 
-    public void setBillVAT(int billVAT) {
-        this.billVAT = billVAT;
+    public void setVAT(int VAT) {
+        this.VAT = VAT;
     }
 
-    public int getBillTraderId() {
-        return billTraderId;
+    public int getTraderId() {
+        return traderId;
     }
 
-    public void setBillTraderId(int billTraderId) {
-        this.billTraderId = billTraderId;
+    public void setTraderId(int traderId) {
+        this.traderId = traderId;
     }
 
-    public String getBillDate() {
-        return billDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setBillDate(String billDate) {
-        this.billDate = billDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public Bitmap getBillPhoto() {
-        return billPhoto;
+    public Bitmap getPhoto() {
+        return photo;
     }
 
-    public void setBillPhoto(Bitmap billPhoto) {
-        this.billPhoto = billPhoto;
+    public void setPhoto(Bitmap photo) {
+        this.photo = photo;
     }
 
-    public String getBillPlace() {
-        return billPlace;
+    public String getPlace() {
+        return place;
     }
 
-    public void setBillPlace(String billPlace) {
-        this.billPlace = billPlace;
+    public void setPlace(String place) {
+        this.place = place;
     }
 
-    public int getBillTypeId() {
-        return billTypeId;
+    public int getTypeId() {
+        return typeId;
     }
 
-    public void setBillTypeId(int billTypeId) {
-        this.billTypeId = billTypeId;
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
     }
 
-    public int getBillUserId() {
-        return billUserId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setBillUserId(int billUserId) {
-        this.billUserId = billUserId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public int getBillIsExpense() {
-        return billIsExpense;
+    public int getIsExpense() {
+        return isExpense;
     }
 
-    public void setBillIsExpense(int billIsExpense) {
-        this.billIsExpense = billIsExpense;
+    public void setIsExpense(int isExpense) {
+        this.isExpense = isExpense;
     }
 }
