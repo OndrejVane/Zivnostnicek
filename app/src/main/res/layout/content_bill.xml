@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity"
-    tools:showIn="@layout/app_bar_income">
+    tools:context="com.example.ondrejvane.zivnostnicek.activities.bill.BillActivity"
+    tools:showIn="@layout/app_bar_bill">
 
 
     <!--Linear layout pro výber roku a měsíce-->
@@ -59,11 +59,13 @@
         android:layout_width="fill_parent"
         android:layout_height="2dip"
         android:background="@color/grey"
-        android:layout_below="@+id/linearLayoutIncome"/>
+        android:layout_below="@+id/linearLayoutIncome"
+        />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
         android:id="@+id/listViewIncome"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/linearLayoutIncome"

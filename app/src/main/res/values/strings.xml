@@ -100,7 +100,9 @@
     <string name="title_activity_expense_new">ExpenseNewActivity</string>
     <string name="fill_information_about_expense">Fill information about expense</string>
     <string name="number_of_bill_name">*Number of bill(Name)</string>
+    <string name="bill_name">Number of bill(Name)</string>
     <string name="amount">*Amount</string>
+    <string name="amount_show">Amount</string>
     <string name="VAT">VAT[%]</string>
     <string name="valuty_list">Exchange Rates</string>
     <string name="basic_currency">Basic currency</string>
@@ -162,7 +164,12 @@
     <string name="save_settings">Save settings</string>
     <string name="settings_saved">Settings saved</string>
     <string name="select_year">Select year</string>
-
+    <string name="picture_is_not_available">Picture is not available</string>
+    <string name="not_selected">Not selected</string>
+    <string name="bill_has_been_deleted">Bill has been deleted</string>
+    <string name="bill_has_not_been_deleted">Bill has not been deleted</string>
+    <string name="title_activity_expense_show">Show expense</string>
+    <string name="bill_delete_question">Are you really want to delete this bill?</string>
     <string-array name="vat_amount">
         <item>21</item>
         <item>15</item>
@@ -213,6 +220,7 @@
         <item>December</item>
     </string-array>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_income_show">Show income</string>
 
 
 </resources>

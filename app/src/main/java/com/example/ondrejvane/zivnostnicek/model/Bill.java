@@ -10,14 +10,14 @@ public class Bill {
     private int VAT;
     private int traderId;
     private String date;
-    private Bitmap photo;
+    private String photo;
     private String place;
     private int typeId;
     private int userId;
     private int isExpense;
 
 
-    public Bill(int id, String name, float amount, int VAT, int traderId, String date, Bitmap photo, String place, int typeId, int userId, int isExpense) {
+    public Bill(int id, String name, float amount, int VAT, int traderId, String date, String photo, String place, int typeId, int userId, int isExpense) {
         this.id = id;
         this.name = name;
         this.amount = amount;
@@ -82,11 +82,11 @@ public class Bill {
         this.date = date;
     }
 
-    public Bitmap getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public void setPhoto(Bitmap photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
     }
 

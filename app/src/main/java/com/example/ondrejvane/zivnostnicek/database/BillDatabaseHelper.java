@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
+import com.example.ondrejvane.zivnostnicek.model.Note;
 
 public class BillDatabaseHelper extends DatabaseHelper{
 
@@ -31,7 +32,7 @@ public class BillDatabaseHelper extends DatabaseHelper{
         values.put(COLUMN_BILL_VAT, bill.getVAT());
         values.put(COLUMN_BILL_TRADER_ID, bill.getTraderId());
         values.put(COLUMN_BILL_DATE, bill.getDate());
-        values.put(COLUMN_BILL_PHOTO, DbBitmapUtility.getBytes(bill.getPhoto()));
+        values.put(COLUMN_BILL_PHOTO, bill.getPhoto());
         values.put(COLUMN_BILL_USER_ID, bill.getUserId());
         values.put(COLUMN_BILL_IS_EXPENSE, bill.getIsExpense());
         billId = db.insert(TABLE_BILL, null, values);
@@ -85,5 +86,62 @@ public class BillDatabaseHelper extends DatabaseHelper{
         return data;
     }
 
+    public Bill getBillById(int billId){
+
+        Bill bill = new Bill();
+
+        String[] columns = {COLUMN_BILL_NUMBER, COLUMN_BILL_AMOUNT, COLUMN_BILL_VAT, COLUMN_BILL_DATE, COLUMN_BILL_TRADER_ID, COLUMN_BILL_PHOTO, COLUMN_BILL_IS_EXPENSE};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_ID + " = ?";
+
+        String[] selectionArgs = {Integer.toString(billId)};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+
+        if(cursor.moveToFirst()){
+            bill.setId(billId);
+            bill.setName(cursor.getString(0));
+            bill.setAmount(cursor.getFloat(1));
+            bill.setVAT(cursor.getInt(2));
+            bill.setDate(cursor.getString(3));
+            bill.setTraderId(cursor.getInt(4));
+            bill.setPhoto(cursor.getString(5));
+            bill.setIsExpense(cursor.getInt(6));
+        }
+
+        db.close();
+        cursor.close();
+
+        return bill;
+
+
+    }
+
+    public boolean deleteBillWithId(int billId){
+
+        boolean result;
+
+        String where = COLUMN_BILL_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(billId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
+        itemQuantityDatabaseHelper.deleteItemQuantityByBillId(billId);
+
+        result = db.delete(TABLE_BILL, where, deleteArgs) > 0;
+        return result;
+
+    }
 
 }

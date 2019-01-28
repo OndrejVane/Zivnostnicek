@@ -18,11 +18,11 @@ public class FormatUtility {
         int possition = input.indexOf('.');
 
         if(possition <= 3){
-            output ="+ " + input + ",-";
+            output ="+" + input + ",-";
             return output;
         }else if (possition <= 6){
             output = input.substring(0, possition-3) + " " + input.substring(possition-3);
-            output = "+ " + output + ",-";
+            output = "+" + output + ",-";
             return output;
         }
         return input;
@@ -44,11 +44,11 @@ public class FormatUtility {
         int possition = input.indexOf('.');
 
         if(possition <= 3){
-            output ="- " + input + ",-";
+            output ="-" + input + ",-";
             return output;
         }else if (possition <= 6){
             output = input.substring(0, possition-3) + " " + input.substring(possition-3);
-            output = "- " + output + ",-";
+            output = "-" + output + ",-";
             return output;
         }
         return input;

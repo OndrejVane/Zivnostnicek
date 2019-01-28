@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
@@ -14,12 +15,17 @@ public class ListViewBillItemAdapter extends BaseAdapter {
     private String[] billItemName;
     private float[] billItemQuantity;
     private String[] billItemUnit;
+    private boolean isTrashHidden = false;
 
     public ListViewBillItemAdapter(Activity context, String[] billItemName, float[] billItemQuantity, String[] billItemUnit){
         this.context = context;
         this.billItemName = billItemName;
         this.billItemQuantity = billItemQuantity;
         this.billItemUnit = billItemUnit;
+    }
+
+    public void isTrashHidden(boolean isTrashHidden){
+        this.isTrashHidden = true;
     }
 
     public int getCount() {
@@ -41,6 +47,7 @@ public class ListViewBillItemAdapter extends BaseAdapter {
         TextView txtViewBillItemName;
         TextView txtViewBillItemQuantity;
         TextView txtViewBillItemUnit;
+        ImageView imageViewDelete;
     }
 
     /**
@@ -62,6 +69,10 @@ public class ListViewBillItemAdapter extends BaseAdapter {
             holder.txtViewBillItemName = convertView.findViewById(R.id.storageBillItemName);
             holder.txtViewBillItemQuantity = convertView.findViewById(R.id.storageBillItemQuantity);
             holder.txtViewBillItemUnit = convertView.findViewById(R.id.storageBillItemUnit);
+            if (isTrashHidden){
+                holder.imageViewDelete = convertView.findViewById(R.id.imgDeleteItem);
+                holder.imageViewDelete.setImageBitmap(null);
+            }
             convertView.setTag(holder);
         }
         else

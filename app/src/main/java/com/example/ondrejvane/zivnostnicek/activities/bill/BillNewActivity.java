@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.activities.income;
+package com.example.ondrejvane.zivnostnicek.activities.bill;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,17 +52,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class IncomeNewActivity extends AppCompatActivity
+public class BillNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    private boolean isExpense;
     private TextView mDisplayDate;  //Datum
     private ImageView photoView;    //foto
     private Spinner spinnerTrader;  //obchodník
-    private EditText incomeName;    //název / číslo faktury
-    private EditText incomeAmount;  //částka
-    private Spinner spinnerIncomeVat;   //DPH
-    private TextInputLayout layoutIncomeName;
-    private TextInputLayout layoutIncomeAmount;
+    private EditText billName;    //název / číslo faktury
+    private EditText billAmount;  //částka
+    private Spinner spinnerBillVat;   //DPH
+    private Button addBill;
+    private TextInputLayout layoutBillName;
+    private TextInputLayout layoutBillAmount;
+    private TextView fillLabel;
     private Calendar cal;
     private String[][] traders;
     private String[][] storageItems;
@@ -74,11 +77,12 @@ public class IncomeNewActivity extends AppCompatActivity
     private TraderDatabaseHelper traderDatabaseHelper;
     private BillDatabaseHelper billDatabaseHelper;
     private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
+    private Uri pictureUri = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_income_new);
+        setContentView(R.layout.activity_bill_new);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,24 +116,31 @@ public class IncomeNewActivity extends AppCompatActivity
      * Metoda, která inicializuje všechny prvky této aktivity
      */
     private void initActivity() {
+        isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+
         mDisplayDate = findViewById(R.id.editTextDate);
         photoView = findViewById(R.id.photoView);
         spinnerTrader = findViewById(R.id.spinnerTrader);
         expandableListView = findViewById(R.id.listViewIncomeStorageItem);
-        incomeName = findViewById(R.id.textInputEditName);
-        incomeAmount = findViewById(R.id.textInputEditTextAmount);
-        spinnerIncomeVat = findViewById(R.id.spinnerVATincome);
-        layoutIncomeName = findViewById(R.id.textInputLayoutIncomeNumber);
-        layoutIncomeAmount = findViewById(R.id.textInputLayoutIncomeAmount);
+        billName = findViewById(R.id.textInputEditName);
+        billAmount = findViewById(R.id.textInputEditTextAmount);
+        spinnerBillVat = findViewById(R.id.spinnerVATincome);
+        layoutBillName = findViewById(R.id.textInputLayoutIncomeNumber);
+        layoutBillAmount = findViewById(R.id.textInputLayoutIncomeAmount);
+        addBill = findViewById(R.id.buttonAddBill);
+        fillLabel = findViewById(R.id.textViewBillFill);
+
+        //zobrazení textu, podle toho, jestli jde o příjem nebo výdaj
+        setTextToActivity();
 
         //inicializace array listu pro položky faktury
         listOfItems = new ArrayList<>();
 
         //inicializace databáze
-        traderDatabaseHelper = new TraderDatabaseHelper(IncomeNewActivity.this);
-        storageItemDatabaseHelper = new StorageItemDatabaseHelper(IncomeNewActivity.this);
-        billDatabaseHelper = new BillDatabaseHelper(IncomeNewActivity.this);
-        itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(IncomeNewActivity.this);
+        traderDatabaseHelper = new TraderDatabaseHelper(BillNewActivity.this);
+        storageItemDatabaseHelper = new StorageItemDatabaseHelper(BillNewActivity.this);
+        billDatabaseHelper = new BillDatabaseHelper(BillNewActivity.this);
+        itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(BillNewActivity.this);
 
         //načtení obchodníků z databáze do globální proměnné
         traders = traderDatabaseHelper.getTradersData(UserInformation.getInstance().getUserId());
@@ -151,6 +162,16 @@ public class IncomeNewActivity extends AppCompatActivity
 
     }
 
+    private void setTextToActivity(){
+        if(isExpense){
+            setTitle(getString(R.string.title_activity_expense_new));
+            addBill.setText(getString(R.string.add_expense));
+            fillLabel.setText(getString(R.string.fill_information_about_expense));
+        }else {
+            setTitle(getString(R.string.title_activity_income_new));
+        }
+    }
+
     /**
      * Procedura, která zobrazí date picker a nechá uživatele vybrat
      * datum. Následně datum vloží do pole datum.
@@ -161,7 +182,7 @@ public class IncomeNewActivity extends AppCompatActivity
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(IncomeNewActivity.this,
+        DatePickerDialog dialog = new DatePickerDialog(BillNewActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 mDateSetListener,
                 year,month,day);
@@ -186,7 +207,7 @@ public class IncomeNewActivity extends AppCompatActivity
         for (int i = 0; i<traders[0].length; i++){
             userList.add(traders[1][i]);
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(IncomeNewActivity.this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, userList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BillNewActivity.this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, userList);
 
         spinnerTrader.setAdapter(adapter);
 
@@ -201,7 +222,7 @@ public class IncomeNewActivity extends AppCompatActivity
             storageItemList.add(storageItems[1][i]);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(IncomeNewActivity.this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, storageItemList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(BillNewActivity.this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, storageItemList);
 
         spinnerStorageItem.setAdapter(adapter);
     }
@@ -214,7 +235,7 @@ public class IncomeNewActivity extends AppCompatActivity
      * @param view
      */
     public void getPicture(View view){
-        AlertDialog.Builder builder = new AlertDialog.Builder(IncomeNewActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(BillNewActivity.this);
         builder.setTitle(R.string.take_picture_from)
                 .setItems(R.array.photo, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -234,21 +255,25 @@ public class IncomeNewActivity extends AppCompatActivity
     }
 
     public void getStorageItem(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(IncomeNewActivity.this);
-        builder.setTitle(R.string.add)
-                .setItems(R.array.income_dialog, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(which == 0){
-                            //zobrazení dialogového okna pro vytvoření skladové položky
-                            showNewItemDialog();
-                        }else {
-                            //zobrazení dialogového okna pro exitující položku = pouze navýšení množství
-                            showExistsItemDialog();
+        if(isExpense){
+            showExistsItemDialog();
+        }else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(BillNewActivity.this);
+            builder.setTitle(R.string.add)
+                    .setItems(R.array.income_dialog, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(which == 0){
+                                //zobrazení dialogového okna pro vytvoření skladové položky
+                                showNewItemDialog();
+                            }else {
+                                //zobrazení dialogového okna pro exitující položku = pouze navýšení množství
+                                showExistsItemDialog();
+                            }
                         }
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+                    });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
     }
 
 
@@ -260,7 +285,11 @@ public class IncomeNewActivity extends AppCompatActivity
             switch (requestCode) {
                 case 0:
                     if (resultCode == RESULT_OK){
+                        //uložení odkazu na ubrázek do globální proměnné
+                        pictureUri = data.getData();
+                        //převedení uri na bitmapu pro zobrazení
                         Bitmap bitmap = (Bitmap)data.getExtras().get("data");
+                        //zobrazení bitmapy
                         photoView.setImageBitmap(bitmap);
                     }
                     break;
@@ -268,6 +297,8 @@ public class IncomeNewActivity extends AppCompatActivity
                     if (resultCode == RESULT_OK && data != null) {
                         //získání Uri z intentu
                         Uri pickedImage = data.getData();
+                        //uložení odkazu na obrázek do globální proměnné
+                        pictureUri = pickedImage;
                         //získání bitmapy z Uri
                         Bitmap bitmap = getBitmapFromUri(pickedImage);
                         //nastavení bitmapy do image view
@@ -275,9 +306,10 @@ public class IncomeNewActivity extends AppCompatActivity
                     }
             }
         }catch (NullPointerException e){
-            System.out.println("Picture is empty");
+            pictureUri = null;
         }
     }
+
 
     /**
      * Metoda, která převede obrázek z Uri do
@@ -309,8 +341,9 @@ public class IncomeNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent home = new Intent(IncomeNewActivity.this, IncomeActivity.class);
-        startActivity(home);
+        Intent intent = new Intent(BillNewActivity.this, BillActivity.class);
+        intent.putExtra("IS_EXPENSE", isExpense);
+        startActivity(intent);
         finish();
     }
 
@@ -340,7 +373,7 @@ public class IncomeNewActivity extends AppCompatActivity
      * nové položky faktury. (Vytvoření nové skladové položky)
      */
     private void showNewItemDialog() {
-        AlertDialog.Builder mBuilder = new AlertDialog.Builder(IncomeNewActivity.this);
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(BillNewActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.income_item_new_dialog, null);
         //inicializace textových polí a tlačítka v dialogovém okně
         final EditText itemName = mView.findViewById(R.id.itemDailogName);
@@ -402,7 +435,7 @@ public class IncomeNewActivity extends AppCompatActivity
      * existuje ve skladu.
      */
     private void showExistsItemDialog(){
-        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(IncomeNewActivity.this);
+        final AlertDialog.Builder mBuilder = new AlertDialog.Builder(BillNewActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.income_item_exists_dialog, null);
         //inicializace polí v dialogovém okně
         final Spinner spinnerStorageItem = mView.findViewById(R.id.spinnerStorageItemExists);
@@ -432,14 +465,25 @@ public class IncomeNewActivity extends AppCompatActivity
                 if( indexInSpinner == 0){
                     //výpis o úspěšném uložení skladové položky
                     String message = getString(R.string.select_storage_item);
-                    Toast.makeText(IncomeNewActivity.this, message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BillNewActivity.this, message, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 int storageItemId = Integer.parseInt(storageItems[0][indexInSpinner-1]);
 
+                //pokud se jedná o výdaj musím zkontrolovat, zda mám dostatečné množství ve skladu
+                if(isExpense){
+                    float storageQuantity = itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItemId);
+                    if(storageQuantity < Float.parseFloat(quantity)){
+                        layoutItemQuantity.setError("Ve skladu není požadované množství");
+                        return;
+                    }
+                }
+
                 //vytvoření skladové položky a vložení do listu položek
                 StorageItem storageItem = storageItemDatabaseHelper.getStorageItemById(storageItemId);
+
+
 
                 //vytvoření množství skladové položky
                 ItemQuantity itemQuantity = new ItemQuantity();
@@ -466,15 +510,15 @@ public class IncomeNewActivity extends AppCompatActivity
      * Metoda vloží záznam nového příjmu do databáze.
      * @param view
      */
-    public void submitNewIncomeForm(View view) {
+    public void submitNewBillForm(View view) {
 
         //načtení dat ze vstupních polí
-        String name = incomeName.getText().toString();
-        String amount = incomeAmount.getText().toString();
-        String VAT = spinnerIncomeVat.getSelectedItem().toString();
+        String name = billName.getText().toString();
+        String amount = billAmount.getText().toString();
+        String VAT = spinnerBillVat.getSelectedItem().toString();
         String date = mDisplayDate.getText().toString();
-        Bitmap photo = ((BitmapDrawable)photoView.getDrawable()).getBitmap();
         int traderId;
+
 
         //obchodník vybrán
         if(spinnerTrader.getSelectedItemId() != 0){
@@ -488,14 +532,14 @@ public class IncomeNewActivity extends AppCompatActivity
         if(!InputValidation.validateIsEmpty(name)){
             String message = getString(R.string.name_of_bill_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutIncomeName.setError(getString(R.string.name_of_bill_is_empty));
+            layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
             return;
         }
 
         if(!InputValidation.validateIsEmpty(amount)){
             String message = getString(R.string.amount_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutIncomeAmount.setError(getString(R.string.amount_is_empty));
+            layoutBillAmount.setError(getString(R.string.amount_is_empty));
             return;
         }
 
@@ -507,9 +551,16 @@ public class IncomeNewActivity extends AppCompatActivity
         bill.setVAT(Integer.parseInt(VAT));
         bill.setDate(date);
         bill.setTraderId(traderId);
-        bill.setPhoto(photo);
-        //jedná se o příjem 0 = příjem  x 1 = výdaj
-        bill.setIsExpense(0);
+        //pokud je pořízen obrázek k faktuře
+        if(pictureUri != null){
+            bill.setPhoto(pictureUri.toString());
+        }
+        //zda se jedná o příjem nebo výdaje
+        if(isExpense){
+            bill.setIsExpense(1);
+        }else {
+            bill.setIsExpense(0);
+        }
 
         //vložení příjmu do databáze
         long billId = billDatabaseHelper.addBill(bill);
@@ -526,8 +577,15 @@ public class IncomeNewActivity extends AppCompatActivity
                 itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
             }else {
                 //položka je již evidivoaná ve skladu
-                listOfItems.get(i).getItemQuantity().setBillId(billId);
-                itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
+                if(isExpense){
+                    //pokud se jedná o výdaj, přidávám se zápornou hodnotou => jako vyskladění
+                    listOfItems.get(i).getItemQuantity().setBillId(billId);
+                    listOfItems.get(i).getItemQuantity().setQuantity(listOfItems.get(i).getItemQuantity().getQuantity()*(-1));
+                    itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
+                }else {
+                    listOfItems.get(i).getItemQuantity().setBillId(billId);
+                    itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
+                }
             }
         }
 
@@ -536,10 +594,10 @@ public class IncomeNewActivity extends AppCompatActivity
 
         String message = getString(R.string.income_has_been_added);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        Intent income = new Intent(IncomeNewActivity.this, IncomeActivity.class);
-        startActivity(income);
+        Intent intent = new Intent(BillNewActivity.this, BillActivity.class);
+        intent.putExtra("IS_EXPENSE", isExpense);
+        startActivity(intent);
         finish();
-
     }
 
 
@@ -556,7 +614,7 @@ public class IncomeNewActivity extends AppCompatActivity
         //id vybrané položky v menu
         int id = item.getItemId();
 
-        IncomeNewActivity thisActivity = IncomeNewActivity.this;
+        BillNewActivity thisActivity = BillNewActivity.this;
         Intent newIntent;
 
         //inicializace třídy menu, kde jsou definovány jednotlivé aktivity
@@ -577,6 +635,5 @@ public class IncomeNewActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 }

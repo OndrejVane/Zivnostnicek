@@ -327,7 +327,7 @@ public class ExpenseNewActivity extends AppCompatActivity
         bill.setAmount(Float.parseFloat(inputExpenseAmount.getText().toString()));
         bill.setDate(mDisplayDate.getText().toString());
         bill.setIsExpense(1);
-        bill.setPhoto(((BitmapDrawable)photoView.getDrawable()).getBitmap());
+        //bill.setPhoto(((BitmapDrawable)photoView.getDrawable()).getBitmap());
         bill.setVAT(Integer.parseInt(spinnerVAT.getSelectedItem().toString()));
         bill.setUserId(UserInformation.getInstance().getUserId());
 

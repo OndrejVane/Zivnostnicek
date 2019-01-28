@@ -62,4 +62,54 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
         return quantity;
     }
+
+    public ArrayList<ItemQuantity> getItemQuantityByBillId(int billId){
+        ArrayList<ItemQuantity> arrayList = new ArrayList<>();
+
+        String[] columns = { COLUMN_ITEM_QUANTITY_ID, COLUMN_ITEM_QUANTITY_QUANTITY, COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
+
+        // selection arguments
+        String[] selectionArgs = {Integer.toString(billId)};
+
+        Cursor cursor = db.query(TABLE_ITEM_QUANTITY,    //Table to query
+                columns,                                //columns to return
+                selection,                              //columns for the WHERE clause
+                selectionArgs,                          //The values for the WHERE clause
+                null,                          //group the rows
+                null,                           //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()){
+            do{
+                ItemQuantity itemQuantity = new ItemQuantity();
+                itemQuantity.setBillId(billId);
+                itemQuantity.setId(cursor.getInt(0));
+                itemQuantity.setQuantity(cursor.getFloat(1));
+                itemQuantity.setStorageItemId(cursor.getInt(2));
+                arrayList.add(itemQuantity);
+            }while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+
+        return arrayList;
+    }
+
+    public boolean deleteItemQuantityByBillId(int billId){
+        boolean result;
+
+        String where = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(billId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        result = db.delete(TABLE_ITEM_QUANTITY, where, deleteArgs) > 0;
+
+        return result;
+    }
 }

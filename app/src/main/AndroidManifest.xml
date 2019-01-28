@@ -25,7 +25,7 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.income.IncomeActivity"
+            android:name=".activities.bill.BillActivity"
             android:label="@string/title_activity_income"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -77,7 +77,7 @@
             android:label="@string/title_activity_trader_edit_note"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.income.IncomeNewActivity"
+            android:name=".activities.bill.BillNewActivity"
             android:label="@string/title_activity_income_new"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -103,7 +103,12 @@
         <activity
             android:name=".activities.settings.SettingsActivity"
             android:label="@string/settings"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.bill.BillShowActivity"
+            android:label="@string/title_activity_income_show"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.ShowPictureActivity"></activity>
     </application>
 
 </manifest>

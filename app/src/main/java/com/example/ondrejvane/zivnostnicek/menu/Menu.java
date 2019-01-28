@@ -6,8 +6,7 @@ import android.content.Intent;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
-import com.example.ondrejvane.zivnostnicek.activities.expense.ExpenseActivity;
-import com.example.ondrejvane.zivnostnicek.activities.income.IncomeActivity;
+import com.example.ondrejvane.zivnostnicek.activities.bill.BillActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.settings.SettingsActivity;
 import com.example.ondrejvane.zivnostnicek.activities.storage.StorageActivity;
@@ -44,11 +43,13 @@ public class Menu {
                 break;
 
             case R.id.nav_income:
-                intent = new Intent(this.context, IncomeActivity.class);
+                intent = new Intent(this.context, BillActivity.class);
+                intent.putExtra("IS_EXPENSE", false);
                 break;
 
             case R.id.nav_expense:
-                intent = new Intent(this.context, ExpenseActivity.class);
+                intent = new Intent(this.context, BillActivity.class);
+                intent.putExtra("IS_EXPENSE", true);
                 break;
 
             case R.id.nav_traders:

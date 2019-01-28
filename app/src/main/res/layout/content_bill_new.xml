@@ -12,8 +12,8 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    tools:context=".activities.income.IncomeNewActivity"
-    tools:showIn="@layout/app_bar_income_new">
+    tools:context=".activities.bill.BillNewActivity"
+    tools:showIn="@layout/app_bar_bill_new">
 
 
     <android.support.v7.widget.LinearLayoutCompat
@@ -22,7 +22,7 @@
         android:orientation="vertical">
 
         <android.support.v7.widget.AppCompatTextView
-            android:id="@+id/appCompatTextViewLoginLinkpokus"
+            android:id="@+id/textViewBillFill"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -190,14 +190,14 @@
             android:textSize="12sp" />
 
         <Button
-            android:id="@+id/buttonAddTrader"
+            android:id="@+id/buttonAddBill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:onClick="submitNewIncomeForm"
+            android:onClick="submitNewBillForm"
             android:text="@string/add_income"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
