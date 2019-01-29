@@ -281,7 +281,7 @@ public class BillNewActivity extends AppCompatActivity
     }
 
     public void getStorageItem(View view) {
-        if (isExpense) {
+        if (!isExpense) {
             showExistsItemDialog();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(BillNewActivity.this);
@@ -612,7 +612,7 @@ public class BillNewActivity extends AppCompatActivity
                 itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
             } else {
                 //položka je již evidivoaná ve skladu
-                if (isExpense) {
+                if (!isExpense) {
                     //pokud se jedná o výdaj, přidávám se zápornou hodnotou => jako vyskladění
                     listOfItems.get(i).getItemQuantity().setBillId(billId);
                     listOfItems.get(i).getItemQuantity().setQuantity(listOfItems.get(i).getItemQuantity().getQuantity() * (-1));
