@@ -2,6 +2,10 @@ package com.example.ondrejvane.zivnostnicek.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.helper.ArrayUtility;
+import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
 
 public class ListViewBillAdapter extends BaseAdapter {
 
@@ -16,13 +22,17 @@ public class ListViewBillAdapter extends BaseAdapter {
     private String[] billName;
     private String[] billDate;
     private String[] billAmount;
+    private int[] typeBillColor;
+    private String[] typeBillName;
     private boolean isExpense = false;
 
-    public ListViewBillAdapter(Activity context, String[] billName, String[] billDate, String[] billAmount){
+    public ListViewBillAdapter(Activity context, String[] billName, String[] billDate, String[] billAmount, String[] typeBillName, String[] typeBillColor){
         this.context = context;
         this.billName = billName;
         this.billDate = billDate;
         this.billAmount = billAmount;
+        this.typeBillName = typeBillName;
+        this.typeBillColor = ArrayUtility.arrayStringToInteger(typeBillColor);
     }
 
     public void isExpense(boolean isExpense){
@@ -80,12 +90,21 @@ public class ListViewBillAdapter extends BaseAdapter {
 
         holder.txtViewBillName.setText(billName[position]);
         holder.txtViewBillDate.setText(billDate[position]);
-        holder.txtViewBillAmount.setText(billAmount[position]);
-        holder.txtViewBillCapitalLetter.setText(Character.toString(billName[position].toUpperCase().charAt(0)));
+        if(isExpense){
+            holder.txtViewBillAmount.setText(FormatUtility.formatExpenseAmount(billAmount[position]));
+        }else {
+            holder.txtViewBillAmount.setText(FormatUtility.formatIncomeAmount(billAmount[position]));
+        }
+
+        //nastavení prvního písmena názvu typu do kruhu
+        holder.txtViewBillCapitalLetter.setText(Character.toString(typeBillName[position].toUpperCase().charAt(0)));
+
+        //nastavení barvy podle typu výdaje
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.txtViewBillCapitalLetter.getBackground().mutate();
+        gradientDrawable.setColor(typeBillColor[position]);
 
         if(isExpense){
             holder.txtViewBillAmount.setTextColor(Color.RED);
-            holder.txtViewBillCapitalLetter.setBackgroundColor(0xFF00FF00);
         }
 
         return convertView;

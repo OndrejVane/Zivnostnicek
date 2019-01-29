@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -71,14 +71,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STORAGE_ITEM_NOTE = "storage_item_note";             //poznámka ke skladové položce
 
     //názvy atributů v tabulce množštví skladové položky
-    public static final String COLUMN_ITEM_QUANTITY_ID = "item_quantity_id";
-    public static final String COLUMN_ITEM_QUANTITY_BILL_ID = "item_quantity_bill_id";
-    public static final String COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID = "item_quantity_storage_item_id";
-    public static final String COLUMN_ITEM_QUANTITY_QUANTITY = "item_quantity_quantity";
+    public static final String COLUMN_ITEM_QUANTITY_ID = "item_quantity_id";               //primární klíč
+    public static final String COLUMN_ITEM_QUANTITY_BILL_ID = "item_quantity_bill_id";     //cizí klíč do tabulky faktur
+    public static final String COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID = "item_quantity_storage_item_id";  //cizí klíč do tabulky skladových položek
+    public static final String COLUMN_ITEM_QUANTITY_QUANTITY = "item_quantity_quantity";   //atribut množství
 
     //názvy atributů tabulky druhů faktur
-    public static final String COLUMN_TYPE_ID = "type_id";
-    public static final String COLUMN_TYPE_NAME = "type_name";
+    public static final String COLUMN_TYPE_ID = "type_id";                                 //primární klíč
+    public static final String COLUMN_TYPE_COLOR = "type_color";                           //číslo vybrané barvy
+    public static final String COLUMN_TYPE_NAME = "type_name";                             //název typu
+    public static final String COLUMN_TYPE_USER_ID = "type_user_id";                       //cizí klíč do tabulk user (každý uživatel má své druhy)
 
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -107,11 +109,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_BILL_TYPE_ID +  " INTEGER," + COLUMN_BILL_USER_ID + " INTEGER,"
             + COLUMN_BILL_IS_EXPENSE +  " INTEGER" + ")";
 
-    //SQL pro vytvoření tabulky type
-    private String CREATE_TYPE_TABLE = "CREATE TABLE " + TABLE_TYPE + "("
-            + COLUMN_TYPE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COLUMN_TYPE_NAME + " TEXT" + ")";
-
     //SQL pro vytvoření tabulky Storage Item
     private String CREATE_STORAGE_ITEM_TABLE = "CREATE TABLE " + TABLE_STORAGE_ITEM + "("
             + COLUMN_STORAGE_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -122,6 +119,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String CREATE_QUANTITY_ITEM_TABLE = "CREATE TABLE " + TABLE_ITEM_QUANTITY+ "("
             + COLUMN_ITEM_QUANTITY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_ITEM_QUANTITY_BILL_ID + " INTEGER,"
             + COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " INTEGER," + COLUMN_ITEM_QUANTITY_QUANTITY + " REAL" + ")";
+
+    //SQL pro vytvoření tabulky type
+    private String CREATE_TYPE_TABLE = "CREATE TABLE " + TABLE_TYPE + "("
+            + COLUMN_TYPE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_TYPE_COLOR + " INTEGER,"
+            + COLUMN_TYPE_USER_ID + " INTEGER,"
+            + COLUMN_TYPE_NAME + " TEXT" + ")";
+
 
     // drop table user
     private String DROP_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
@@ -135,17 +140,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //drop table Bill
     private String DROP_TABLE_BILL = "DROP TABLE IF EXISTS " + TABLE_BILL;
 
-    //drop table type
-    private String DROP_TABLE_TYPE = "DROP TABLE IF EXISTS " + TABLE_TYPE;
-
     //drop table storage item
     private String DROP_TABLE_STORAGE_ITEM = "DROP TABLE IF EXISTS " + TABLE_STORAGE_ITEM;
 
     //drop table item quantity
     private String DROP_TABLE_ITEM_QUANTITY = "DROP TABLE IF EXISTS " + TABLE_ITEM_QUANTITY;
 
+    //drop table type
+    private String DROP_TABLE_TYPE = "DROP TABLE IF EXISTS " + TABLE_TYPE;
+
+
     /**
-     * Constructor
+     * Konstruktor
      *
      * @param context
      */
@@ -158,6 +164,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return this.context;
     }
 
+    /**
+     *  Tato metoda vytvoří všechny tabulky v databázi.
+     *
+     * @param db    instance databáze
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_USER_TABLE);
@@ -170,10 +181,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * Pokud je oldVersion menší než newVersion, tak dojde ke
+     * smazání všech tabulek (pouze pokud existují).
+     *
+     * @param db            instance databáze
+     * @param oldVersion    stará verze databáze
+     * @param newVersion    nová verze databáze
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        //Drop User Table if exist
+        //zahodí všechny tabulky pokud existují
         db.execSQL(DROP_USER_TABLE);
         db.execSQL(DROP_TRADER_TABLE);
         db.execSQL(DROP_NOTE_TABLE);
@@ -182,7 +201,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(DROP_TABLE_STORAGE_ITEM);
         db.execSQL(DROP_TABLE_ITEM_QUANTITY);
 
-        // Create tables again
+        // vytvoření nové databáze
         onCreate(db);
 
     }

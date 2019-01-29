@@ -22,6 +22,17 @@ public class Settings {
     //id vybraného roku
     private int arrayYearId = -1;
 
+    //tato hodnota udává, zda se budou zobrazovat data puze pro jeden vybraný měsíc
+    private boolean isPickedOneMonth = false;
+
+    //vybranný měsíc
+    private String month = null;
+
+    //id vybraného měsíce
+    private int arrayMonthId = -1;
+
+
+
     //instance této třídy (Singleton)
     private static Settings self = null;
 
@@ -76,9 +87,35 @@ public class Settings {
         this.year = year;
     }
 
+    public boolean isPickedOneMonth() {
+        return isPickedOneMonth;
+    }
+
+    public void setIsPickedOneMonth(boolean pickedOneMonth) {
+        isPickedOneMonth = pickedOneMonth;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public int getArrayMonthId() {
+        return arrayMonthId;
+    }
+
+    public void setArrayMonthId(int arrayMonthId) {
+        this.arrayMonthId = arrayMonthId;
+    }
+
     public void resetInstance(){
         self = null;
     }
+
+
 
     /**
      * Uložení aktuálního nastavení do shared preferences.
@@ -93,6 +130,9 @@ public class Settings {
         editor.putBoolean("PICKED_YEAR_ID_"+userId, isPickedOneYear);                                 //uložení hodnoty pro zobrazování dat v aplikaci pouze pro jeden rok
         editor.putInt("ARRAY_INDEX_YEAR_ID_"+userId, arrayYearId);                                    //uložení indexu v seznamu roku podle vybraného roku ve spinneru
         editor.putString("YEAR_ID_"+userId, year);                                                    //uložení vybraného roku pro zobrazování dat
+        editor.putBoolean("PICKED_MONTH_ID_"+userId, isPickedOneMonth);                               //uložení hodnoty, zda je vybranný jeden měsíc
+        editor.putInt("ARRAY_INDEX_MONTH_ID_"+userId, arrayMonthId);                                  //uložení indexu měsíce
+        editor.putString("MONTH_ID_"+userId, month);                                                  //uložení názvu vybraného měsíce
         editor.apply();
     }
 
@@ -109,6 +149,9 @@ public class Settings {
         isPickedOneYear = sp.getBoolean("PICKED_YEAR_ID_"+userId,false);
         year = sp.getString("YEAR_ID_"+userId, null);
         arrayYearId = sp.getInt("ARRAY_INDEX_YEAR_ID_"+userId, -1);
+        isPickedOneMonth = sp.getBoolean("PICKED_MONTH_ID_"+userId, false);
+        arrayMonthId = sp.getInt("ARRAY_INDEX_MONTH_ID_"+userId, -1);
+        month = sp.getString("MONTH_ID_"+userId, null);
     }
 
 }

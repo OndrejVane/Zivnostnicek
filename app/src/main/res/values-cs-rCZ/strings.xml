@@ -149,6 +149,7 @@
     <string name="allow_foreign_IN">Povolit zahraniční IČ</string>
     <string name="allow_foreign_TIN">Povolit zahraniční DIČ</string>
     <string name="display_data_for_selected_year">Zobrazovat data pouze pro vybraný rok</string>
+    <string name="display_data_for_selected_month">Zobrazovat data pouze pro vybraný měsíc</string>
     <string name="save_settings">Uložit nastavení</string>
     <string name="settings_saved">Nastavení bylo uloženo</string>
     <string name="select_year">Vyberte rok</string>
@@ -159,6 +160,17 @@
     <string name="bill_has_not_been_deleted">Faktura nebyla smazána</string>
     <string name="title_activity_expense_show">Náhled výdaje</string>
     <string name="bill_delete_question">Opravdu chcete smazat tuto fakturu?</string>
+    <string name="select_month">Vyberte měsíc</string>
+    <string name="select">Vybrat</string>
+    <string name="close">Zavřít</string>
+    <string name="add_bill_type">Přidat druh faktury</string>
+    <string name="bill_type_name">Název druhu</string>
+    <string name="pick_color">Vyberte barvu</string>
+    <string name="bill_type_name_is_empty">Název typu je prázdný</string>
+    <string name="bill_type_has_been_added">Druh faktury byl přidán</string>
+    <string name="bill_type">Druh faktury</string>
+    <string name="select_bill_type">Vyberte druh faktury</string>
+    <string name="no_bill_items">Žádné položky</string>
 
     <string-array name="photo">
         <item>galerie</item>

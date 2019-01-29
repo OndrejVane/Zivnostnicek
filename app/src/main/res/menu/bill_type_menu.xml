@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/option_menu_bill_type_add"
+        android:orderInCategory="100"
+        android:title="Přidat druh faktury"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_menu_bill_type_show"
+        android:orderInCategory="100"
+        android:title="Zobrazit druhy faktur"
+        app:showAsAction="never" />
+</menu>

@@ -28,9 +28,12 @@ public class SettingsActivity extends AppCompatActivity
     private CheckBox checkBoxTIN;
     private CheckBox checkBoxYear;
     private Spinner spinnerYear;
+    private CheckBox checkBoxMonth;
+    private Spinner spinnerMonth;
 
 
-    private boolean isSelected;
+    private boolean isSelectedYear;
+    private boolean isSelectedMonth;
     private Settings settings;
 
     @Override
@@ -58,12 +61,28 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isSelected){
+                if(isSelectedYear){
                     spinnerYear.setEnabled(false);
-                    isSelected = false;
+                    checkBoxMonth.setEnabled(false);
+                    isSelectedYear = false;
                 }else {
                     spinnerYear.setEnabled(true);
-                    isSelected = true;
+                    checkBoxMonth.setEnabled(true);
+                    isSelectedYear = true;
+                }
+            }
+        });
+
+        checkBoxMonth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if(isSelectedMonth){
+                    spinnerMonth.setEnabled(false);
+                    isSelectedMonth = false;
+                }else {
+                    spinnerMonth.setEnabled(true);
+                    isSelectedMonth = true;
                 }
             }
         });
@@ -74,17 +93,28 @@ public class SettingsActivity extends AppCompatActivity
         checkBoxTIN = findViewById(R.id.checkBoxSettingsTIN);
         checkBoxYear = findViewById(R.id.checkBoxSettingsYear);
         spinnerYear = findViewById(R.id.spinnerSettingsYear);
+        checkBoxMonth = findViewById(R.id.checkBoxSettingsMonth);
+        spinnerMonth = findViewById(R.id.spinnerSettingsMonth);
         settings = Settings.getInstance();
 
         //načtení nastavení z Třídy Settings a zobrazení
-        isSelected = settings.isIsPickedOneYear();
-        spinnerYear.setEnabled(isSelected);
+        isSelectedYear = settings.isIsPickedOneYear();
+        isSelectedMonth = settings.isPickedOneMonth();
+
+        spinnerYear.setEnabled(isSelectedYear);
+        spinnerMonth.setEnabled(isSelectedMonth);
+
         checkBoxIN.setChecked(settings.isIsForeignIdentificationNumberPossible());
         checkBoxTIN.setChecked(settings.isIsForeignTaxIdentificationNumberPossible());
-        checkBoxYear.setChecked(isSelected);
-        if (isSelected){
+        checkBoxYear.setChecked(isSelectedYear);
+        checkBoxMonth.setChecked(isSelectedMonth);
+        if (isSelectedYear){
             //nastavit vybraný rok do spinneru
             spinnerYear.setSelection(settings.getArrayYearId());
+        }
+
+        if(isSelectedMonth){
+            spinnerMonth.setSelection(settings.getArrayMonthId());
         }
     }
 
@@ -98,7 +128,8 @@ public class SettingsActivity extends AppCompatActivity
         settings.setIsForeignIdentificationNumberPossible(checkBoxIN.isChecked());
         settings.setIsForeignTaxIdentificationNumberPossible(checkBoxTIN.isChecked());
 
-        if (isSelected){
+        //uložení nastavení roku do tříd settings
+        if (isSelectedYear){
             settings.setIsPickedOneYear(true);
             if(spinnerYear.getSelectedItemId() != 0){
                 settings.setYear(spinnerYear.getSelectedItem().toString());
@@ -115,6 +146,26 @@ public class SettingsActivity extends AppCompatActivity
             settings.setIsPickedOneYear(false);
             settings.setYear(null);
             settings.setArrayYearId(-1);
+        }
+
+        //uložení nastavní měsíce do třídy settings
+        if (isSelectedMonth){
+            settings.setIsPickedOneMonth(true);
+            if(spinnerMonth.getSelectedItemId() != 0){
+                settings.setMonth(spinnerMonth.getSelectedItem().toString());
+                settings.setArrayMonthId((int) spinnerMonth.getSelectedItemId());
+
+            }else {
+                //pokud není vybrán žádný měsíc
+                String message = getString(R.string.select_month);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }else {
+            settings.setIsPickedOneMonth(false);
+            settings.setMonth(null);
+            settings.setArrayMonthId(-1);
         }
 
         //uložení data do shared preferences

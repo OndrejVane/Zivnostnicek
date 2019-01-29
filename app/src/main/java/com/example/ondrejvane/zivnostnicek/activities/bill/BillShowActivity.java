@@ -18,24 +18,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.note.NoteShowActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
 import java.io.IOException;
@@ -45,19 +45,21 @@ public class BillShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private boolean isExpense;
-    private int incomeID;
-    private EditText textViewIncomeName;
-    private EditText textViewIncomeAmount;
-    private EditText textViewIncomeVAT;
-    private EditText textViewIncomeDate;
-    private EditText textViewIncomeTrader;
-    private TextView textViewIncomePhoto;
-    private ImageView photoViewIncomePhoto;
+    private int billId;
+    private EditText textViewBillName;
+    private EditText textViewBillAmount;
+    private EditText textViewBillVAT;
+    private EditText textViewBillDate;
+    private EditText textViewBillTrader;
+    private EditText textViewBillType;
+    private TextView textViewBillPhoto;
+    private ImageView photoViewBillPhoto;
     private ExpandableHeightListView expandableListView;
     private BillDatabaseHelper billDatabaseHelper;
     private TraderDatabaseHelper traderDatabaseHelper;
     private ItemQuantityDatabaseHelper quantityDatabaseHelper;
     private StorageItemDatabaseHelper storageItemDatabaseHelper;
+    private TypeBillDatabaseHelper typeBillDatabaseHelper;
     private Bitmap pickedBitmap;
     private Bill bill;
 
@@ -86,20 +88,22 @@ public class BillShowActivity extends AppCompatActivity
     }
 
     private void initActivity() {
-        incomeID = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
+        billId = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
         isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
 
+        //nastaví příslušné texty, podle toho, jestli se jedná o příjem nebo výdaj
         setTextToActivity();
 
         //inicializace textových polí
-        textViewIncomeName = findViewById(R.id.textIncomeShowName);
-        textViewIncomeAmount = findViewById(R.id.textIncomeShowAmount);
-        textViewIncomeVAT = findViewById(R.id.textIncomeShowVAT);
-        textViewIncomeDate = findViewById(R.id.textIncomeShowDate);
-        textViewIncomeTrader = findViewById(R.id.textIncomeShowTrader);
-        photoViewIncomePhoto = findViewById(R.id.photoViewIncomeShow);
-        textViewIncomePhoto = findViewById(R.id.textViewIncomeShow);
+        textViewBillName = findViewById(R.id.textIncomeShowName);
+        textViewBillAmount = findViewById(R.id.textIncomeShowAmount);
+        textViewBillVAT = findViewById(R.id.textIncomeShowVAT);
+        textViewBillDate = findViewById(R.id.textIncomeShowDate);
+        textViewBillTrader = findViewById(R.id.textIncomeShowTrader);
+        photoViewBillPhoto = findViewById(R.id.photoViewIncomeShow);
+        textViewBillPhoto = findViewById(R.id.textViewIncomeShow);
         expandableListView = findViewById(R.id.listViewIncomeStorageItemShow);
+        textViewBillType = findViewById(R.id.textIncomeShowBillType);
 
 
         //inicializace databáze
@@ -107,20 +111,28 @@ public class BillShowActivity extends AppCompatActivity
         traderDatabaseHelper = new TraderDatabaseHelper(BillShowActivity.this);
         quantityDatabaseHelper = new ItemQuantityDatabaseHelper(BillShowActivity. this);
         storageItemDatabaseHelper = new StorageItemDatabaseHelper(BillShowActivity.this);
+        typeBillDatabaseHelper = new TypeBillDatabaseHelper(BillShowActivity.this);
 
         //načtení potřebných údajů z databáze z databáze a zobrazení v aktivitě
-        bill = billDatabaseHelper.getBillById(incomeID);
+        bill = billDatabaseHelper.getBillById(billId);
         if(bill.getTraderId() != -1){
             Trader trader = traderDatabaseHelper.getTraderById(bill.getTraderId());
-            textViewIncomeTrader.setText(trader.getTraderName());
+            textViewBillTrader.setText(trader.getTraderName());
         }else {
-            textViewIncomeTrader.setText(getString(R.string.not_selected));
+            textViewBillTrader.setText(getString(R.string.not_selected));
         }
 
-        textViewIncomeName.setText(bill.getName());
-        textViewIncomeAmount.setText(Float.toString(bill.getAmount()));
-        textViewIncomeVAT.setText(Integer.toString(bill.getVAT()));
-        textViewIncomeDate.setText(bill.getDate());
+        if(bill.getTypeId() != -1){
+            TypeBill typeBill = typeBillDatabaseHelper.getTypeBillById(bill.getTypeId());
+            textViewBillType.setText(typeBill.getName());
+        }else {
+            textViewBillType.setText(getString(R.string.not_selected));
+        }
+
+        textViewBillName.setText(bill.getName());
+        textViewBillAmount.setText(Float.toString(bill.getAmount()));
+        textViewBillVAT.setText(Integer.toString(bill.getVAT()));
+        textViewBillDate.setText(bill.getDate());
 
 
         if(bill.getPhoto() != null){
@@ -128,9 +140,9 @@ public class BillShowActivity extends AppCompatActivity
         }
 
         if(pickedBitmap != null){
-            photoViewIncomePhoto.setImageBitmap(pickedBitmap);
+            photoViewBillPhoto.setImageBitmap(pickedBitmap);
         }else {
-            textViewIncomePhoto.setText(getText(R.string.picture_is_not_available));
+            textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
         }
 
         showBillItemsToActivity(bill.getId());
@@ -144,16 +156,26 @@ public class BillShowActivity extends AppCompatActivity
 
     private void showBillItemsToActivity(int billId) {
         ArrayList<ItemQuantity> arrayList = quantityDatabaseHelper.getItemQuantityByBillId(billId);
-        String[] billItemName = new String[arrayList.size()];
-        float[] billItemQuantity = new float[arrayList.size()];
-        String[] billItemUnit = new String[arrayList.size()];
+        String[] billItemName;
+        float[] billItemQuantity;
+        String[] billItemUnit;
         StorageItem storageItemTemp;
-
-        for (int i=0; i<arrayList.size(); i++){
-            storageItemTemp = storageItemDatabaseHelper.getStorageItemById((int) arrayList.get(i).getStorageItemId());
-            billItemName[i] = storageItemTemp.getName();
-            billItemQuantity[i] = arrayList.get(i).getQuantity();
-            billItemUnit[i] = storageItemTemp.getUnit();
+        //pokud obsahuje faktura nějaké položky
+        if(arrayList.size() != 0){
+            billItemName = new String[arrayList.size()];
+            billItemQuantity = new float[arrayList.size()];
+            billItemUnit = new String[arrayList.size()];
+            for (int i=0; i<arrayList.size(); i++){
+                storageItemTemp = storageItemDatabaseHelper.getStorageItemById((int) arrayList.get(i).getStorageItemId());
+                billItemName[i] = storageItemTemp.getName();
+                billItemQuantity[i] = arrayList.get(i).getQuantity();
+                billItemUnit[i] = storageItemTemp.getUnit();
+            }
+        }else {
+            //pokud neobsahuje žádné položky
+            billItemName = new String[]{getString(R.string.no_bill_items)};
+            billItemQuantity = new float[1];
+            billItemUnit = new String[]{""};
         }
 
         //nastavení adapteru do list view pro zobrazení
