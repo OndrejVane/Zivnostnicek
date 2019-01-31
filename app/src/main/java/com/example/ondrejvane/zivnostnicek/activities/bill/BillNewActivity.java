@@ -100,7 +100,7 @@ public class BillNewActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header(navigationView, this);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         initActivity();

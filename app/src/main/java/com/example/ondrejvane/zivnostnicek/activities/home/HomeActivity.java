@@ -48,6 +48,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Log.d(TAG, "Starting activity HomeActivity");
 
         setContentView(R.layout.activity_home);
@@ -64,7 +65,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headeru
-        Header header = new Header(navigationView, this);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
 
@@ -116,7 +117,6 @@ public class HomeActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
     }
 
     /**

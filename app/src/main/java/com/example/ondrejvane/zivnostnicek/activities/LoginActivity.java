@@ -3,14 +3,18 @@ package com.example.ondrejvane.zivnostnicek.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
@@ -21,9 +25,12 @@ import com.example.ondrejvane.zivnostnicek.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private final String TAG = "LoginActivity";
+
     private EditText userAddressET;
     private EditText passwordET;
     private CheckBox rememberMeBox;
+    private ImageView imageViewLogo;
 
     private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
@@ -31,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "Starting activity");
 
         //skryje horní panel
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -42,8 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
-
         initActivity();
+
+        Log.d(TAG, "Activity successfully started");
 
         //kontrola, zda uživatel zůstal přihlášen
         if (checkIfYouAreLogIn()){
@@ -62,9 +70,14 @@ public class LoginActivity extends AppCompatActivity {
         userAddressET = findViewById(R.id.userAddress);
         passwordET = findViewById(R.id.userPassword);
         rememberMeBox = findViewById(R.id.checkBox);
+        imageViewLogo = findViewById(R.id.imageViewLoginLogo);
         userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
         hashPassword = new HashPassword();
         settings = Settings.getInstance();
+
+        //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
+        Glide.with(this).load(R.drawable.logo1).into(imageViewLogo);
+
 
 
     }

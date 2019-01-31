@@ -1,5 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.ortiz.touchview.TouchImageView;
 
@@ -27,21 +30,24 @@ public class ShowPictureActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         setContentView(R.layout.activity_show_picture);
-        /*
+
         touchImageView = findViewById(R.id.touchImageView);
-        Bitmap bitmap = getBitmapFromUri(Uri.parse(getIntent().getStringExtra("BITMAP_URI")));
-        touchImageView.setImageBitmap(bitmap);
-        */
+
+        setBitmap(Uri.parse(getIntent().getStringExtra("BITMAP_URI")));
+
     }
 
-    private Bitmap getBitmapFromUri(Uri pickedImage) {
-        //TODO zjistit proč naroste halda při načítání obrázku!!!!!!!
-        Bitmap bitmap;
-        try {
-            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
-        } catch (IOException e) {
-            bitmap = null;
-        }
-        return bitmap;
+    private void setBitmap(Uri pickedImage) {
+        double percentageSize = 0.6;
+        int width = (int)(ApplicationClass.screenWidth * percentageSize);
+        int height = (int)(ApplicationClass.screenHeight * percentageSize);
+        Glide.with(this).load(pickedImage).apply(new RequestOptions().override(width, height)).into(touchImageView);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        touchImageView.setImageBitmap(null);
+        System.gc();
     }
 }

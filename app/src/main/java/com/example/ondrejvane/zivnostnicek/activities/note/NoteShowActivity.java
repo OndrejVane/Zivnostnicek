@@ -56,7 +56,7 @@ public class NoteShowActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView, this);
+        Header header = new Header( navigationView);
         header.setTextToHeader();
 
         //skryje klávesnici při startu aplikace

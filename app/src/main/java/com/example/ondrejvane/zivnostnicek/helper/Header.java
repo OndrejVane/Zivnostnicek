@@ -14,7 +14,7 @@ import com.example.ondrejvane.zivnostnicek.R;
  */
 public class Header extends AppCompatActivity {
 
-    private Context context;
+
     private NavigationView navigationView;
     private UserInformation userInformation;
 
@@ -22,10 +22,8 @@ public class Header extends AppCompatActivity {
      * Konstruktor třídy Header.
      *
      * @param navigationView navigační zobrazení
-     * @param context kontext aktivity
      */
-    public Header(NavigationView navigationView, Context context) {
-        this.context = context;
+    public Header(NavigationView navigationView) {
         this.navigationView = navigationView;
         this.userInformation = UserInformation.getInstance();
     }

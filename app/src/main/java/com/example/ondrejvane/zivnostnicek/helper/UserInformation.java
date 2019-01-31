@@ -44,7 +44,7 @@ public class UserInformation {
         this.FullName = name;
     }
 
-    public void resetInstace(){
+    public void resetInstance(){
         self = null;
     }
 

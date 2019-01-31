@@ -68,7 +68,7 @@ public class Logout extends AppCompatActivity {
 
         //resetování instací pro user data a pro user nastavení
         Settings.getInstance().resetInstance();
-        UserInformation.getInstance().resetInstace();
+        UserInformation.getInstance().resetInstance();
 
         //aktualizace dat v shared preferences o přihlášeném uživateli
         SharedPreferences sp = context.getSharedPreferences("USER", MODE_PRIVATE);

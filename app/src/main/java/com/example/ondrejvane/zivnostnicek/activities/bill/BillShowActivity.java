@@ -1,8 +1,9 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.ShowPictureActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
@@ -32,6 +34,7 @@ import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
@@ -40,6 +43,7 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -62,7 +66,7 @@ public class BillShowActivity extends AppCompatActivity
     private ItemQuantityDatabaseHelper quantityDatabaseHelper;
     private StorageItemDatabaseHelper storageItemDatabaseHelper;
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
-    private Bitmap pickedBitmap;
+    private boolean isPictureFound;
     private Bill bill;
 
     private String TAG = "BillShowActivity";
@@ -84,6 +88,9 @@ public class BillShowActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Header header = new Header(navigationView);
+        header.setTextToHeader();
 
         //skryje klávesnici při startu aplikace
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -126,6 +133,7 @@ public class BillShowActivity extends AppCompatActivity
             textViewBillTrader.setText(getString(R.string.not_selected));
         }
 
+        //pokud je přířazen obchodník, tak ho zobrazím
         if (bill.getTypeId() != -1) {
             TypeBill typeBill = typeBillDatabaseHelper.getTypeBillById(bill.getTypeId());
             textViewBillType.setText(typeBill.getName());
@@ -138,18 +146,50 @@ public class BillShowActivity extends AppCompatActivity
         textViewBillVAT.setText(Integer.toString(bill.getVAT()));
         textViewBillDate.setText(bill.getDate());
 
+        if (bill.getPhoto() != null && tryReadPicture(Uri.parse(bill.getPhoto()))) {
 
-        if (bill.getPhoto() != null) {
-            pickedBitmap = getBitmapFromUri(Uri.parse(bill.getPhoto()));
-        }
+            setBitmap(Uri.parse(bill.getPhoto()));
+            isPictureFound = true;
 
-        if (pickedBitmap != null) {
-            photoViewBillPhoto.setImageBitmap(pickedBitmap);
         } else {
             textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
+            isPictureFound = false;
         }
 
         showBillItemsToActivity(bill.getId());
+    }
+
+    private boolean tryReadPicture(Uri pickedImage) {
+        /*
+        try {
+            MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
+            return true;
+        } catch (IOException e) {
+            Log.d(TAG, "Picture not found, probably is deleted");
+            return false;
+        }
+        */
+        boolean returnValue;
+        ContentResolver cr = getContentResolver();
+        String[] projection = {MediaStore.MediaColumns.DATA};
+        Cursor cur = cr.query(pickedImage, projection, null, null, null);
+        if (cur != null) {
+            if (cur.moveToFirst()) {
+                String filePath = cur.getString(0);
+
+                if (new File(filePath).exists()) {
+                    returnValue = true;
+                } else {
+                    returnValue = false;
+                }
+            } else {
+                returnValue = false;
+            }
+        } else {
+            returnValue = false;
+        }
+        cur.close();
+        return returnValue;
     }
 
     private void setTextToActivity() {
@@ -191,30 +231,19 @@ public class BillShowActivity extends AppCompatActivity
     }
 
 
-    /**
-     * Metoda, která převede obrázek z Uri do
-     * bitmapy
-     *
-     * @param pickedImage Uri vybraného obrázku
-     * @return Bitmap bitmapa odpovídajícího Uri
-     */
-    private Bitmap getBitmapFromUri(Uri pickedImage) {
-        //TODO zjistit proč naroste halda při načítání obrázku!!!!!!!
-        Bitmap bitmap;
-        try {
-            bitmap = null;
-            MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
-        } catch (IOException e) {
-            Log.d(TAG, "Image not found");
-            bitmap = null;
-        }
-        return bitmap;
+    private void setBitmap(Uri pickedImage) {
+
+        //TODO zjistit, když nebude obrázek načtený
+        Glide.with(this)
+                .load(pickedImage)
+                .into(photoViewBillPhoto);
+
+
     }
 
 
     public void showPicture(View view) {
-        /*
-        if (pickedBitmap != null) {
+        if (isPictureFound) {
             Intent intent = new Intent(BillShowActivity.this, ShowPictureActivity.class);
             Log.d("BillShowActivity", "Start activity Show PictureActivity");
             intent.putExtra("BITMAP_URI", bill.getPhoto());
@@ -223,7 +252,6 @@ public class BillShowActivity extends AppCompatActivity
             String message = getString(R.string.picture_is_not_available);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         }
-        */
     }
 
     @Override
