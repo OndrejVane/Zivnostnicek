@@ -10,17 +10,18 @@ public class InputValidation {
      * Kostruktor třídy je privátní,aby nešla
      * vytvořit instance této třídy.
      */
-    private InputValidation(){
+    private InputValidation() {
 
     }
 
     /**
      * Metoda, která validuje jediný povinný údaj ve formuláři.
      * Pokud je prázdný, metoda vrací false.
+     *
      * @return boolean
      */
-    public static boolean validateCompanyName(String input){
-        if(input.isEmpty()){
+    public static boolean validateCompanyName(String input) {
+        if (input.isEmpty()) {
             return false;
         }
         return true;
@@ -31,23 +32,24 @@ public class InputValidation {
      * Telefonní číslo je nepovinné. Pokud je tedy prázdé, tak
      * metoda vrací true. Metoda akceptuje formát 123456789
      * a formát s předvolbou +420 123456789.
+     *
      * @return boolean
      */
     public static boolean validatePhoneNumber(String telephoneNumber) {
-        if(telephoneNumber.isEmpty()){
+        if (telephoneNumber.isEmpty()) {
             return true;
-        }else {
-            if(telephoneNumber.startsWith("+")){
-                if(telephoneNumber.length() == 13){
+        } else {
+            if (telephoneNumber.startsWith("+")) {
+                if (telephoneNumber.length() == 13) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
             }
-            if(Character.isDigit(telephoneNumber.charAt(0))){
-                if(telephoneNumber.length() == 9){
+            if (Character.isDigit(telephoneNumber.charAt(0))) {
+                if (telephoneNumber.length() == 9) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
             }
@@ -60,34 +62,35 @@ public class InputValidation {
      * číslic. Následně ověří validitu iča podle algoritmu pro ověření iča.
      * Pokud je pole prázdné vrací true protože je to nepovinný údaj.
      * Odkaz na algoritmus: https://phpfashion.com/jak-overit-platne-ic-a-rodne-cislo
-     * @return  boolean
+     *
+     * @return boolean
      */
     public static boolean validateIdentificationNumber(String identificationNumber) {
         int temp = 0;
         int a, c;
-        if(identificationNumber.isEmpty()){
+        if (identificationNumber.isEmpty()) {
             return true;
-        }else {
-            if(identificationNumber.length() == 10){
-                if(Character.isLetter(identificationNumber.charAt(0)) && Character.isLetter(identificationNumber.charAt(1))){
-                    for(int i = 2; i<identificationNumber.length()-1; i++){
-                        if(Character.isDigit(identificationNumber.charAt(i))){
-                            temp = temp + (Character.getNumericValue(identificationNumber.charAt(i)) * (10-i));
-                        }else {
+        } else {
+            if (identificationNumber.length() == 10) {
+                if (Character.isLetter(identificationNumber.charAt(0)) && Character.isLetter(identificationNumber.charAt(1))) {
+                    for (int i = 2; i < identificationNumber.length() - 1; i++) {
+                        if (Character.isDigit(identificationNumber.charAt(i))) {
+                            temp = temp + (Character.getNumericValue(identificationNumber.charAt(i)) * (10 - i));
+                        } else {
                             return false;
                         }
                     }
                     a = temp % 11;
-                    if(a == 0){
+                    if (a == 0) {
                         c = 1;
-                    }else if (a == 1){
+                    } else if (a == 1) {
                         c = 0;
-                    }else {
+                    } else {
                         c = 11 - temp;
                     }
-                    if(Character.getNumericValue(identificationNumber.charAt(9)) == c){
+                    if (Character.getNumericValue(identificationNumber.charAt(9)) == c) {
                         return true;
-                    }else {
+                    } else {
                         return false;
                     }
                 }
@@ -98,17 +101,18 @@ public class InputValidation {
 
     /**
      * Metoda, která validuje DIČ.
+     *
      * @return
      */
     public static boolean validateTaxIdentificationNumber(String taxIdentificationNumber) {
         int inputLength = taxIdentificationNumber.length();
-        if (taxIdentificationNumber.isEmpty()){
+        if (taxIdentificationNumber.isEmpty()) {
             return true;
-        }else {
-            if(inputLength >= 10 && inputLength <= 12){
-                if(Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))){
-                    for (int i = 2; i<inputLength ; i++){
-                        if(!Character.isDigit(taxIdentificationNumber.charAt(i))){
+        } else {
+            if (inputLength >= 10 && inputLength <= 12) {
+                if (Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))) {
+                    for (int i = 2; i < inputLength; i++) {
+                        if (!Character.isDigit(taxIdentificationNumber.charAt(i))) {
                             return false;
                         }
                     }
@@ -121,10 +125,11 @@ public class InputValidation {
 
     /**
      * Metoda, která validuje, zda je string prázdný.
+     *
      * @return
      */
-    public static boolean validateNote(String input){
-        if(input.isEmpty()){
+    public static boolean validateNote(String input) {
+        if (input.isEmpty()) {
             return false;
         }
         return true;
@@ -132,10 +137,11 @@ public class InputValidation {
 
     /**
      * Metoda, která validuje, zda je string prázdný.
+     *
      * @return
      */
-    public static boolean validateIsEmpty(String input){
-        if(input.isEmpty()){
+    public static boolean validateIsEmpty(String input) {
+        if (input.isEmpty()) {
             return false;
         }
         return true;

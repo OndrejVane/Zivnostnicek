@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.helper;
 
+import android.util.Log;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -21,7 +23,7 @@ public class HashPassword {
      */
     private String bytesToStringHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
+        for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
             hexChars[j * 2] = hexArray[v >>> 4];
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
@@ -33,10 +35,10 @@ public class HashPassword {
      * Metoda, která převede vstupní řetězec pomocí příslušného algoritmu na hash.
      * Algoritmus je definovaný v konstantě algorithm.
      *
-     * @param data  vstupní řetězec
-     * @return  výsledný hash vstupního řetězce v bytech
+     * @param data vstupní řetězec
+     * @return hash vstupního řetězce v bytech
      */
-    public String hashPassword(String data){
+    public String hashPassword(String data) {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance(algorithm);
             messageDigest.reset();
@@ -45,7 +47,7 @@ public class HashPassword {
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            System.out.println("No algorithm!");
+            Log.d("HashPassword", "Algorithm not found");
             return null;
         }
 

@@ -7,4 +7,7 @@
     <color name="black">#000000</color>
     <color name="grey">#898989</color>
     <color name="red">#ff0000</color>
+    <color name="expense">#fa6262</color>
+    <color name="income">#68e994</color>
+    <color name="zero">#f2d158</color>
 </resources>

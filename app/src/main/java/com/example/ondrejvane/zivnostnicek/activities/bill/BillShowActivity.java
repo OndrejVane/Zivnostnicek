@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.ShowPictureActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
@@ -63,6 +65,8 @@ public class BillShowActivity extends AppCompatActivity
     private Bitmap pickedBitmap;
     private Bill bill;
 
+    private String TAG = "BillShowActivity";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,7 @@ public class BillShowActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -109,23 +113,23 @@ public class BillShowActivity extends AppCompatActivity
         //inicializace databáze
         billDatabaseHelper = new BillDatabaseHelper(BillShowActivity.this);
         traderDatabaseHelper = new TraderDatabaseHelper(BillShowActivity.this);
-        quantityDatabaseHelper = new ItemQuantityDatabaseHelper(BillShowActivity. this);
+        quantityDatabaseHelper = new ItemQuantityDatabaseHelper(BillShowActivity.this);
         storageItemDatabaseHelper = new StorageItemDatabaseHelper(BillShowActivity.this);
         typeBillDatabaseHelper = new TypeBillDatabaseHelper(BillShowActivity.this);
 
         //načtení potřebných údajů z databáze z databáze a zobrazení v aktivitě
         bill = billDatabaseHelper.getBillById(billId);
-        if(bill.getTraderId() != -1){
+        if (bill.getTraderId() != -1) {
             Trader trader = traderDatabaseHelper.getTraderById(bill.getTraderId());
             textViewBillTrader.setText(trader.getTraderName());
-        }else {
+        } else {
             textViewBillTrader.setText(getString(R.string.not_selected));
         }
 
-        if(bill.getTypeId() != -1){
+        if (bill.getTypeId() != -1) {
             TypeBill typeBill = typeBillDatabaseHelper.getTypeBillById(bill.getTypeId());
             textViewBillType.setText(typeBill.getName());
-        }else {
+        } else {
             textViewBillType.setText(getString(R.string.not_selected));
         }
 
@@ -135,13 +139,13 @@ public class BillShowActivity extends AppCompatActivity
         textViewBillDate.setText(bill.getDate());
 
 
-        if(bill.getPhoto() != null){
+        if (bill.getPhoto() != null) {
             pickedBitmap = getBitmapFromUri(Uri.parse(bill.getPhoto()));
         }
 
-        if(pickedBitmap != null){
+        if (pickedBitmap != null) {
             photoViewBillPhoto.setImageBitmap(pickedBitmap);
-        }else {
+        } else {
             textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
         }
 
@@ -149,7 +153,7 @@ public class BillShowActivity extends AppCompatActivity
     }
 
     private void setTextToActivity() {
-        if(isExpense){
+        if (isExpense) {
             setTitle(getString(R.string.title_activity_expense_show));
         }
     }
@@ -161,17 +165,17 @@ public class BillShowActivity extends AppCompatActivity
         String[] billItemUnit;
         StorageItem storageItemTemp;
         //pokud obsahuje faktura nějaké položky
-        if(arrayList.size() != 0){
+        if (arrayList.size() != 0) {
             billItemName = new String[arrayList.size()];
             billItemQuantity = new float[arrayList.size()];
             billItemUnit = new String[arrayList.size()];
-            for (int i=0; i<arrayList.size(); i++){
+            for (int i = 0; i < arrayList.size(); i++) {
                 storageItemTemp = storageItemDatabaseHelper.getStorageItemById((int) arrayList.get(i).getStorageItemId());
                 billItemName[i] = storageItemTemp.getName();
                 billItemQuantity[i] = arrayList.get(i).getQuantity();
                 billItemUnit[i] = storageItemTemp.getUnit();
             }
-        }else {
+        } else {
             //pokud neobsahuje žádné položky
             billItemName = new String[]{getString(R.string.no_bill_items)};
             billItemQuantity = new float[1];
@@ -190,15 +194,18 @@ public class BillShowActivity extends AppCompatActivity
     /**
      * Metoda, která převede obrázek z Uri do
      * bitmapy
+     *
      * @param pickedImage Uri vybraného obrázku
-     * @return  Bitmap bitmapa odpovídajícího Uri
+     * @return Bitmap bitmapa odpovídajícího Uri
      */
-    private Bitmap getBitmapFromUri(Uri pickedImage){
+    private Bitmap getBitmapFromUri(Uri pickedImage) {
         //TODO zjistit proč naroste halda při načítání obrázku!!!!!!!
         Bitmap bitmap;
         try {
-            bitmap =  MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
+            bitmap = null;
+            MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
         } catch (IOException e) {
+            Log.d(TAG, "Image not found");
             bitmap = null;
         }
         return bitmap;
@@ -206,12 +213,22 @@ public class BillShowActivity extends AppCompatActivity
 
 
     public void showPicture(View view) {
-
+        /*
+        if (pickedBitmap != null) {
+            Intent intent = new Intent(BillShowActivity.this, ShowPictureActivity.class);
+            Log.d("BillShowActivity", "Start activity Show PictureActivity");
+            intent.putExtra("BITMAP_URI", bill.getPhoto());
+            startActivity(intent);
+        } else {
+            String message = getString(R.string.picture_is_not_available);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        }
+        */
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -233,8 +250,9 @@ public class BillShowActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -263,7 +281,7 @@ public class BillShowActivity extends AppCompatActivity
      * Pokud ano zavolá proceduru deteleNote. Pokud ne, upozornění se zavře
      * a nic se nestane.
      */
-    private void alertDelete(){
+    private void alertDelete() {
         AlertDialog.Builder alert = new AlertDialog.Builder(BillShowActivity.this);
         alert.setMessage(R.string.bill_delete_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -284,8 +302,8 @@ public class BillShowActivity extends AppCompatActivity
 
     }
 
-    private void deleteBill(){
-        if (billDatabaseHelper.deleteBillWithId(bill.getId())){
+    private void deleteBill() {
+        if (billDatabaseHelper.deleteBillWithId(bill.getId())) {
 
             //vypis uživateli o úspěšném smazání záznamu
             String message = getString(R.string.bill_has_been_deleted);
@@ -294,7 +312,7 @@ public class BillShowActivity extends AppCompatActivity
             intent.putExtra("IS_EXPENSE", isExpense);
             startActivity(intent);
             finish();
-        }else {
+        } else {
             //vypis uživateli o neúspěšném smazání záznamu
             String message = getString(R.string.bill_has_not_been_deleted);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -303,8 +321,9 @@ public class BillShowActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -320,10 +339,10 @@ public class BillShowActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

@@ -18,6 +18,10 @@ android {
     }
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
@@ -35,5 +39,7 @@ dependencies {
     implementation 'com.github.paolorotolo:expandableheightlistview:1.0.0'
     implementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.duanhong169:colorpicker:1.1.6'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'com.github.MikeOrtiz:TouchImageView:1.4.0'
 
 }

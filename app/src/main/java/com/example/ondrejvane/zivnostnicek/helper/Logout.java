@@ -16,16 +16,30 @@ public class Logout extends AppCompatActivity {
     private Activity activity;
     private Context context;
 
-    public Logout(Activity activity, Context context){
+    /**
+     * Kontruktor třídy log out
+     *
+     * @param activity příslušná aktivita
+     * @param context  kontext aktivity
+     */
+    public Logout(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
     }
 
-    public void logout(){
+    /**
+     * Pomocná procedura, která obaluje funkci pro zobrazení
+     * dialogového okna a pro odhlášení.
+     */
+    public void logout() {
         alertLogOut();
     }
 
-    private void alertLogOut(){
+    /**
+     * Procedura, která zobrazí dialogové okno a zeptá
+     * se uživatele, zda si přeje být odhlášen.
+     */
+    private void alertLogOut() {
         AlertDialog.Builder alert = new AlertDialog.Builder(activity);
         alert.setMessage(R.string.log_out_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -46,6 +60,10 @@ public class Logout extends AppCompatActivity {
 
     }
 
+    /**
+     * Porcesura, která provede odhlášení uživtele
+     * a spustí aktivitu pro přihlášení do aplikace.
+     */
     private void logOutActivity() {
 
         //resetování instací pro user data a pro user nastavení
@@ -60,6 +78,6 @@ public class Logout extends AppCompatActivity {
         editor.apply();
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
-        ((Activity)context).finish();
+        ((Activity) context).finish();
     }
 }

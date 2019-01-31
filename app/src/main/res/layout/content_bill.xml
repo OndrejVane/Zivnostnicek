@@ -43,7 +43,7 @@
             android:layout_marginStart="5dp"
             android:textSize="17sp"/>
 
-        <!--Spinner pro vybrání roku-->
+        <!--Spinner pro vybrání mesíce-->
         <Spinner
             android:id="@+id/spinnerIncomeMonth"
             android:layout_width="110dp"

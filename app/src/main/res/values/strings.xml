@@ -182,6 +182,10 @@
     <string name="bill_type">Bill type</string>
     <string name="select_bill_type">Select bill type</string>
     <string name="no_bill_items">No bill items</string>
+    <string name="income_and_expense">Income and expense</string>
+    <string name="income_and_expense_space">Income \n and \n expense</string>
+    <string name="balance">Balance</string>
+    <string name="zero">0.0,-</string>
 
     <string-array name="vat_amount">
         <item>21</item>

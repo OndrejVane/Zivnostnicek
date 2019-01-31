@@ -21,17 +21,18 @@
         </activity>
         <activity android:name=".activities.RegisterActivity" />
         <activity
-            android:name=".activities.HomeActivity"
+            android:name=".activities.home.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.bill.BillActivity"
             android:label="@string/title_activity_income"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!--
         <activity
             android:name=".activities.expense.ExpenseActivity"
             android:label="@string/title_activity_expense"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.trader.TraderActivity"
             android:label="@string/title_activity_trader"
@@ -80,10 +81,11 @@
             android:name=".activities.bill.BillNewActivity"
             android:label="@string/title_activity_income_new"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!--
         <activity
             android:name=".activities.expense.ExpenseNewActivity"
             android:label="@string/title_activity_expense_new"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />-->
         <activity
             android:name=".activities.info.InfoCurrencyActivity"
             android:label="@string/title_activity_info_currency"
@@ -108,7 +110,8 @@
             android:name=".activities.bill.BillShowActivity"
             android:label="@string/title_activity_income_show"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ShowPictureActivity"></activity>
+        <activity android:name=".activities.ShowPictureActivity"/>
+
     </application>
 
 </manifest>

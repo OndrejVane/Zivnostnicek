@@ -20,10 +20,11 @@ public class Header extends AppCompatActivity {
 
     /**
      * Konstruktor třídy Header.
-     * @param navigationView
-     * @param context
+     *
+     * @param navigationView navigační zobrazení
+     * @param context kontext aktivity
      */
-    public Header(NavigationView navigationView, Context context){
+    public Header(NavigationView navigationView, Context context) {
         this.context = context;
         this.navigationView = navigationView;
         this.userInformation = UserInformation.getInstance();

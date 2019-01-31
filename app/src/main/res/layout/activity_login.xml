@@ -47,7 +47,6 @@
         android:fontFamily="sans-serif"
         android:hint="@string/password"
         android:inputType="textPassword" />
-
     <android.support.v7.widget.CardView
         android:layout_width="268dp"
         android:layout_height="50dp"

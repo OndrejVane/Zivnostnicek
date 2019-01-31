@@ -1,31 +1,47 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
-import android.widget.ImageView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.ortiz.touchview.TouchImageView;
+
+import java.io.IOException;
 
 public class ShowPictureActivity extends AppCompatActivity {
 
-    private ImageView imageView;
+
+    private TouchImageView touchImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //skryje horní panel
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
         setContentView(R.layout.activity_show_picture);
+        /*
+        touchImageView = findViewById(R.id.touchImageView);
+        Bitmap bitmap = getBitmapFromUri(Uri.parse(getIntent().getStringExtra("BITMAP_URI")));
+        touchImageView.setImageBitmap(bitmap);
+        */
+    }
 
-
-        //zákaz orientace na šířku
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_login);
-
-
-        imageView = findViewById(R.id.showImageView);
-        Bitmap bitmap = getIntent().getParcelableExtra("BILL");
-        imageView.setImageBitmap(bitmap);
+    private Bitmap getBitmapFromUri(Uri pickedImage) {
+        //TODO zjistit proč naroste halda při načítání obrázku!!!!!!!
+        Bitmap bitmap;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
+        } catch (IOException e) {
+            bitmap = null;
+        }
+        return bitmap;
     }
 }

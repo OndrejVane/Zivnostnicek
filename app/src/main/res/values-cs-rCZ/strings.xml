@@ -171,6 +171,10 @@
     <string name="bill_type">Druh faktury</string>
     <string name="select_bill_type">Vyberte druh faktury</string>
     <string name="no_bill_items">Žádné položky</string>
+    <string name="income_and_expense">Příjmy a výdaje</string>
+    <string name="income_and_expense_space">Příjmy \n a \n výdaje</string>
+    <string name="balance">Bilance</string>
+    <string name="zero">0.0,-</string>
 
     <string-array name="photo">
         <item>galerie</item>

@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -12,7 +13,7 @@ import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
-public class BillDatabaseHelper extends DatabaseHelper{
+public class BillDatabaseHelper extends DatabaseHelper {
 
     /**
      * Constructor
@@ -24,7 +25,7 @@ public class BillDatabaseHelper extends DatabaseHelper{
     }
 
 
-    public long addBill(Bill bill){
+    public long addBill(Bill bill) {
         SQLiteDatabase db = this.getWritableDatabase();
         long billId;
 
@@ -44,11 +45,11 @@ public class BillDatabaseHelper extends DatabaseHelper{
         return billId;
     }
 
-    public String[][] getBillData(int userID, int isExpense){
+    public String[][] getBillData(int userID, int isExpense) {
         String data[][];
         TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
 
-        String[] columns = { COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_DATE, COLUMN_BILL_AMOUNT, COLUMN_BILL_TYPE_ID};
+        String[] columns = {COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_DATE, COLUMN_BILL_AMOUNT, COLUMN_BILL_TYPE_ID};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -70,27 +71,27 @@ public class BillDatabaseHelper extends DatabaseHelper{
         data = new String[6][count];
         int i = 0;
 
-        if (cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 data[0][i] = cursor.getString(0);
                 data[1][i] = cursor.getString(1);
                 data[2][i] = cursor.getString(2);
-                if(isExpense == 0){
+                if (isExpense == 0) {
                     data[3][i] = cursor.getString(3);
-                }else {
+                } else {
                     data[3][i] = cursor.getString(3);
                 }
 
-                if(cursor.getInt(4) != -1){
+                if (cursor.getInt(4) != -1) {
                     TypeBill typeBill = typeBillDatabaseHelper.getTypeBillById(cursor.getInt(4));
                     data[4][i] = typeBill.getName();
                     data[5][i] = Integer.toString(typeBill.getColor());
-                }else {
+                } else {
                     data[4][i] = "Žándý typ";
                     data[5][i] = "-9901676";    //primary color number
                 }
                 i++;
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         db.close();
         cursor.close();
@@ -98,7 +99,7 @@ public class BillDatabaseHelper extends DatabaseHelper{
         return data;
     }
 
-    public Bill getBillById(int billId){
+    public Bill getBillById(int billId) {
 
         Bill bill = new Bill();
 
@@ -119,7 +120,7 @@ public class BillDatabaseHelper extends DatabaseHelper{
                 null);
 
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             bill.setId(billId);
             bill.setName(cursor.getString(0));
             bill.setAmount(cursor.getFloat(1));
@@ -135,11 +136,9 @@ public class BillDatabaseHelper extends DatabaseHelper{
         cursor.close();
 
         return bill;
-
-
     }
 
-    public boolean deleteBillWithId(int billId){
+    public boolean deleteBillWithId(int billId) {
 
         boolean result;
 
@@ -155,6 +154,64 @@ public class BillDatabaseHelper extends DatabaseHelper{
         result = db.delete(TABLE_BILL, where, deleteArgs) > 0;
         return result;
 
+    }
+
+    public float getBillDataByDate(int year, int month, int isExpense) {
+        int userId = UserInformation.getInstance().getUserId();
+        float result = 0;
+
+        String[] columns = {COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?";
+
+        String[] selectionArgs = {Integer.toString(userId), Integer.toString(isExpense)};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(1);
+                int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
+                int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
+
+                //nevybrán měsíc ani rok
+                if (year == -1 && month == -1) {
+                    result = result + cursor.getFloat(0);
+                    //vybrán pouze rok
+                } else if (year != -1 && month == -1) {
+
+                    if(year == foundYear){
+                        result = result + cursor.getFloat(0);
+                    }
+
+                    //vybrán rok i měsíc
+                } else if (year != -1 && month != -1) {
+
+                    if( year == foundYear && month == foundMonth){
+                        result = result + cursor.getFloat(0);
+                    }
+
+                    //vybrán měsíc ale ne rok
+                } else {
+                    result = 0;
+                }
+            } while (cursor.moveToNext());
+
+        }
+
+        db.close();
+        cursor.close();
+
+        return result;
     }
 
 }
