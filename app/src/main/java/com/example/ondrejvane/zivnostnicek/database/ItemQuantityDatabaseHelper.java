@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.ondrejvane.zivnostnicek.helper.StorageItemBox;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
@@ -21,7 +22,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addItemQuantity(ItemQuantity itemQuantity){
+    public void addItemQuantity(ItemQuantity itemQuantity) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -32,10 +33,10 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public float getQuantityWithStorageItemId(int storageItemId){
+    public float getQuantityWithStorageItemId(int storageItemId) {
         float quantity = 0;
 
-        String[] columns = { COLUMN_ITEM_QUANTITY_QUANTITY};
+        String[] columns = {COLUMN_ITEM_QUANTITY_QUANTITY};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -52,10 +53,10 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
                 null,                           //filter by row groups
                 null);
 
-        if (cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 quantity = quantity + cursor.getFloat(0);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         db.close();
         cursor.close();
@@ -63,10 +64,10 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return quantity;
     }
 
-    public ArrayList<ItemQuantity> getItemQuantityByBillId(int billId){
+    public ArrayList<ItemQuantity> getItemQuantityByBillId(int billId) {
         ArrayList<ItemQuantity> arrayList = new ArrayList<>();
 
-        String[] columns = { COLUMN_ITEM_QUANTITY_ID, COLUMN_ITEM_QUANTITY_QUANTITY, COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID};
+        String[] columns = {COLUMN_ITEM_QUANTITY_ID, COLUMN_ITEM_QUANTITY_QUANTITY, COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -83,15 +84,15 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
                 null,                           //filter by row groups
                 null);
 
-        if (cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 ItemQuantity itemQuantity = new ItemQuantity();
                 itemQuantity.setBillId(billId);
                 itemQuantity.setId(cursor.getInt(0));
                 itemQuantity.setQuantity(cursor.getFloat(1));
                 itemQuantity.setStorageItemId(cursor.getInt(2));
                 arrayList.add(itemQuantity);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         db.close();
         cursor.close();
@@ -99,7 +100,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public boolean deleteItemQuantityByBillId(int billId){
+    public boolean deleteItemQuantityByBillId(int billId) {
         boolean result;
 
         String where = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
@@ -111,5 +112,36 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         result = db.delete(TABLE_ITEM_QUANTITY, where, deleteArgs) > 0;
 
         return result;
+    }
+
+    public boolean deleteItemQuantityById(int itemId){
+        boolean result;
+
+        String where = COLUMN_ITEM_QUANTITY_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(itemId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        result = db.delete(TABLE_ITEM_QUANTITY, where, deleteArgs) > 0;
+
+        return result;
+    }
+
+    public ArrayList<StorageItemBox> getItemQuantityAndStorageItemByBillId(int billId) {
+
+        ArrayList<ItemQuantity> arrayItemQuantity = getItemQuantityByBillId(billId);
+        ArrayList<StorageItemBox> arrayStorageItemBox = new ArrayList<>();
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(getContext());
+
+        for (int i = 0; i < arrayItemQuantity.size(); i++) {
+            long storageItemId = arrayItemQuantity.get(i).getStorageItemId();
+            ItemQuantity itemQuantity = arrayItemQuantity.get(i);
+            StorageItem storageItem = storageItemDatabaseHelper.getStorageItemById((int) storageItemId);
+            StorageItemBox storageItemBox = new StorageItemBox(storageItem, itemQuantity, false);
+            arrayStorageItemBox.add(storageItemBox);
+        }
+
+        return arrayStorageItemBox;
     }
 }

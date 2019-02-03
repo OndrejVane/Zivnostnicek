@@ -11,6 +11,7 @@ import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
 public class BillDatabaseHelper extends DatabaseHelper {
@@ -212,6 +213,28 @@ public class BillDatabaseHelper extends DatabaseHelper {
         cursor.close();
 
         return result;
+    }
+
+
+    public void updateBill(Bill bill){
+        String where = COLUMN_BILL_ID + " = ?";
+
+        String[] updateArgs = {Integer.toString(bill.getId())};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BILL_NUMBER, bill.getName());
+        values.put(COLUMN_BILL_AMOUNT, bill.getAmount());
+        values.put(COLUMN_BILL_VAT, bill.getVAT());
+        values.put(COLUMN_BILL_TRADER_ID, bill.getTraderId());
+        values.put(COLUMN_BILL_DATE, bill.getDate());
+        values.put(COLUMN_BILL_PHOTO, bill.getPhoto());
+        values.put(COLUMN_BILL_USER_ID, bill.getUserId());
+        values.put(COLUMN_BILL_TYPE_ID, bill.getTypeId());
+        values.put(COLUMN_BILL_IS_EXPENSE, bill.getIsExpense());
+        db.update(TABLE_BILL, values, where, updateArgs);
+        db.close();
     }
 
 }

@@ -186,6 +186,17 @@
     <string name="income_and_expense_space">Income \n and \n expense</string>
     <string name="balance">Balance</string>
     <string name="zero">0.0,-</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_income_show">Show income</string>
+    <string name="title_activity_bill_edit">Edit income</string>
+    <string name="save_income">Save income</string>
+    <string name="save_expense">Save expense</string>
+    <string name="title_activity_expense_edit">Edit expense</string>
+    <string name="edit_information_about_income">Edit information about income</string>
+    <string name="edit_information_about_expense">Edit information about expense</string>
+    <string name="no_quantity_required">No quantity required</string>
+    <string name="bill_item_question">Are you really want to delete this item?</string>
+    <string name="income_has_been_saved">Income has been saved</string>
 
     <string-array name="vat_amount">
         <item>21</item>
@@ -236,8 +247,4 @@
         <item>November</item>
         <item>December</item>
     </string-array>
-    <string name="title_activity_settings">SettingsActivity</string>
-    <string name="title_activity_income_show">Show income</string>
-
-
 </resources>

@@ -175,6 +175,15 @@
     <string name="income_and_expense_space">Příjmy \n a \n výdaje</string>
     <string name="balance">Bilance</string>
     <string name="zero">0.0,-</string>
+    <string name="title_activity_bill_edit">Editace příjmu</string>
+    <string name="save_income">Uložit příjem</string>
+    <string name="save_expense">Uložit výdaj</string>
+    <string name="title_activity_expense_edit">Editace výdaje</string>
+    <string name="edit_information_about_income">Editujte informace o příjmu</string>
+    <string name="edit_information_about_expense">Editujte informace o výdaji</string>
+    <string name="no_quantity_required">Ve skladu není požadované množství</string>
+    <string name="bill_item_question">Opravdu si přejete smazat tuto položku?</string>
+    <string name="income_has_been_saved">Faktura byla úspěšně uložena</string>
 
     <string-array name="photo">
         <item>galerie</item>

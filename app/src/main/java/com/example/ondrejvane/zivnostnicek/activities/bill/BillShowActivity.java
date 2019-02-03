@@ -36,6 +36,7 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.helper.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
@@ -44,7 +45,6 @@ import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BillShowActivity extends AppCompatActivity
@@ -79,6 +79,7 @@ public class BillShowActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Log.d(TAG, "Activity is starting");
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,6 +97,8 @@ public class BillShowActivity extends AppCompatActivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initActivity();
+
+        Log.d(TAG, "Activity is successfully started");
     }
 
     private void initActivity() {
@@ -146,9 +149,9 @@ public class BillShowActivity extends AppCompatActivity
         textViewBillVAT.setText(Integer.toString(bill.getVAT()));
         textViewBillDate.setText(bill.getDate());
 
-        if (bill.getPhoto() != null && tryReadPicture(Uri.parse(bill.getPhoto()))) {
+        if (bill.getPhoto() != null && PictureUtility.tryReadPicture(Uri.parse(bill.getPhoto()), this)) {
 
-            setBitmap(Uri.parse(bill.getPhoto()));
+            PictureUtility.setBitmap(Uri.parse(bill.getPhoto()), this, photoViewBillPhoto);
             isPictureFound = true;
 
         } else {
@@ -157,39 +160,6 @@ public class BillShowActivity extends AppCompatActivity
         }
 
         showBillItemsToActivity(bill.getId());
-    }
-
-    private boolean tryReadPicture(Uri pickedImage) {
-        /*
-        try {
-            MediaStore.Images.Media.getBitmap(this.getContentResolver(), pickedImage);
-            return true;
-        } catch (IOException e) {
-            Log.d(TAG, "Picture not found, probably is deleted");
-            return false;
-        }
-        */
-        boolean returnValue;
-        ContentResolver cr = getContentResolver();
-        String[] projection = {MediaStore.MediaColumns.DATA};
-        Cursor cur = cr.query(pickedImage, projection, null, null, null);
-        if (cur != null) {
-            if (cur.moveToFirst()) {
-                String filePath = cur.getString(0);
-
-                if (new File(filePath).exists()) {
-                    returnValue = true;
-                } else {
-                    returnValue = false;
-                }
-            } else {
-                returnValue = false;
-            }
-        } else {
-            returnValue = false;
-        }
-        cur.close();
-        return returnValue;
     }
 
     private void setTextToActivity() {
@@ -229,18 +199,6 @@ public class BillShowActivity extends AppCompatActivity
         expandableListView.setAdapter(listViewItemAdapter);
         expandableListView.setExpanded(true);
     }
-
-
-    private void setBitmap(Uri pickedImage) {
-
-        //TODO zjistit, když nebude obrázek načtený
-        Glide.with(this)
-                .load(pickedImage)
-                .into(photoViewBillPhoto);
-
-
-    }
-
 
     public void showPicture(View view) {
         if (isPictureFound) {
@@ -286,14 +244,12 @@ public class BillShowActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.option_menu_income_show_edit:
-                /*
-                intent = new Intent(BillShowActivity.this, null);
-                intent.putExtra("TRADER_ID", traderID);
-                intent.putExtra("NOTE_ID", noteID);
+
+                Intent intent = new Intent(BillShowActivity.this, BillEditActivity.class);
+                intent.putExtra("BILL_ID", billId);
+                intent.putExtra("IS_EXPENSE", isExpense);
                 startActivity(intent);
                 finish();
-                */
-                //TODO EDIT
                 return true;
             case R.id.option_menu_income_show_delete:
                 alertDelete();

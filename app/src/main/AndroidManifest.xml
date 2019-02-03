@@ -13,8 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.LoginActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -102,8 +103,11 @@
             android:name=".activities.bill.BillShowActivity"
             android:label="@string/title_activity_income_show"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ShowPictureActivity"/>
-
+        <activity android:name=".activities.ShowPictureActivity" />
+        <activity
+            android:name=".activities.bill.BillEditActivity"
+            android:label="@string/title_activity_bill_edit"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

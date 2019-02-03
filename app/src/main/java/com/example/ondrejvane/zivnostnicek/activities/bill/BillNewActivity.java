@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
@@ -56,6 +58,7 @@ import java.util.List;
 public class BillNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private final String TAG = "BillNewActivity";
 
     private boolean isExpense;
     private TextView mDisplayDate;  //Datum
@@ -325,35 +328,17 @@ public class BillNewActivity extends AppCompatActivity
                         //uložení odkazu na obrázek do globální proměnné
                         pictureUri = pickedImage;
                         //získání bitmapy z Uri
-                        Bitmap bitmap = getBitmapFromUri(pickedImage);
+                        Bitmap bitmap = PictureUtility.getBitmapFromUri(pickedImage, this);
                         //nastavení bitmapy do image view
                         photoView.setImageBitmap(bitmap);
                     }
             }
         } catch (NullPointerException e) {
             pictureUri = null;
+            Log.d(TAG, "On activity result null pointer exception");
         }
     }
 
-
-    /**
-     * Metoda, která převede obrázek z Uri do
-     * bitmapy
-     *
-     * @param pickedImage Uri vybraného obrázku
-     * @return Bitmap bitmapa odpovídajícího Uri
-     */
-    private Bitmap getBitmapFromUri(Uri pickedImage) {
-        String[] filePath = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-        cursor.moveToFirst();
-        String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-        cursor.close();
-        return bitmap;
-    }
 
     /**
      * Metoda, která po stisknutí tlačítka zpět nastartuje příslušnou
@@ -497,11 +482,11 @@ public class BillNewActivity extends AppCompatActivity
 
                 int storageItemId = Integer.parseInt(storageItems[0][indexInSpinner - 1]);
 
-                //pokud se jedná o výdaj musím zkontrolovat, zda mám dostatečné množství ve skladu
-                if (isExpense) {
+                //pokud se jedná o příjem musím zkontrolovat, zda mám dostatečné množství ve skladu
+                if (!isExpense) {
                     float storageQuantity = itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItemId);
                     if (storageQuantity < Float.parseFloat(quantity)) {
-                        layoutItemQuantity.setError("Ve skladu není požadované množství");
+                        layoutItemQuantity.setError(getString(R.string.no_quantity_required));
                         return;
                     }
                 }
