@@ -204,7 +204,13 @@
     <string name="traders_summary">Traders summary</string>
     <string name="title_activity_info_about_app">About application</string>
     <string name="add_type_bill">Add type bill</string>
-
+    <string name="version">Version:</string>
+    <string name="author">Author: </string>
+    <string name="contact">Contact: </string>
+    <string name="about_app">This application was created as a student project within the bachelor thesis.</string>
+    <string name="author_name">Ondřej Váně</string>
+    <string name="version_number">1.0</string>
+    <string name="email">onry.vane@gmail.com</string>
     <string-array name="vat_amount">
         <item>21</item>
         <item>15</item>

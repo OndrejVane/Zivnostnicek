@@ -192,6 +192,13 @@
     <string name="title_activity_home_year_summary">Roční přehled</string>
     <string name="title_activity_info_about_app">O aplikaci</string>
     <string name="add_type_bill">Přidat druh faktury</string>
+    <string name="version">Verze: </string>
+    <string name="author">Autor: </string>
+    <string name="contact">Kontakt: </string>
+    <string name="about_app">Tato aplikace byla vytvořena jako studentský projekt v rámci bakalářské práce."</string>
+    <string name="author_name">Ondřej Váně</string>
+    <string name="version_number">1.0</string>
+    <string name="email">onry.vane@gmail.com</string>
 
     <string-array name="photo">
         <item>galerie</item>
