@@ -197,6 +197,8 @@
     <string name="no_quantity_required">No quantity required</string>
     <string name="bill_item_question">Are you really want to delete this item?</string>
     <string name="income_has_been_saved">Income has been saved</string>
+    <string name="can_not_connect_to_the_server">Can not connect to the server</string>
+    <string name="registration_in_progress">Signing Up.. Please wait...</string>
 
     <string-array name="vat_amount">
         <item>21</item>

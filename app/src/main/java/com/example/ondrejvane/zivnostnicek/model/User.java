@@ -1,11 +1,14 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
+import java.util.Date;
+
 public class User {
 
     private int id;
     private String fullName;
     private String email;
     private String password;
+    private Date sessionExpiryDate;
 
     public int getId() {
         return id;
@@ -37,5 +40,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Date getSessionExpiryDate() {
+        return sessionExpiryDate;
+    }
+
+    public void setSessionExpiryDate(Date sessionExpiryDate) {
+        this.sessionExpiryDate = sessionExpiryDate;
     }
 }

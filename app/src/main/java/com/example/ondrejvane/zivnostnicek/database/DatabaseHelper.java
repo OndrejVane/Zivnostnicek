@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 6;
+    public static final int DATABASE_VERSION = 7;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -84,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_USER_FULL_NAME + " TEXT,"
+            + COLUMN_USER_ID + " INTEGER PRIMARY KEY, " + COLUMN_USER_FULL_NAME + " TEXT,"
             + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT" + ")";
 
     //SQL pro vytvoření tabulky Trader

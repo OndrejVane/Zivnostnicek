@@ -1,28 +1,47 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
+import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
-import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.session.MySingleton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    private static final String TAG = "RegisterActivity";
 
     private EditText nameET;
     private EditText userAddressET;
     private EditText password1ET;
     private EditText password2ET;
 
-    private UserDatabaseHelper userDatabaseHelper;
-    private User user;
+    private static final String KEY_STATUS = "status";
+    private static final String KEY_MESSAGE = "message";
+    private static final String KEY_FULL_NAME = "full_name";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASSWORD = "password";
+
     private HashPassword hashPassword;
+    private String email;
+    private String password;
+    private String fullName;
+    private ProgressDialog pDialog;
+    private static final String register_url = "http://10.0.0.2:8089/Zivnostnicek/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +67,19 @@ public class RegisterActivity extends AppCompatActivity {
         userAddressET = findViewById(R.id.userAddress);
         password1ET = findViewById(R.id.userPassword);
         password2ET = findViewById(R.id.userConfirmPassword);
-        userDatabaseHelper = new UserDatabaseHelper(RegisterActivity.this);
-        user = new User();
         hashPassword = new HashPassword();
+    }
+
+    /**
+     * Display Progress bar while registering
+     */
+    private void displayLoader() {
+        pDialog = new ProgressDialog(RegisterActivity.this);
+        pDialog.setMessage(getString(R.string.registration_in_progress));
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
     }
 
 
@@ -65,41 +94,74 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Metoda, která pomocí ostatních metod zjistí, zda jsou vyplněny
-     * vstupní pole a vloží uživatele do databáze.
+     *
      * @param view
      */
     public void makeRegistration(View view){
 
-        if (checkIfIsAllFilled() && !isUserExists()){
-            user.setFullName(nameET.getText().toString());
-            user.setEmail(userAddressET.getText().toString());
-            user.setPassword(hashPassword.hashPassword(password1ET.getText().toString()));
+        if(checkIfIsAllFilled()){
+            displayLoader();
+            JSONObject request = new JSONObject();
+            try {
+                String hashedPassword = hashPassword.hashPassword(password);
+                //Populate the request parameters
+                request.put(KEY_EMAIL, email);
+                request.put(KEY_PASSWORD, hashedPassword);
+                request.put(KEY_FULL_NAME, fullName);
 
-            userDatabaseHelper.addUser(user);
 
 
-            String message = getString(R.string.user_is_created);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            finish();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            JsonObjectRequest jsArrayRequest = new JsonObjectRequest
+                    (Request.Method.POST, register_url, request, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            pDialog.dismiss();
+                            try {
+                                //Check if user got registered successfully
+                                if (response.getInt(KEY_STATUS) == 0) {
+                                    //Set the user session
+                                    Log.d(TAG, "User is successfully register");
+                                    Toast.makeText(getApplicationContext(),
+                                            getString(R.string.user_is_created), Toast.LENGTH_SHORT).show();
+                                    finish();
+
+                                }else if(response.getInt(KEY_STATUS) == 1){
+                                    //Display error message if username is already existsing
+                                    userAddressET.setError(getString(R.string.user_already_exists));
+                                    userAddressET.requestFocus();
+
+                                }else{
+                                    Toast.makeText(getApplicationContext(),
+                                            response.getString(KEY_MESSAGE), Toast.LENGTH_SHORT).show();
+
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            pDialog.dismiss();
+
+                            //Display error message whenever an error occurs
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, error.getMessage());
+
+                        }
+                    });
+
+            // Access the RequestQueue through your singleton class.
+            MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
         }
 
-    }
-
-    /**
-     * Metoda, která se zjistí zda uživatel se zadanou e-mailovou
-     * adresou již existuje nebo neexistuje.
-     * @return  boolean
-     */
-    private boolean isUserExists() {
-        String userAddress = userAddressET.getText().toString();
-
-        if(userDatabaseHelper.checkUser(userAddress)){
-            String message = getString(R.string.user_already_exists);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -110,10 +172,10 @@ public class RegisterActivity extends AppCompatActivity {
      */
     private boolean checkIfIsAllFilled() {
 
-        String name = nameET.getText().toString();
-        String userAdress = userAddressET.getText().toString();
-        String password1 = password1ET.getText().toString();
-        String password2 = password2ET.getText().toString();
+        String name = nameET.getText().toString().trim();
+        String userAddress = userAddressET.getText().toString().trim();
+        String password1 = password1ET.getText().toString().trim();
+        String password2 = password2ET.getText().toString().trim();
         String message;
 
         if (name.isEmpty()){
@@ -122,13 +184,13 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
-        if (userAdress.isEmpty()){
+        if (userAddress.isEmpty()){
             message = getString(R.string.empty_user_name);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userAdress).matches()) {
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userAddress).matches()) {
             message = getString(R.string.email_is_not_valid);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
@@ -157,6 +219,11 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        //načtení do globálních proměnných
+        fullName = nameET.getText().toString().trim();
+        email = userAddressET.getText().toString().trim();
+        password = password1ET.getText().toString().trim();
 
         return true;
 

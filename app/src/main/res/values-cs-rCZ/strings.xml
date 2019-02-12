@@ -184,6 +184,8 @@
     <string name="no_quantity_required">Ve skladu není požadované množství</string>
     <string name="bill_item_question">Opravdu si přejete smazat tuto položku?</string>
     <string name="income_has_been_saved">Faktura byla úspěšně uložena</string>
+    <string name="can_not_connect_to_the_server">Server není dostupný</string>
+    <string name="registration_in_progress">Probíhá registrace...Prosím čekejte...</string>
 
     <string-array name="photo">
         <item>galerie</item>

@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.LoginActivity;
+import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
 public class Logout extends AppCompatActivity {
 
@@ -70,12 +71,8 @@ public class Logout extends AppCompatActivity {
         Settings.getInstance().resetInstance();
         UserInformation.getInstance().resetInstance();
 
-        //aktualizace dat v shared preferences o přihlášeném uživateli
-        SharedPreferences sp = context.getSharedPreferences("USER", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("IS_LOGEDIN", false);
-        editor.putString("USER", null);
-        editor.apply();
+        SessionHandler sessionHandler = new SessionHandler(context);
+        sessionHandler.logoutUser();
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
         ((Activity) context).finish();
