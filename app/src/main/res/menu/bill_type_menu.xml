@@ -4,12 +4,13 @@
     <item
         android:id="@+id/option_menu_bill_type_add"
         android:orderInCategory="100"
-        android:title="Přidat druh faktury"
+        android:title="@string/add_type_bill"
         app:showAsAction="never" />
-
+<!--
     <item
         android:id="@+id/option_menu_bill_type_show"
         android:orderInCategory="100"
         android:title="Zobrazit druhy faktur"
         app:showAsAction="never" />
+        -->
 </menu>

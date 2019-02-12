@@ -33,7 +33,7 @@ import java.util.ArrayList;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private final String TAG = "MainActivity";
+    private static final String TAG = "HomeActivity";
 
     private Spinner spinnerPickedYear;
     private Spinner spinnerPickedMonth;
@@ -233,6 +233,51 @@ public class HomeActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_side_menu, menu);
         return true;
+    }
+
+    /**
+     * Metoda, která se stará o boční navigační menu a přechod
+     * mezi aktivitami
+     * @param item  vybraný item z menu
+     * @return      boolean
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.option_menu_home_income_and_expense:
+                intent = new Intent(this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.option_menu_home_year_summary:
+                intent = new Intent(this, HomeYearSummaryActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.option_menu_home_income:
+                intent = new Intent(this, HomeIncomeActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.option_menu_home_expense:
+                intent = new Intent(this, HomeExpenseActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.option_menu_home_storage:
+                intent = new Intent(this, HomeStorageActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            case R.id.option_menu_home_traders:
+                intent = new Intent(this, HomeTraderActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

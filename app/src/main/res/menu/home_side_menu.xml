@@ -18,4 +18,23 @@
         android:orderInCategory="100"
         android:title="@string/expense"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_menu_home_year_summary"
+        android:orderInCategory="100"
+        android:title="@string/year_summary"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_menu_home_storage"
+        android:orderInCategory="100"
+        android:title="@string/storage_summary"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_menu_home_traders"
+        android:orderInCategory="100"
+        android:title="@string/traders_summary"
+        app:showAsAction="never" />
+
 </menu>

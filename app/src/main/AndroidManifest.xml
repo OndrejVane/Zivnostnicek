@@ -24,6 +24,7 @@
         </activity>
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.ShowPictureActivity" />
         <activity
             android:name=".activities.home.HomeActivity"
             android:label="@string/title_activity_home"
@@ -104,11 +105,34 @@
             android:name=".activities.bill.BillShowActivity"
             android:label="@string/title_activity_income_show"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.ShowPictureActivity" />
         <activity
             android:name=".activities.bill.BillEditActivity"
             android:label="@string/title_activity_bill_edit"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.home.HomeYearSummaryActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.home.HomeIncomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.home.HomeExpenseActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.home.HomeStorageActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.home.HomeTraderActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.info.InfoAboutAppActivity"
+            android:label="@string/title_activity_info_about_app"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

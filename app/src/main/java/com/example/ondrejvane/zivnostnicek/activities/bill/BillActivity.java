@@ -451,8 +451,6 @@ public class BillActivity extends AppCompatActivity
             case R.id.option_menu_bill_type_add:
                 addTypeBillDialogShow();
                 return true;
-            case R.id.option_menu_bill_type_show:
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
