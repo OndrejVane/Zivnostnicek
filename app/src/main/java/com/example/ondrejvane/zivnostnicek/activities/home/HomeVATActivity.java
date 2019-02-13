@@ -16,13 +16,13 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
-public class HomeStorageActivity extends AppCompatActivity
+public class HomeVATActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_storage);
+        setContentView(R.layout.activity_home_vat);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,8 +93,8 @@ public class HomeStorageActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
                 return true;
-            case R.id.option_menu_home_storage:
-                intent = new Intent(this, HomeStorageActivity.class);
+            case R.id.option_menu_home_vat:
+                intent = new Intent(this, HomeVATActivity.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -120,7 +120,7 @@ public class HomeStorageActivity extends AppCompatActivity
         //id vybrané položky v menu
         int id = item.getItemId();
 
-        HomeStorageActivity thisActivity = HomeStorageActivity.this;
+        HomeVATActivity thisActivity = HomeVATActivity.this;
         Intent newIntent;
 
         //inicializace třídy menu, kde jsou definovány jednotlivé aktivity

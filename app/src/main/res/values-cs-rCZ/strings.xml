@@ -187,7 +187,7 @@
     <string name="can_not_connect_to_the_server">Server není dostupný</string>
     <string name="registration_in_progress">Probíhá registrace…Prosím čekejte…</string>
     <string name="year_summary">Roční přehled</string>
-    <string name="storage_summary">Přehled skladu</string>
+    <string name="vat_summary">Přehled DPH</string>
     <string name="traders_summary">Přehled obchodníků </string>
     <string name="title_activity_home_year_summary">Roční přehled</string>
     <string name="title_activity_info_about_app">O aplikaci</string>

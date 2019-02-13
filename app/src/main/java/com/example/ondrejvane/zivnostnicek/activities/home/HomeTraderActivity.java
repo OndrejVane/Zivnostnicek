@@ -93,8 +93,8 @@ public class HomeTraderActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
                 return true;
-            case R.id.option_menu_home_storage:
-                intent = new Intent(this, HomeStorageActivity.class);
+            case R.id.option_menu_home_vat:
+                intent = new Intent(this, HomeVATActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

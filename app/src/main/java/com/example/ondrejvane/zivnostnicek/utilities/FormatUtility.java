@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.helper;
+package com.example.ondrejvane.zivnostnicek.utilities;
 
 public class FormatUtility {
 

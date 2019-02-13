@@ -2,16 +2,12 @@ package com.example.ondrejvane.zivnostnicek.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
-import com.example.ondrejvane.zivnostnicek.model.Note;
-import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
 public class BillDatabaseHelper extends DatabaseHelper {

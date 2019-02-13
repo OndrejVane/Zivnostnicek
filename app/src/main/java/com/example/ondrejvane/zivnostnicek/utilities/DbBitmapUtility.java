@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.helper;
+package com.example.ondrejvane.zivnostnicek.utilities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
@@ -266,8 +266,8 @@ public class HomeActivity extends AppCompatActivity
                 startActivity(intent);
                 finish();
                 return true;
-            case R.id.option_menu_home_storage:
-                intent = new Intent(this, HomeStorageActivity.class);
+            case R.id.option_menu_home_vat:
+                intent = new Intent(this, HomeVATActivity.class);
                 startActivity(intent);
                 finish();
                 return true;

@@ -2,9 +2,6 @@ package com.example.ondrejvane.zivnostnicek.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.helper.ArrayUtility;
-import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 
 public class ListViewBillAdapter extends BaseAdapter {
 

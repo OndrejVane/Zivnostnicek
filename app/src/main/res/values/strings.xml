@@ -200,7 +200,7 @@
     <string name="can_not_connect_to_the_server">Can not connect to the server</string>
     <string name="registration_in_progress">Signing Up… Please wait…</string>
     <string name="year_summary">Year summary</string>
-    <string name="storage_summary">Storage summary</string>
+    <string name="vat_summary">VAT summary</string>
     <string name="traders_summary">Traders summary</string>
     <string name="title_activity_info_about_app">About application</string>
     <string name="add_type_bill">Add type bill</string>

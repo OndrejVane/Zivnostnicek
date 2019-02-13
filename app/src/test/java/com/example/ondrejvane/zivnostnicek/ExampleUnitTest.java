@@ -1,6 +1,6 @@
 package com.example.ondrejvane.zivnostnicek;
 
-import com.example.ondrejvane.zivnostnicek.helper.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 
 import org.junit.Test;
