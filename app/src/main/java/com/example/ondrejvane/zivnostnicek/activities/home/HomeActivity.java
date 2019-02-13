@@ -204,6 +204,7 @@ public class HomeActivity extends AppCompatActivity
         pieChart.invalidate();
         pieChart.getLegend().setEnabled(false);
         pieChart.animateXY(700, 700);
+        pieChart.getDescription().setEnabled(false);
 
 
     }

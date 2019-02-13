@@ -60,6 +60,8 @@
         android:layout_below="@+id/linearLayoutIncome"
         />
 
+    <!-- Koláčový graf pro zobrazení příjmu a výdajů -->
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieGraphHome"
         android:layout_below="@id/line"

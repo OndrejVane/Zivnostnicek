@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.activities;
+package com.example.ondrejvane.zivnostnicek.activities.bill;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import android.view.Window;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.ApplicationClass;
 import com.ortiz.touchview.TouchImageView;
 
 import java.io.IOException;

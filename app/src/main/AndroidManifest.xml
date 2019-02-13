@@ -24,7 +24,7 @@
         </activity>
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.ShowPictureActivity" />
+        <activity android:name=".activities.bill.ShowPictureActivity" />
         <activity
             android:name=".activities.home.HomeActivity"
             android:label="@string/title_activity_home"

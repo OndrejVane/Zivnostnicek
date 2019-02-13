@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,18 +8,169 @@
     tools:context=".activities.home.HomeYearSummaryActivity"
     tools:showIn="@layout/app_bar_home_year_summary">
 
+    <RelativeLayout
+        android:id="@+id/relativeLayoutFirst"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/year_summary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:id="@+id/linearLayoutSpinnerYear"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+
+        </LinearLayout>
+
+        <!--Linear layout pro výber roku-->
+        <LinearLayout
+            android:id="@+id/linearLayoutHomeYear"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:text="@string/year"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="100dp"
+                android:textSize="17sp"/>
+
+            <!--Spinner pro vybrání roku-->
+            <Spinner
+                android:id="@+id/spinnerHomeYearSummary"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:entries="@array/years"
+                android:layout_marginEnd="15dp"
+                >
+
+            </Spinner>
+        </LinearLayout>
+
+
+
+        <!-- Oddelující čára -->
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@color/grey"
+            android:layout_below="@+id/linearLayoutHomeYear"
+            />
+
+        <!-- Line graph pro zobrazení ročního přehledu -->
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineGraphYearSummary"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="20dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/line"/>
+
+        <!-- Příjmy -->
+
+        <LinearLayout
+            android:id="@+id/linearLayoutIncomeLabel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineGraphYearSummary"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/income"
+                android:layout_marginEnd="20dp"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textViewHomeYearSummaryIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0,-"
+                android:textColor="@color/income"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Výdaje -->
+
+        <LinearLayout
+            android:id="@+id/linearLayoutExpenseLabel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/linearLayoutIncomeLabel"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expense"
+                android:layout_marginEnd="20dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+            <TextView
+                android:id="@+id/textViewHomeYearSummaryExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0,-"
+                android:textColor="@color/expense"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/lineline"
+            android:layout_width="300dp"
+            android:layout_height="2dip"
+            android:background="@color/grey"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/linearLayoutExpenseLabel"
+            />
+
+        <!-- Bilance -->
+
+        <LinearLayout
+            android:id="@+id/linearLayoutResultLabel"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineline"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/balance"
+                android:layout_marginEnd="20dp"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+            <TextView
+                android:id="@+id/textViewHomeYearSummaryBalance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/zero"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+</ScrollView>
