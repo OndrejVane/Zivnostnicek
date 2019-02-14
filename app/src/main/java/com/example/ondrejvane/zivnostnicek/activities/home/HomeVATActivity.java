@@ -170,7 +170,7 @@ public class HomeVATActivity extends AppCompatActivity
             formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
             textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.income));
             textViewBalancVATAmount.setText(formattedBalance);
-            textViewBalancVATLabel.setText("Pohledávka");
+            textViewBalancVATLabel.setText(getString(R.string.claim));
             return;
         }
 
@@ -178,7 +178,7 @@ public class HomeVATActivity extends AppCompatActivity
             formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
             textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.expense));
             textViewBalancVATAmount.setText(formattedBalance);
-            textViewBalancVATLabel.setText("Závazek");
+            textViewBalancVATLabel.setText(getString(R.string.obligation));
             return;
         }
 

@@ -96,7 +96,7 @@
     <string name="title_activity_info_currency">Kurzovní lístek</string>
     <string name="europe">Evropská unie</string>
     <string name="eur">EUR</string>
-    <string name="dot">...</string>
+    <string name="dot">…</string>
     <string name="usa">USA</string>
     <string name="usd">USD</string>
     <string name="great_britain">Velká Británie</string>
@@ -202,6 +202,8 @@
     <string name="paid">Uhrazené</string>
     <string name="received">Obdržené</string>
     <string name="VAT_label">DPH</string>
+    <string name="claim">Pohledávka</string>
+    <string name="obligation">Závazek</string>
 
     <string-array name="photo">
         <item>galerie</item>

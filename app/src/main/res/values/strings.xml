@@ -214,6 +214,8 @@
     <string name="paid">Paid</string>
     <string name="received">Received</string>
     <string name="VAT_label">VAT</string>
+    <string name="claim">Claim</string>
+    <string name="obligation">Obligation</string>
     
     <string-array name="vat_amount">
         <item>21</item>
