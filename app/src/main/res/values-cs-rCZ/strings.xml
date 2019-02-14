@@ -199,6 +199,9 @@
     <string name="author_name">Ondřej Váně</string>
     <string name="version_number">1.0</string>
     <string name="email">onry.vane@gmail.com</string>
+    <string name="paid">Uhrazené</string>
+    <string name="received">Obdržené</string>
+    <string name="VAT_label">DPH</string>
 
     <string-array name="photo">
         <item>galerie</item>

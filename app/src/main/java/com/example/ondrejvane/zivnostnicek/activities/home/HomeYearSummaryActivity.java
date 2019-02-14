@@ -46,6 +46,7 @@ public class HomeYearSummaryActivity extends AppCompatActivity
     private TextView incomeTextView;
     private TextView bilancTextView;
 
+    //globální proměnné
     private int pickedYear;
     private BillDatabaseHelper billDatabaseHelper;
     private float expenseYear;

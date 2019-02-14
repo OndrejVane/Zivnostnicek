@@ -211,6 +211,85 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
+    public double getBillVatByDate(int year, int month, int isExpense) {
+        int userId = UserInformation.getInstance().getUserId();
+        double coefficient21 = 0.1736;
+        double coefficient15 = 0.1304;
+        double coefficient10 = 0.0909;
+        double result = 0;
+        double temp = 0;
+
+        String[] columns = {COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE, COLUMN_BILL_VAT};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?";
+
+        String[] selectionArgs = {Integer.toString(userId), Integer.toString(isExpense)};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+
+        if (cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(1);
+                int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
+                int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
+                int vat = cursor.getInt(2);
+
+                //nevybrán měsíc ani rok
+                if (year == -1 && month == -1) {
+
+                    temp =  cursor.getDouble(0);
+                    //vybrán pouze rok
+                } else if (year != -1 && month == -1) {
+
+                    if(year == foundYear){
+                        temp =  cursor.getDouble(0);
+                    }
+
+                    //vybrán rok i měsíc
+                } else if (year != -1 && month != -1) {
+
+                    if( year == foundYear && month == foundMonth){
+                        temp = cursor.getDouble(0);
+                    }
+
+                    //vybrán měsíc ale ne rok
+                } else {
+                    temp = 0;
+                }
+
+                switch (vat){
+                    case 21:
+                        result = result + (temp * coefficient21);
+                        break;
+                    case 15:
+                        result = result + (temp * coefficient15);
+                        break;
+                    case 10:
+                        result = result + (temp * coefficient10);
+                        break;
+                    case 0:
+                        break;
+                }
+            } while (cursor.moveToNext());
+
+        }
+
+        db.close();
+        cursor.close();
+
+        //zaokrouhlení na 2 desetinná místa
+        return Math.round(result * 100.0) / 100.0;
+    }
+
 
     public void updateBill(Bill bill){
         String where = COLUMN_BILL_ID + " = ?";

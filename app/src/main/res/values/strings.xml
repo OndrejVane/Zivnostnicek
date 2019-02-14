@@ -211,6 +211,10 @@
     <string name="author_name">Ondřej Váně</string>
     <string name="version_number">1.0</string>
     <string name="email">onry.vane@gmail.com</string>
+    <string name="paid">Paid</string>
+    <string name="received">Received</string>
+    <string name="VAT_label">VAT</string>
+    
     <string-array name="vat_amount">
         <item>21</item>
         <item>15</item>

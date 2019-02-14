@@ -9,19 +9,53 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.helper.Settings;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
+import java.util.ArrayList;
 
 public class HomeVATActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "HomeVATActivity";
+
+    //prvky aktivity
+    private Spinner spinnerYear;
+    private Spinner spinnerMonth;
+    private PieChart pieChart;
+    private TextView textViewInputVAT;
+    private TextView textViewOutputVAT;
+    private TextView textViewBalancVATLabel;
+    private TextView textViewBalancVATAmount;
+
+    //globální proměnné
+    private BillDatabaseHelper billDatabaseHelper;
+    private int pickedYear = -1;
+    private int pickedMonth = -1;
+    private Settings settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "Starting activity");
+
         setContentView(R.layout.activity_home_vat);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,9 +75,152 @@ public class HomeVATActivity extends AppCompatActivity
 
         //inicializace aktivity
         initActivity();
+
+        //inicializace nastavení
+        setSettings();
+
+        Log.d(TAG, "Activity successfully init");
+
+        //akce při výběru roku ze spinner
+        spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    pickedYear = Integer.parseInt(spinnerYear.getSelectedItem().toString());
+                } else {
+                    pickedYear = -1;
+                }
+
+                getDataAndSetToActivity();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        //akce při výběru roku ze spinner
+        spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    pickedMonth = position;
+                } else {
+                    pickedMonth = -1;
+                }
+
+                getDataAndSetToActivity();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     private void initActivity() {
+
+        spinnerYear = findViewById(R.id.spinnerHomeVATYear);
+        spinnerMonth = findViewById(R.id.spinnerHomeVATMonth);
+        pieChart = findViewById(R.id.pieGraphHomeVAT);
+        textViewInputVAT = findViewById(R.id.textViewHomeInputVAT);
+        textViewOutputVAT = findViewById(R.id.textViewHomeOutputVAT);
+        textViewBalancVATLabel = findViewById(R.id.textViewHomeVATLabel);
+        textViewBalancVATAmount = findViewById(R.id.textViewHomeBalanceVAT);
+
+        settings = Settings.getInstance();
+        billDatabaseHelper = new BillDatabaseHelper(this);
+    }
+
+    private void setSettings() {
+
+        //pokud je vybraný jeden rok
+        if (settings.isIsPickedOneYear()) {
+            spinnerYear.setEnabled(false);
+            spinnerYear.setSelection(settings.getArrayYearId());
+            pickedYear = Integer.parseInt(settings.getYear());
+        }
+
+        if (settings.isPickedOneMonth()) {
+            spinnerMonth.setEnabled(false);
+            spinnerMonth.setSelection(settings.getArrayMonthId());
+            pickedMonth = settings.getArrayMonthId();
+        }
+
+    }
+
+    private void getDataAndSetToActivity() {
+        double inputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 1);
+        double outputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 0);
+        double balanceVAT = inputAmountVAT - outputAmountVAT;
+
+        //nastavení dat do grafu
+        addDataToChart(inputAmountVAT, outputAmountVAT);
+
+        //nastavení dat do text view
+        String formattedIncomes = FormatUtility.formatIncomeAmount(Double.toString(inputAmountVAT)).substring(1);
+        String formattedExpense = FormatUtility.formatExpenseAmount(Double.toString(outputAmountVAT)).substring(1);
+        String formattedBalance;
+        textViewInputVAT.setText(formattedIncomes);
+        textViewOutputVAT.setText(formattedExpense);
+
+        if (balanceVAT > 0) {
+            formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
+            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.income));
+            textViewBalancVATAmount.setText(formattedBalance);
+            textViewBalancVATLabel.setText("Pohledávka");
+            return;
+        }
+
+        if (balanceVAT < 0) {
+            formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
+            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.expense));
+            textViewBalancVATAmount.setText(formattedBalance);
+            textViewBalancVATLabel.setText("Závazek");
+            return;
+        }
+
+        if (balanceVAT == 0) {
+            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.zero));
+            textViewBalancVATAmount.setText(getString(R.string.zero));
+        }
+    }
+
+    private void addDataToChart(double inputAmountVAT, double outputAmountVAT) {
+        //inicializace grafu
+        pieChart.setRotationEnabled(true);
+        pieChart.setCenterText(getString(R.string.VAT_label));
+        pieChart.setCenterTextSize(20);
+        pieChart.setCenterTextRadiusPercent(80);
+
+        ArrayList<PieEntry> arrayData = new ArrayList<>();
+        ArrayList<String> arrayDataStrings = new ArrayList<>();
+
+        arrayData.add(new PieEntry((float) inputAmountVAT, 0));
+        arrayData.add(new PieEntry((float) outputAmountVAT, 1));
+
+        arrayDataStrings.add(getString(R.string.received));
+        arrayDataStrings.add(getString(R.string.paid));
+
+        PieDataSet pieDataSet = new PieDataSet(arrayData, null);
+        pieDataSet.setSliceSpace(2);
+        pieDataSet.setValueTextSize(15);
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(getResources().getColor(R.color.income));
+        colors.add(getResources().getColor(R.color.expense));
+
+        pieDataSet.setColors(colors);
+
+
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+        pieChart.getLegend().setEnabled(false);
+        pieChart.animateXY(700, 700);
+        pieChart.getDescription().setEnabled(false);
     }
 
     @Override
@@ -66,8 +243,9 @@ public class HomeVATActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
