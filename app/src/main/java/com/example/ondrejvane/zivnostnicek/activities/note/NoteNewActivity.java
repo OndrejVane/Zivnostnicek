@@ -17,6 +17,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
@@ -95,7 +96,7 @@ public class NoteNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent intent = new Intent(NoteNewActivity.this, NoteActivity.class);
+        Intent intent = new Intent(NoteNewActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
@@ -134,7 +135,7 @@ public class NoteNewActivity extends AppCompatActivity
         noteDatabaseHelper.addNote(note);
 
         Toast.makeText(this, R.string.note_has_been_added, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(NoteNewActivity.this, NoteActivity.class);
+        Intent intent = new Intent(NoteNewActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();

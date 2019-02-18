@@ -16,4 +16,18 @@ public class ArrayUtility {
         return integers;
 
     }
+
+    /**
+     * Metoda, která sočte průměrné hodnocení obchodníka.
+     * @return  float průměrné hodnocení obchodníka
+     */
+    public static float countAverageRating(String[] rating) {
+        float sum = 0;
+        float averageRating;
+        for (int i = 0; i<rating.length; i++){
+            sum = sum + Float.parseFloat(rating[i]);
+        }
+        averageRating = sum/rating.length;
+        return (float) (Math.round(averageRating * Math.pow(10, 2)) / Math.pow(10, 2));
+    }
 }

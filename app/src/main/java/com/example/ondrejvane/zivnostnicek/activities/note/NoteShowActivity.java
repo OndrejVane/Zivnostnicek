@@ -18,6 +18,7 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
@@ -100,13 +101,13 @@ public class NoteShowActivity extends AppCompatActivity
      */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-        Intent intent = new Intent(NoteShowActivity.this, NoteActivity.class);
+        Intent intent = new Intent(NoteShowActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();
@@ -187,7 +188,7 @@ public class NoteShowActivity extends AppCompatActivity
         }else {
             Toast.makeText(this, R.string.note_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
-        Intent intent = new Intent(NoteShowActivity.this, NoteActivity.class);
+        Intent intent = new Intent(NoteShowActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);
         finish();

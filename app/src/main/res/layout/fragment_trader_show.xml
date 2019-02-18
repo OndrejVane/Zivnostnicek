@@ -1,51 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.trader.TraderShowActivity"
-    tools:showIn="@layout/app_bar_trader_show">
-
-
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPagerTrader"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</android.support.constraint.ConstraintLayout>
-
-    <!--
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
+    tools:context=".activities.trader.TraderShowFragment">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@color/grey"
-                android:text="Informace" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:onClick="goToTraderNoteActivity"
-                android:text="Hodnocení" />
-
-        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutCompanyName"
@@ -201,5 +168,5 @@
         </android.support.design.widget.TextInputLayout>
 
     </android.support.v7.widget.LinearLayoutCompat>
-</RelativeLayout>
-    -->
+
+</ScrollView>

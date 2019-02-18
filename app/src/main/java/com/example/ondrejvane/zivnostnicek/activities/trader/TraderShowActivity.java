@@ -3,6 +3,10 @@ package com.example.ondrejvane.zivnostnicek.activities.trader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,16 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.note.NoteNewActivity;
-import com.example.ondrejvane.zivnostnicek.activities.note.NoteActivity;
+import com.example.ondrejvane.zivnostnicek.adapters.TabPagerTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
-import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 /**
  * Aktivita, která se stará o zobrazení vybraného obchodníka.
@@ -32,17 +35,16 @@ public class TraderShowActivity extends AppCompatActivity
 
     private TraderDatabaseHelper traderDatabaseHelper;
     private int traderID;
-    private Trader trader;
 
-    private EditText inputCompanyNameShow, inputContactPersonShow, inputTelephoneNumberShow;
-    private EditText inputIdentificationNumberShow, inputTaxIdentificationNumberShow;
-    private EditText inputCityShow, inputStreetShow, inputHouseNumberShow;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabPagerTraderAdapter tabPagerTraderAdapter;
 
 
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,18 @@ public class TraderShowActivity extends AppCompatActivity
         setContentView(R.layout.activity_trader_show);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //stará se o přechod do nové aplikace po stisknutí tlačítk přidat
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TraderShowActivity.this, NoteNewActivity.class);
+                intent.putExtra("TRADER_ID", traderID);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,11 +77,11 @@ public class TraderShowActivity extends AppCompatActivity
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //skryje klávesnici při startu aktivity
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        //inicializace aktivity
         initActivity();
-
-        setTextToActivity();
-
-
     }
 
     /**
@@ -75,32 +89,15 @@ public class TraderShowActivity extends AppCompatActivity
      * aktivity
      */
     private void initActivity() {
+
         traderDatabaseHelper = new TraderDatabaseHelper(TraderShowActivity.this);
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        trader = traderDatabaseHelper.getTraderById(traderID);
-        inputCompanyNameShow = findViewById(R.id.textInputEditTextCompanyNameShow);
-        inputContactPersonShow = findViewById(R.id.textInputEditTextContactPersonShow);
-        inputTelephoneNumberShow = findViewById(R.id.textInputEditTextTelephoneNumberShow);
-        inputIdentificationNumberShow = findViewById(R.id.textInputEditTextIdentificationNumberShow);
-        inputTaxIdentificationNumberShow = findViewById(R.id.textInputEditTextTaxIdentificationNumberShow);
-        inputCityShow = findViewById(R.id.textInputEditTextCityShow);
-        inputStreetShow = findViewById(R.id.textInputEditTextStreetShow);
-        inputHouseNumberShow = findViewById(R.id.textInputEditTextHouseNumberShow);
-    }
+        tabLayout = findViewById(R.id.tabLayoutTrader);
+        viewPager = findViewById(R.id.viewPagerTrader);
+        tabPagerTraderAdapter = new TabPagerTraderAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(tabPagerTraderAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
-    /**
-     * Procerdura, která nastaví text do všech políček
-     * activity, které se načetli z databáze.
-     */
-    private void setTextToActivity(){
-        inputCompanyNameShow.setText(trader.getTraderName());
-        inputContactPersonShow.setText(trader.getTraderContactPerson());
-        inputTelephoneNumberShow.setText(trader.getTraderPhoneNumber());
-        inputIdentificationNumberShow.setText(trader.getTraderIN());
-        inputTaxIdentificationNumberShow.setText(trader.getTraderTIN());
-        inputCityShow.setText(trader.getTraderCity());
-        inputStreetShow.setText(trader.getTraderStreet());
-        inputHouseNumberShow.setText(trader.getTraderHouseNumber());
     }
 
     /**
@@ -207,27 +204,13 @@ public class TraderShowActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která změní aktivitu na Note Activity. Přiloží
-     * id obchodníka, aby bylo možné zobrazit a následně přidávat
-     * poznámky k příslušnému obchodníkovi.
-     * @param view  view příslušné aktivity
-     */
-    public void goToTraderNoteActivity(View view) {
-        Intent intent = new Intent(TraderShowActivity.this, NoteActivity.class);
-        intent.putExtra("TRADER_ID", traderID);
-        startActivity(intent);
-        finish();
-    }
-
-
-    /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
      * @param item  vybraná položka v menu
      * @return      boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

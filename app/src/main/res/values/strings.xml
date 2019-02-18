@@ -216,7 +216,7 @@
     <string name="VAT_label">VAT</string>
     <string name="claim">Claim</string>
     <string name="obligation">Obligation</string>
-    
+
     <string-array name="vat_amount">
         <item>21</item>
         <item>15</item>
@@ -266,6 +266,9 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
