@@ -148,8 +148,6 @@ public class HomeTraderActivity extends AppCompatActivity
         data.setValueTextSize(13f);
         data.setValueTextColor(Color.DKGRAY);
         barChart.setScaleEnabled(false);
-
-
     }
 
 
