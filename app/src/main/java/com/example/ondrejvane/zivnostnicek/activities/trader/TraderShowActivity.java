@@ -94,7 +94,8 @@ public class TraderShowActivity extends AppCompatActivity
         traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
         tabLayout = findViewById(R.id.tabLayoutTrader);
         viewPager = findViewById(R.id.viewPagerTrader);
-        tabPagerTraderAdapter = new TabPagerTraderAdapter(getSupportFragmentManager());
+        String[] titles = {getResources().getString(R.string.info), getResources().getString(R.string.rating)};
+        tabPagerTraderAdapter = new TabPagerTraderAdapter(getSupportFragmentManager(), titles, 2);
         viewPager.setAdapter(tabPagerTraderAdapter);
         tabLayout.setupWithViewPager(viewPager);
 

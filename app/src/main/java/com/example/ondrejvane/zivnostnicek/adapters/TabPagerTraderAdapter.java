@@ -10,12 +10,14 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowFragment;
 
 public class TabPagerTraderAdapter extends FragmentStatePagerAdapter{
 
-    private String[] tabArray= {"Informace", "Hodnocení"};
+    private String[] tabArray;
 
-    private Integer numberOfTabs = 2;
+    private Integer numberOfTabs;
 
-    public TabPagerTraderAdapter(FragmentManager fm) {
+    public TabPagerTraderAdapter(FragmentManager fm, String[] titles, int numberOfTabs) {
         super(fm);
+        this.tabArray = titles;
+        this.numberOfTabs = numberOfTabs;
     }
 
     @Nullable
@@ -32,8 +34,7 @@ public class TabPagerTraderAdapter extends FragmentStatePagerAdapter{
             case 0:
                 return new TraderShowFragment();
             case 1:
-                NoteFragment noteFragment = new NoteFragment();
-                return noteFragment;
+                return new NoteFragment();
         }
 
 
