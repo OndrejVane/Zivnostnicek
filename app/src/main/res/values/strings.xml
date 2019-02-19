@@ -207,7 +207,8 @@
     <string name="version">Version:</string>
     <string name="author">Author: </string>
     <string name="contact">Contact: </string>
-    <string name="about_app">This application was created as a student project within the bachelor thesis.</string>
+    <string name="about_app_1">This application was created as a student project within the bachelor thesis.</string>
+    <string name="about_app_2">This application was created as a student project within the bachelor thesis.</string>
     <string name="author_name">Ondřej Váně</string>
     <string name="version_number">1.0</string>
     <string name="email">onry.vane@gmail.com</string>
@@ -216,6 +217,7 @@
     <string name="VAT_label">VAT</string>
     <string name="claim">Claim</string>
     <string name="obligation">Obligation</string>
+    <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
 
     <string-array name="vat_amount">
         <item>21</item>

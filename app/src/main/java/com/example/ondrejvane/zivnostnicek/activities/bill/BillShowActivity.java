@@ -44,8 +44,7 @@ import java.util.ArrayList;
 public class BillShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private boolean isExpense;
-    private int billId;
+    //ptvky aktivity
     private EditText textViewBillName;
     private EditText textViewBillAmount;
     private EditText textViewBillVAT;
@@ -54,6 +53,8 @@ public class BillShowActivity extends AppCompatActivity
     private EditText textViewBillType;
     private TextView textViewBillPhoto;
     private ImageView photoViewBillPhoto;
+
+    //pomocné globální proměnné
     private ExpandableHeightListView expandableListView;
     private BillDatabaseHelper billDatabaseHelper;
     private TraderDatabaseHelper traderDatabaseHelper;
@@ -62,6 +63,8 @@ public class BillShowActivity extends AppCompatActivity
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
     private boolean isPictureFound;
     private Bill bill;
+    private boolean isExpense;
+    private int billId;
 
     private String TAG = "BillShowActivity";
 
@@ -216,7 +219,7 @@ public class BillShowActivity extends AppCompatActivity
         }
         Intent intent = new Intent(BillShowActivity.this, BillActivity.class);
         intent.putExtra("IS_EXPENSE", isExpense);
-        startActivity(intent);
+        //startActivity(intent);
         finish();
     }
 

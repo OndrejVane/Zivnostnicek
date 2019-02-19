@@ -55,7 +55,9 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    private String login_url = "http://10.0.0.2:8089/Zivnostnicek/login.php";
+    //private String login_url = "http://10.0.0.2:8089/Zivnostnicek/login.php";
+    //private static final String login_url = "http://zivnostnicek.000webhostapp.com/login.php";
+    private static String login_url = "/login.php";
     private SessionHandler session;
 
 
@@ -94,7 +96,8 @@ public class LoginActivity extends AppCompatActivity {
         //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
         Glide.with(this).load(R.drawable.logo1).into(imageViewLogo);
 
-
+        //přidat název serveru
+        login_url = getResources().getString(R.string.web_server) + login_url;
 
     }
 
@@ -175,6 +178,9 @@ public class LoginActivity extends AppCompatActivity {
                             pDialog.dismiss();
                             try {
                                 //Check if user got logged in successfully
+
+                                Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
+                                Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
 
                                 if (response.getInt(KEY_STATUS) == 0) {
                                     //pokud je zaškrtnuto pole pro zustat přihlášen

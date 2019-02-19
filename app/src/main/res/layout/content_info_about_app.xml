@@ -82,7 +82,13 @@
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/about_app"/>
+            android:text="@string/about_app_1"/>
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/about_app_2"/>
     </LinearLayout>
 
 

@@ -41,7 +41,9 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String fullName;
     private ProgressDialog pDialog;
-    private static final String register_url = "http://10.0.0.2:8089/Zivnostnicek/register.php";
+    //private static final String register_url = "http://10.0.0.2:8089/Zivnostnicek/register.php";
+    //private static final String register_url = "http://zivnostnicek.000webhostapp.com/register.php";
+    private static String register_url = "/register.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,9 @@ public class RegisterActivity extends AppCompatActivity {
         password1ET = findViewById(R.id.userPassword);
         password2ET = findViewById(R.id.userConfirmPassword);
         hashPassword = new HashPassword();
+
+        //načíst název serveru
+        register_url = getResources().getString(R.string.web_server) + register_url;
     }
 
     /**
@@ -121,6 +126,8 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();
                             try {
+                                Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
+                                Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
                                 //Check if user got registered successfully
                                 if (response.getInt(KEY_STATUS) == 0) {
                                     //Set the user session

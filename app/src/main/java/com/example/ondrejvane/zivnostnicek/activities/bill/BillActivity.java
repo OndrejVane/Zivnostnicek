@@ -114,7 +114,7 @@ public class BillActivity extends AppCompatActivity
                     intent.putExtra("BILL_ID", incomeId);
                     intent.putExtra("IS_EXPENSE", isExpense);
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
             }
         });
