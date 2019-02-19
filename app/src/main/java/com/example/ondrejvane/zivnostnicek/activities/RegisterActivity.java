@@ -41,9 +41,8 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String fullName;
     private ProgressDialog pDialog;
-    //private static final String register_url = "http://10.0.0.2:8089/Zivnostnicek/register.php";
-    //private static final String register_url = "http://zivnostnicek.000webhostapp.com/register.php";
-    private static String register_url = "/register.php";
+    private static final String register_url = "http://zivnostnicek.000webhostapp.com/register.php";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
         hashPassword = new HashPassword();
 
         //načíst název serveru
-        register_url = getResources().getString(R.string.web_server) + register_url;
     }
 
     /**

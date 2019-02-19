@@ -2,9 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,7 +22,6 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
-import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
@@ -37,27 +34,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = "LoginActivity";
 
+    //prvky aktivity
     private EditText userAddressET;
     private EditText passwordET;
     private CheckBox rememberMeBox;
     private ImageView imageViewLogo;
 
+    //pomocné globální proměnné
     private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
-    private Settings settings;
     private static final String KEY_STATUS = "status";
     private static final String KEY_MESSAGE = "message";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_ID = "id";
-    private static final String KEY_EMPTY = "";
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    //private String login_url = "http://10.0.0.2:8089/Zivnostnicek/login.php";
-    //private static final String login_url = "http://zivnostnicek.000webhostapp.com/login.php";
-    private static String login_url = "/login.php";
+    private static final String login_url = "http://zivnostnicek.000webhostapp.com/login.php";
     private SessionHandler session;
 
 
@@ -74,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
+        //inicializace aktivity
         initActivity();
 
         Log.d(TAG, "Activity successfully started");
@@ -90,20 +86,16 @@ public class LoginActivity extends AppCompatActivity {
         imageViewLogo = findViewById(R.id.imageViewLoginLogo);
         userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
         hashPassword = new HashPassword();
-        settings = Settings.getInstance();
         session = new SessionHandler(getApplicationContext());
 
         //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
         Glide.with(this).load(R.drawable.logo1).into(imageViewLogo);
 
-        //přidat název serveru
-        login_url = getResources().getString(R.string.web_server) + login_url;
-
     }
 
     /**
      * Metoda, která po kliknutí na textView přepne aktivitu do RegisterActivity.
-     * @param view
+     * @param view view
      */
     public void goToRegisterActivity(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -177,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();
                             try {
-                                //Check if user got logged in successfully
+                                //Kontrola, zda byl uživatel úspěšně přihlášen
 
                                 Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
                                 Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
@@ -221,66 +213,16 @@ public class LoginActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             pDialog.dismiss();
 
-                            //Display error message whenever an error occurs
+                            //zobrazení informace uživateli, pokud došlo k chybě
                             Toast.makeText(getApplicationContext(),
-                                    error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    getResources().getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Error message: "+ error.getMessage());
 
                         }
                     });
 
-            // Access the RequestQueue through your singleton class.
             MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
         }
 
-    }
-
-    /**
-     * Pokud uživatel zvolí možnost "Zůstat přihlášen", tak se do shared preferences
-     * uloží jeho emailová adresa a nastaví se hodnota IS_LOGEDIN na true. Pokud nezvolí
-     * zústat přihlášen ,tak se nastaví hodnota IS_LOGEDIN na false.
-     */
-    private void stayLogIn(){
-        String userAddress = userAddressET.getText().toString();
-        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-
-        if(rememberMeBox.isChecked()){
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean("IS_LOGEDIN", true);
-            editor.putString("USER", userAddress);
-            editor.apply();
-
-        }else {
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean("IS_LOGEDIN", false);
-            editor.putString("USER", userAddress);
-            editor.apply();
-        }
-
-    }
-
-    private void loadAllInformation(){
-
-        SharedPreferences sp = getSharedPreferences("USER", MODE_PRIVATE);
-        String emailAddress = sp.getString("USER", "NULL");
-        User user = userDatabaseHelper.getUserByEmailAddress(emailAddress);
-        UserInformation userInformation = UserInformation.getInstance();
-        userInformation.setMail(user.getEmail());
-        userInformation.setFullName(user.getFullName());
-        userInformation.setUserId(user.getId());
-
-        //načtení dat o nstavení aplikace ze shared preferences
-        settings.readSettingsFromSharedPreferences(this);
-
-    }
-
-    private void loadAllInformation(String emailAddress){
-        User user = userDatabaseHelper.getUserByEmailAddress(emailAddress);
-        UserInformation userInformation = UserInformation.getInstance();
-        userInformation.setMail(user.getEmail());
-        userInformation.setFullName(user.getFullName());
-        userInformation.setUserId(user.getId());
-
-        //načtení dat o nstavení aplikace ze shared preferences
-        settings.readSettingsFromSharedPreferences(this);
     }
 }
