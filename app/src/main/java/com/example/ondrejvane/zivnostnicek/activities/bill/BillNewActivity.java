@@ -141,7 +141,7 @@ public class BillNewActivity extends AppCompatActivity
         layoutBillAmount = findViewById(R.id.textInputLayoutIncomeAmount);
         addBill = findViewById(R.id.buttonAddBill);
         fillLabel = findViewById(R.id.textViewBillFill);
-        checkBoxGeneratePDF = findViewById(R.id.checkBoxGeneratePDF);
+        //checkBoxGeneratePDF = findViewById(R.id.checkBoxGeneratePDF);
 
         //zobrazení textu, podle toho, jestli jde o příjem nebo výdaj
         setTextToActivity();

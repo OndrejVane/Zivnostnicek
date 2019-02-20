@@ -1,98 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.LoginActivity"
     android:background="@color/colorPrimary">
 
-    <ImageView
-        android:id="@+id/imageViewLoginLogo"
-        android:layout_width="222dp"
-        android:layout_height="241dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:contentDescription="@string/header_logo" />
-
-    <EditText
-        android:id="@+id/userAddress"
-        android:layout_width="195dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="203dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableStart="@drawable/ic_action_mail"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:hint="@string/user_name"
-        android:inputType="textEmailAddress" />
+        >
 
-    <EditText
-        android:id="@+id/userPassword"
-        android:layout_width="195dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="164dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableStart="@drawable/ic_action_password"
-        android:ems="10"
-        android:fontFamily="sans-serif"
-        android:hint="@string/password"
-        android:inputType="textPassword" />
-    <android.support.v7.widget.CardView
-        android:layout_width="268dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="67dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="25dp">
+        <!-- Image view pro zobrazení logo -->
+        <ImageView
+            android:id="@+id/imageViewLoginLogo"
+            android:layout_width="222dp"
+            android:layout_height="241dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:contentDescription="@string/header_logo" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="logIn">
+        <!-- edit text pro vložení emailu -->
+        <EditText
+            android:id="@+id/userAddress"
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/imageViewLoginLogo"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/ic_action_mail"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="@string/user_name"
+            android:inputType="textEmailAddress" />
 
-            <TextView
-                android:id="@+id/login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="sans-serif"
-                android:onClick="logIn"
-                android:text="@string/login"
-                android:textColor="@color/colorAccent"
-                android:textSize="20sp" />
-        </RelativeLayout>
-    </android.support.v7.widget.CardView>
+        <!-- edit text pro vložení hesla -->
+        <EditText
+            android:id="@+id/userPassword"
+            android:layout_width="195dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/userAddress"
+            android:background="@drawable/rounded_edittext"
+            android:drawableStart="@drawable/ic_action_password"
+            android:ems="10"
+            android:fontFamily="sans-serif"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="191dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword"
+            android:layout_centerHorizontal="true"
+            android:text="@string/remember_me"
+            android:textColor="@color/white" />
 
-    <TextView
-        android:id="@+id/register"
-        android:layout_width="123dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="19dp"
-        android:fontFamily="sans-serif"
-        android:onClick="goToRegisterActivity"
-        android:text="@string/register_here"
-        android:textAlignment="center"
-        android:textColor="@color/white" />
+        <!-- Tlačítko pro přihlášení -->
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardViewLogin"
+            android:layout_width="268dp"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            app:cardBackgroundColor="@color/white"
+            android:layout_below="@+id/checkBox"
+            android:layout_marginTop="10dp"
+            app:cardCornerRadius="25dp">
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="191dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="-164dp"
-        android:text="@string/remember_me"
-        android:textColor="@color/white" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="logIn">
 
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="sans-serif"
+                    android:onClick="logIn"
+                    android:text="@string/login"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <!-- text pro přechod do register activity -->
+
+        <TextView
+            android:id="@+id/register"
+            android:layout_width="123dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="sans-serif"
+            android:layout_below="@+id/cardViewLogin"
+            android:onClick="goToRegisterActivity"
+            android:text="@string/register_here"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</ScrollView>

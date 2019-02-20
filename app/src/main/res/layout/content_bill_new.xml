@@ -209,6 +209,7 @@
             android:gravity="center"
             android:text="@string/mandatory_information"
             android:textSize="12sp" />
+        <!--
 
         <CheckBox
             android:id="@+id/checkBoxGeneratePDF"
@@ -217,6 +218,7 @@
             android:text="@string/generate_pdf"
             android:textColor="@color/grey"
             />
+            -->
 
         <Button
             android:id="@+id/buttonAddBill"
