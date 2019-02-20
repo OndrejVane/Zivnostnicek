@@ -42,7 +42,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
-import com.example.ondrejvane.zivnostnicek.helper.StorageItemBox;
+import com.example.ondrejvane.zivnostnicek.model.StorageItemBox;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;

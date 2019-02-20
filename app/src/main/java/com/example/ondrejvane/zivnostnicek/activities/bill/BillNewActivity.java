@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.GeneratePDF;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.R;
@@ -42,7 +44,7 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
-import com.example.ondrejvane.zivnostnicek.helper.StorageItemBox;
+import com.example.ondrejvane.zivnostnicek.model.StorageItemBox;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
@@ -58,11 +60,11 @@ public class BillNewActivity extends AppCompatActivity
 
     private final String TAG = "BillNewActivity";
 
-    private boolean isExpense;
+    //prvky aktivity
     private TextView mDisplayDate;  //Datum
     private ImageView photoView;    //foto
     private Spinner spinnerTrader;  //obchodník
-    private Spinner spinnerBillType;
+    private Spinner spinnerBillType;    //spinner typ faktury
     private EditText billName;    //název / číslo faktury
     private EditText billAmount;  //částka
     private Spinner spinnerBillVat;   //DPH
@@ -70,11 +72,15 @@ public class BillNewActivity extends AppCompatActivity
     private TextInputLayout layoutBillName;
     private TextInputLayout layoutBillAmount;
     private TextView fillLabel;
+    private CheckBox checkBoxGeneratePDF;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+
+    //pomocné globální proměnné
+    private boolean isExpense;
     private Calendar cal;
     private String[][] traders;
     private String[][] storageItems;
     private String[][] billTypes;
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
     private ArrayList<StorageItemBox> listOfItems;
     private ExpandableHeightListView expandableListView;
     private StorageItemDatabaseHelper storageItemDatabaseHelper;
@@ -135,6 +141,7 @@ public class BillNewActivity extends AppCompatActivity
         layoutBillAmount = findViewById(R.id.textInputLayoutIncomeAmount);
         addBill = findViewById(R.id.buttonAddBill);
         fillLabel = findViewById(R.id.textViewBillFill);
+        checkBoxGeneratePDF = findViewById(R.id.checkBoxGeneratePDF);
 
         //zobrazení textu, podle toho, jestli jde o příjem nebo výdaj
         setTextToActivity();
@@ -174,6 +181,10 @@ public class BillNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Funkce, která nastaví všechny dostupné typy faktur
+     * uživatele do spinneru.
+     */
     private void setDataToBillTypeSpinner() {
         List<String> typeList = new ArrayList<>();
 
@@ -187,6 +198,10 @@ public class BillNewActivity extends AppCompatActivity
         spinnerBillType.setAdapter(adapter);
     }
 
+    /**
+     * Nastavení textu do aktivity, podle toho, jeslti se
+     * jedná o příjem nebo výdaj.
+     */
     private void setTextToActivity() {
         if (isExpense) {
             setTitle(getString(R.string.title_activity_expense_new));
@@ -607,9 +622,7 @@ public class BillNewActivity extends AppCompatActivity
             }
         }
 
-
         //vypis uživateli o úspěšném vložení faktruy do databáze
-
         String message = getString(R.string.income_has_been_added);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(BillNewActivity.this, BillActivity.class);

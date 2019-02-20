@@ -219,6 +219,7 @@
     <string name="claim">Claim</string>
     <string name="obligation">Obligation</string>
     <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
+    <string name="generate_pdf">Generate PDF</string>
 
     <string-array name="vat_amount">
         <item>21</item>

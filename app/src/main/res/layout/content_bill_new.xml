@@ -210,11 +210,19 @@
             android:text="@string/mandatory_information"
             android:textSize="12sp" />
 
+        <CheckBox
+            android:id="@+id/checkBoxGeneratePDF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/generate_pdf"
+            android:textColor="@color/grey"
+            />
+
         <Button
             android:id="@+id/buttonAddBill"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="5dp"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textStyle="bold"

@@ -69,8 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
         password1ET = findViewById(R.id.userPassword);
         password2ET = findViewById(R.id.userConfirmPassword);
         hashPassword = new HashPassword();
-
-        //načíst název serveru
     }
 
     /**

@@ -206,6 +206,7 @@
     <string name="VAT_label">DPH</string>
     <string name="claim">Pohledávka</string>
     <string name="obligation">Závazek</string>
+    <string name="generate_pdf">Generovat PDF</string>
 
     <string-array name="photo">
         <item>galerie</item>
