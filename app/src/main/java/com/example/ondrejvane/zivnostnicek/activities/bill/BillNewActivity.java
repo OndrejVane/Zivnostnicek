@@ -223,6 +223,16 @@ public class BillNewActivity extends AppCompatActivity
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                String date = day + "." + month + "." + year;
+                Log.d(TAG, "Picked date "+ date);
+                mDisplayDate.setText(date);
+            }
+        };
+
         DatePickerDialog dialog = new DatePickerDialog(BillNewActivity.this,
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 mDateSetListener,
@@ -230,14 +240,7 @@ public class BillNewActivity extends AppCompatActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
 
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = day + "." + month + "." + year;
-                mDisplayDate.setText(date);
-            }
-        };
+
     }
 
     private void setDataToTraderSpinner() {
