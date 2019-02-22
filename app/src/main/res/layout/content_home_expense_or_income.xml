@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.home.HomeExpenseOrIncomeActivity"
-    tools:showIn="@layout/app_bar_home_expense">
+    tools:showIn="@layout/app_bar_home_expense_or_income">
 
     <RelativeLayout
         android:layout_width="match_parent"
