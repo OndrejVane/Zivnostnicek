@@ -5,7 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
+
+import java.util.ArrayList;
 
 public class TypeBillDatabaseHelper extends DatabaseHelper {
 
@@ -108,5 +112,39 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         cursor.close();
 
         return typeBill;
+    }
+
+    public ArrayList<TypeBill> getAllTypeByUserId(int userId){
+        ArrayList<TypeBill> billTypes = new ArrayList<>();
+
+        String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_NAME, COLUMN_TYPE_COLOR};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        // selection criteria
+        String selection = COLUMN_TYPE_USER_ID + " = ?";
+
+        // selection arguments
+        String[] selectionArgs = {Integer.toString(userId)};
+
+        Cursor cursor = db.query(TABLE_TYPE, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        TypeBill noType = new TypeBill(-1, UserInformation.getInstance().getUserId(), "Nepřiřazeno", 1);
+        billTypes.add(noType);
+        if (cursor.moveToFirst()) {
+            do {
+                TypeBill typeBill = new TypeBill(cursor.getInt(0), userId, cursor.getString(1), cursor.getInt(2));
+                billTypes.add(typeBill);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        cursor.close();
+
+        return billTypes;
     }
 }

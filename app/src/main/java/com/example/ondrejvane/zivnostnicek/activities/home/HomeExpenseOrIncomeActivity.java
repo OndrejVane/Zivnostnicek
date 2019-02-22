@@ -14,16 +14,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.adapters.ListViewHomeAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
-import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -31,33 +34,35 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 
-public class HomeVATActivity extends AppCompatActivity
+public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "HomeVATActivity";
+    private static final String TAG = "HomeEOrIActivity";
 
     //prvky aktivity
     private Spinner spinnerYear;
     private Spinner spinnerMonth;
     private PieChart pieChart;
-    private TextView textViewInputVAT;
-    private TextView textViewOutputVAT;
-    private TextView textViewBalancVATLabel;
-    private TextView textViewBalancVATAmount;
+    private ListView listViewExpense;
 
-    //globální proměnné
+
+    //pomocné gloální proměnné
+    private TypeBillDatabaseHelper typeBillDatabaseHelper;
     private BillDatabaseHelper billDatabaseHelper;
+    private String[] typeName;
+    private float[] typeAmount;
+    private int[] typeColor;
     private int pickedYear = -1;
     private int pickedMonth = -1;
-    private Settings settings;
+    private boolean isExpense;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_expense);
 
-        Log.d(TAG, "Starting activity");
+        Log.d(TAG, "Activity is starting");
 
-        setContentView(R.layout.activity_home_vat);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -77,12 +82,15 @@ public class HomeVATActivity extends AppCompatActivity
         //inicializace aktivity
         initActivity();
 
-        //inicializace nastavení
+        //implementace nastavení
         setSettings();
 
-        Log.d(TAG, "Activity successfully init");
+        //nastavení dat do aktivity
+        setDataToActivity();
 
-        //akce při výběru roku ze spinner
+        Log.d(TAG, "Activity is successfully started");
+
+        //nastavení (aktualizace dat) akce po vybrání roku ze spinneru
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -92,7 +100,7 @@ public class HomeVATActivity extends AppCompatActivity
                     pickedYear = -1;
                 }
 
-                getDataAndSetToActivity();
+                setDataToActivity();
 
             }
 
@@ -101,7 +109,7 @@ public class HomeVATActivity extends AppCompatActivity
             }
         });
 
-        //akce při výběru roku ze spinner
+        //nastavení (aktualizace dat) akce po vybrání roku ze spinneru
         spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -111,7 +119,7 @@ public class HomeVATActivity extends AppCompatActivity
                     pickedMonth = -1;
                 }
 
-                getDataAndSetToActivity();
+                setDataToActivity();
 
             }
 
@@ -119,99 +127,76 @@ public class HomeVATActivity extends AppCompatActivity
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
     }
 
+    /**
+     * Inicializace všech potřebných prvků v aktivitě.
+     */
     private void initActivity() {
+        //zjištění, zda se jedná o náhled příjmu
+        if(getIntent().hasExtra("IS_EXPENSE")){
+            isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        }else {
+            isExpense = false;
+        }
 
-        spinnerYear = findViewById(R.id.spinnerHomeVATYear);
-        spinnerMonth = findViewById(R.id.spinnerHomeVATMonth);
-        pieChart = findViewById(R.id.pieGraphHomeVAT);
-        textViewInputVAT = findViewById(R.id.textViewHomeInputVAT);
-        textViewOutputVAT = findViewById(R.id.textViewHomeOutputVAT);
-        textViewBalancVATLabel = findViewById(R.id.textViewHomeVATLabel);
-        textViewBalancVATAmount = findViewById(R.id.textViewHomeBalanceVAT);
+        spinnerYear = findViewById(R.id.spinnerHomeYearExpense);
+        spinnerMonth = findViewById(R.id.spinnerHomeMonthExpense);
+        pieChart = findViewById(R.id.pieGraphHomeExpense);
+        listViewExpense = findViewById(R.id.listViewHomeExpense);
 
-        settings = Settings.getInstance();
+        typeBillDatabaseHelper = new TypeBillDatabaseHelper(this);
         billDatabaseHelper = new BillDatabaseHelper(this);
     }
 
-    private void setSettings() {
+    private void setDataToActivity() {
+        ArrayList<TypeBill> tempTypeBill = typeBillDatabaseHelper.getAllTypeByUserId(UserInformation.getInstance().getUserId());
+        tempTypeBill.get(0).setColor(getResources().getColor(R.color.colorPrimary));
+        tempTypeBill.get(0).setName(getResources().getString(R.string.not_assigned));
 
-        //pokud je vybraný jeden rok
-        if (settings.isIsPickedOneYear()) {
-            spinnerYear.setEnabled(false);
-            spinnerYear.setSelection(settings.getArrayYearId());
-            pickedYear = Integer.parseInt(settings.getYear());
+        typeName = new String[tempTypeBill.size()];
+        typeColor = new int[tempTypeBill.size()];
+        typeAmount = new float[tempTypeBill.size()];
+
+        for (int i = 0; i < tempTypeBill.size(); i++) {
+            typeName[i] = tempTypeBill.get(i).getName();
+            typeColor[i] = tempTypeBill.get(i).getColor();
+            typeAmount[i] = billDatabaseHelper.getTotalAmountByTypeId(pickedYear, pickedMonth, tempTypeBill.get(i).getId(), isExpense);
         }
 
-        if (settings.isPickedOneMonth()) {
-            spinnerMonth.setEnabled(false);
-            spinnerMonth.setSelection(settings.getArrayMonthId());
-            pickedMonth = settings.getArrayMonthId();
-        }
+        setAdapterToList(typeName, typeColor, typeAmount);
+
+        setDataToGraph(typeName, typeColor, typeAmount);
 
     }
 
-    private void getDataAndSetToActivity() {
-        double inputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 1);
-        double outputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 0);
-        double balanceVAT = inputAmountVAT - outputAmountVAT;
-
-        //nastavení dat do grafu
-        addDataToChart(inputAmountVAT, outputAmountVAT);
-
-        //nastavení dat do text view
-        String formattedIncomes = FormatUtility.formatIncomeAmount(Double.toString(inputAmountVAT)).substring(1);
-        String formattedExpense = FormatUtility.formatExpenseAmount(Double.toString(outputAmountVAT)).substring(1);
-        String formattedBalance;
-        textViewInputVAT.setText(formattedIncomes);
-        textViewOutputVAT.setText(formattedExpense);
-
-        if (balanceVAT > 0) {
-            formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
-            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.income));
-            textViewBalancVATAmount.setText(formattedBalance);
-            textViewBalancVATLabel.setText(getString(R.string.claim));
-            return;
-        }
-
-        if (balanceVAT < 0) {
-            formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
-            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.expense));
-            textViewBalancVATAmount.setText(formattedBalance);
-            textViewBalancVATLabel.setText(getString(R.string.obligation));
-            return;
-        }
-
-        if (balanceVAT == 0) {
-            textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.zero));
-            textViewBalancVATAmount.setText(getString(R.string.zero));
-        }
-    }
-
-    private void addDataToChart(double inputAmountVAT, double outputAmountVAT) {
+    private void setDataToGraph(String[] typeName, int[] typeColor, float[] typeAmount) {
         //inicializace grafu
         pieChart.setRotationEnabled(true);
-        pieChart.setCenterText(getString(R.string.VAT_label));
+        if(isExpense){
+            pieChart.setCenterText(getString(R.string.expense));
+        }else {
+            pieChart.setCenterText(getString(R.string.income));
+        }
         pieChart.setCenterTextSize(20);
         pieChart.setCenterTextRadiusPercent(80);
 
         ArrayList<PieEntry> arrayData = new ArrayList<>();
         ArrayList<String> arrayDataStrings = new ArrayList<>();
+        ArrayList<Integer> colors = new ArrayList<>();
 
-        arrayData.add(new PieEntry((float) inputAmountVAT, 0));
-        arrayData.add(new PieEntry((float) outputAmountVAT, 1));
-
-        arrayDataStrings.add(getString(R.string.received));
-        arrayDataStrings.add(getString(R.string.paid));
+        for (int i = 0; i < typeAmount.length; i++) {
+            if(typeAmount[i] != 0.0) {
+                arrayData.add(new PieEntry(typeAmount[i], i));
+                arrayDataStrings.add(typeName[i]);
+                colors.add(typeColor[i]);
+            }
+        }
 
         PieDataSet pieDataSet = new PieDataSet(arrayData, null);
         pieDataSet.setSliceSpace(2);
         pieDataSet.setValueTextSize(15);
-
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(getResources().getColor(R.color.income));
-        colors.add(getResources().getColor(R.color.expense));
 
         pieDataSet.setColors(colors);
 
@@ -220,8 +205,33 @@ public class HomeVATActivity extends AppCompatActivity
         pieChart.setData(pieData);
         pieChart.invalidate();
         pieChart.getLegend().setEnabled(false);
-        pieChart.animateXY(700, 700);
+        //pieChart.animateXY(700, 700);
         pieChart.getDescription().setEnabled(false);
+    }
+
+
+    private void setAdapterToList(String[] typeName, int[] typeColor, float[] typeAmount) {
+        ListViewHomeAdapter listViewHomeAdapter = new ListViewHomeAdapter(this, typeColor, typeName, typeAmount);
+        listViewHomeAdapter.setExpense(isExpense);
+
+        listViewExpense.setAdapter(listViewHomeAdapter);
+    }
+
+    private void setSettings() {
+        Settings settings = Settings.getInstance();
+        //pokud je vybraný jeden rok
+        if (settings.isIsPickedOneYear()) {
+            spinnerYear.setEnabled(false);
+            spinnerYear.setSelection(settings.getArrayYearId());
+            pickedYear = Integer.parseInt(settings.getYear());
+        }
+
+        //pokud je vybraný měsíc
+        if (settings.isPickedOneMonth()) {
+            spinnerMonth.setEnabled(false);
+            spinnerMonth.setSelection(settings.getArrayMonthId());
+            pickedMonth = settings.getArrayMonthId();
+        }
     }
 
     @Override
@@ -269,7 +279,7 @@ public class HomeVATActivity extends AppCompatActivity
         //id vybrané položky v menu
         int id = item.getItemId();
 
-        HomeVATActivity thisActivity = HomeVATActivity.this;
+        HomeExpenseOrIncomeActivity thisActivity = HomeExpenseOrIncomeActivity.this;
         Intent newIntent;
 
         //inicializace třídy menu, kde jsou definovány jednotlivé aktivity

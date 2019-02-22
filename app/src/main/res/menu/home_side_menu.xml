@@ -8,6 +8,18 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/option_menu_home_income"
+        android:orderInCategory="100"
+        android:title="@string/income"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/option_menu_home_expense"
+        android:orderInCategory="100"
+        android:title="@string/expense"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/option_menu_home_year_summary"
         android:orderInCategory="100"
         android:title="@string/year_summary"
@@ -23,18 +35,6 @@
         android:id="@+id/option_menu_home_traders"
         android:orderInCategory="100"
         android:title="@string/traders_summary"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/option_menu_home_income"
-        android:orderInCategory="100"
-        android:title="@string/income"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/option_menu_home_expense"
-        android:orderInCategory="100"
-        android:title="@string/expense"
         app:showAsAction="never" />
 
 

@@ -35,6 +35,7 @@ public class ListViewBillAdapter extends BaseAdapter {
     public void isExpense(boolean isExpense){
         this.isExpense = isExpense;
     }
+
     public int getCount() {
         return billName.length;
     }

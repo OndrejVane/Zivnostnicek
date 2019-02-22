@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.home;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class HomeIncomeExpenseFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_income_expense, container, false);
 
@@ -103,6 +104,19 @@ public class HomeIncomeExpenseFragment extends Fragment {
         return view;
     }
 
+    private void initFragment(View view) {
+        //inicializace prvků v aktivitě
+        spinnerPickedYear = view.findViewById(R.id.spinnerHomeYear);
+        spinnerPickedMonth = view.findViewById(R.id.spinnerHomeMonth);
+        pieChart = view.findViewById(R.id.pieGraphHome);
+        textViewIncome = view.findViewById(R.id.textViewHomeIncome);
+        textViewExpense = view.findViewById(R.id.textViewHomeExpense);
+        textViewBalance = view.findViewById(R.id.textViewHomeBalance);
+
+        //inicializace databáze
+        billDatabaseHelper = new BillDatabaseHelper(getContext());
+    }
+
     private void addDataToChart(float incomes, float expense) {
         //inicializace grafu
         pieChart.setRotationEnabled(true);
@@ -153,19 +167,6 @@ public class HomeIncomeExpenseFragment extends Fragment {
             spinnerPickedMonth.setSelection(settings.getArrayMonthId());
             pickedMonth = settings.getArrayMonthId();
         }
-    }
-
-    private void initFragment(View view) {
-        //inicializace prvků v aktivitě
-        spinnerPickedYear = view.findViewById(R.id.spinnerHomeYear);
-        spinnerPickedMonth = view.findViewById(R.id.spinnerHomeMonth);
-        pieChart = view.findViewById(R.id.pieGraphHome);
-        textViewIncome = view.findViewById(R.id.textViewHomeIncome);
-        textViewExpense = view.findViewById(R.id.textViewHomeExpense);
-        textViewBalance = view.findViewById(R.id.textViewHomeBalance);
-
-        //inicializace databáze
-        billDatabaseHelper = new BillDatabaseHelper(getContext());
     }
 
     private void getDataAndSetToActivity() {

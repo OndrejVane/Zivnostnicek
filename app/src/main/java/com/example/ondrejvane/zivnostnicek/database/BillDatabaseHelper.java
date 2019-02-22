@@ -10,6 +10,8 @@ import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
+import java.util.ArrayList;
+
 public class BillDatabaseHelper extends DatabaseHelper {
 
     /**
@@ -227,12 +229,12 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
         String[] selectionArgs = {Integer.toString(userId), Integer.toString(isExpense)};
 
-        Cursor cursor = db.query(TABLE_BILL, //Table to query
-                columns,                    //columns to return
-                selection,                  //columns for the WHERE clause
-                selectionArgs,              //The values for the WHERE clause
+        Cursor cursor = db.query(TABLE_BILL,         //Table to query
+                columns,                             //columns to return
+                selection,                           //columns for the WHERE clause
+                selectionArgs,                       //The values for the WHERE clause
                 null,                       //group the rows
-                null,                       //filter by row groups
+                null,                        //filter by row groups
                 null);
 
 
@@ -290,6 +292,49 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return Math.round(result * 100.0) / 100.0;
     }
 
+    public float getTotalAmountByTypeId(int year, int month,int typeId, boolean isExpense){
+        int userId = UserInformation.getInstance().getUserId();
+        int isExpenseInt;
+        float totalAmount = 0.0f;
+        if(isExpense){
+            isExpenseInt = 1;
+        }else {
+            isExpenseInt = 0;
+        }
+        String[] columns = { COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?" + " AND " + COLUMN_BILL_TYPE_ID + " = ?";
+
+        String[] selectionArgs = {Integer.toString(userId), Integer.toString(isExpenseInt), Integer.toString(typeId)};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(1);
+                int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
+                int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
+
+                if(isRightDate(year, month, foundYear, foundMonth)){
+                    totalAmount = totalAmount + cursor.getFloat(0);
+                }
+            } while (cursor.moveToNext());
+
+        }
+
+        db.close();
+        cursor.close();
+
+        return totalAmount;
+    }
 
     public void updateBill(Bill bill){
         String where = COLUMN_BILL_ID + " = ?";
@@ -311,5 +356,32 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.update(TABLE_BILL, values, where, updateArgs);
         db.close();
     }
+
+    private boolean isRightDate(int year, int month, int foundYear, int foundMonth) {
+        //nevybrán měsíc ani rok
+        if (year == -1 && month == -1) {
+            return true;
+            //vybrán pouze rok
+        } else if (year != -1 && month == -1) {
+
+            if(year == foundYear){
+                return true;
+            }
+
+            //vybrán rok i měsíc
+        } else if (year != -1 && month != -1) {
+
+            if( year == foundYear && month == foundMonth){
+                return true;
+            }
+
+            //vybrán měsíc ale ne rok
+        } else {
+            return false;
+        }
+
+        return false;
+    }
+
 
 }

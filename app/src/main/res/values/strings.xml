@@ -220,6 +220,7 @@
     <string name="obligation">Obligation</string>
     <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
     <string name="generate_pdf">Generate PDF</string>
+    <string name="not_assigned">Not assigned</string>
 
     <string-array name="vat_amount">
         <item>21</item>

@@ -21,7 +21,7 @@ public class Menu {
 
     /**
      * Konstruktor třídy Menu.
-     * @param context
+     * @param context Kontext aktivity
      */
     public Menu(Context context){
         this.context = context;

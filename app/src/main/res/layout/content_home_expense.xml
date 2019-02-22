@@ -1,25 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".activities.home.HomeExpenseActivity"
+    tools:context=".activities.home.HomeExpenseOrIncomeActivity"
     tools:showIn="@layout/app_bar_home_expense">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Výdaje"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+
+        <!--Linear layout pro výber roku a měsíce-->
+        <LinearLayout
+            android:id="@+id/linearLayoutHomeExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:text="@string/year"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="10dp"
+                android:textSize="17sp"/>
+
+            <!--Spinner pro vybrání roku-->
+            <Spinner
+                android:id="@+id/spinnerHomeYearExpense"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:entries="@array/years"
+                android:layout_marginEnd="15dp"
+                >
+
+            </Spinner>
+
+            <TextView
+                android:layout_width="55dp"
+                android:layout_height="match_parent"
+                android:text="@string/month"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="5dp"
+                android:textSize="17sp"/>
+
+            <!--Spinner pro vybrání mesíce-->
+            <Spinner
+                android:id="@+id/spinnerHomeMonthExpense"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:entries="@array/months">
+
+            </Spinner>
+        </LinearLayout>
+        <View
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@color/grey"
+            android:layout_below="@+id/linearLayoutHomeExpense"
+            />
+
+        <!-- Koláčový graf pro zobrazení příjmu a výdajů -->
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieGraphHomeExpense"
+            android:layout_below="@id/line"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true"/>
+
+        <!-- List view pro zobrazení jednotlivých výdajů členěných podle typu-->
+        <ListView
+            android:id="@+id/listViewHomeExpense"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_below="@+id/pieGraphHomeExpense"
+            />
+
+    </RelativeLayout>
+
+</ScrollView>

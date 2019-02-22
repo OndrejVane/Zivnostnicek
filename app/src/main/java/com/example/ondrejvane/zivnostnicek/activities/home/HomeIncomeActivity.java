@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
 
 public class HomeIncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,46 +67,17 @@ public class HomeIncomeActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.option_menu_home_income_and_expense:
-                intent = new Intent(this, HomeActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.option_menu_home_year_summary:
-                intent = new Intent(this, HomeYearSummaryActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.option_menu_home_income:
-                intent = new Intent(this, HomeIncomeActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.option_menu_home_expense:
-                intent = new Intent(this, HomeExpenseActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.option_menu_home_vat:
-                intent = new Intent(this, HomeVATActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            case R.id.option_menu_home_traders:
-                intent = new Intent(this, HomeTraderActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        HomeOptionMenu homeOptionMenu = new HomeOptionMenu(this);
+        Intent intent = homeOptionMenu.getMenu(item.getItemId());
+        startActivity(intent);
+        finish();
+        return true;
     }
 
     /**

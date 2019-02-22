@@ -207,6 +207,7 @@
     <string name="claim">Pohledávka</string>
     <string name="obligation">Závazek</string>
     <string name="generate_pdf">Generovat PDF</string>
+    <string name="not_assigned">Nepřiřazeno</string>
 
     <string-array name="photo">
         <item>galerie</item>
