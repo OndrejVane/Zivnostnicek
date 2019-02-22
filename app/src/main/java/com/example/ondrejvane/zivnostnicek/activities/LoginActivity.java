@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    private static final String login_url = "http://zivnostnicek.000webhostapp.com/login.php";
+    private static final String login_url = "http://zivnostnicek.000webhostapp.com/api/login.php";
     private SessionHandler session;
 
 
