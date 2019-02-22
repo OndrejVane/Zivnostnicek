@@ -1,9 +1,11 @@
 package com.example.ondrejvane.zivnostnicek.activities.home;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,8 @@ import java.util.Calendar;
  * A simple {@link Fragment} subclass.
  */
 public class HomeYearSummaryFragment extends Fragment {
+
+    private static final String TAG = "HomeYearSummary";
 
     //prvky aktivity
     private Spinner yearSpinner;
@@ -61,11 +65,23 @@ public class HomeYearSummaryFragment extends Fragment {
         //inicializace nastavení
         setSettings();
 
-        //nastavení dat do grafu
-        setDataToGraph();
-
         //nastavení dat do text view
         setDataToTextView();
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //nastavení dat do grafu
+                setDataToGraph();
+
+
+            }
+        });
+
+
+
+
+
 
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -77,6 +93,7 @@ public class HomeYearSummaryFragment extends Fragment {
                     pickedYear = Calendar.getInstance().get(Calendar.YEAR);
                 }
 
+                Log.d(TAG, "Spinner");
                 //aktualizace grafu
                 setDataToGraph();
 

@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.activities.home;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,8 @@ public class HomeIncomeExpenseFragment extends Fragment {
     private BillDatabaseHelper billDatabaseHelper;
     private int pickedYear = -1;
     private int pickedMonth = -1;
+    float incomes;
+    float expense;
 
 
     public HomeIncomeExpenseFragment() {
@@ -59,11 +62,14 @@ public class HomeIncomeExpenseFragment extends Fragment {
 
 
         //načtení dat z databáze
-        float incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
-        float expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+        incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
+        expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+
 
         //zobrazení dat do grafu
         addDataToChart(incomes, expense);
+
+
 
         //akce při výběru roku ze spinner
         spinnerPickedYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

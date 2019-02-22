@@ -44,7 +44,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return billId;
     }
 
-    public String[][] getBillData(int userID, int isExpense) {
+    public synchronized String[][] getBillData(int userID, int isExpense) {
         String data[][];
         TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
 
@@ -98,7 +98,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
-    public Bill getBillById(int billId) {
+    public synchronized Bill getBillById(int billId) {
 
         Bill bill = new Bill();
 
@@ -137,7 +137,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return bill;
     }
 
-    public boolean deleteBillWithId(int billId) {
+    public synchronized boolean deleteBillWithId(int billId) {
 
         boolean result;
 
@@ -155,7 +155,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
     }
 
-    public float getBillDataByDate(int year, int month, int isExpense) {
+    public synchronized float getBillDataByDate(int year, int month, int isExpense) {
         int userId = UserInformation.getInstance().getUserId();
         float result = 0;
 
@@ -213,7 +213,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
-    public double getBillVatByDate(int year, int month, int isExpense) {
+    public synchronized double getBillVatByDate(int year, int month, int isExpense) {
         int userId = UserInformation.getInstance().getUserId();
         double coefficient21 = 0.1736;
         double coefficient15 = 0.1304;
@@ -245,6 +245,11 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
                 int vat = cursor.getInt(2);
 
+                if(isRightDate(year, month, foundYear, foundMonth)){
+                    temp = cursor.getDouble(0);
+                }
+                /*
+
                 //nevybrán měsíc ani rok
                 if (year == -1 && month == -1) {
 
@@ -267,6 +272,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 } else {
                     temp = 0;
                 }
+                */
 
                 switch (vat){
                     case 21:
@@ -292,7 +298,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return Math.round(result * 100.0) / 100.0;
     }
 
-    public float getTotalAmountByTypeId(int year, int month,int typeId, boolean isExpense){
+    public synchronized float getTotalAmountByTypeId(int year, int month,int typeId, boolean isExpense){
         int userId = UserInformation.getInstance().getUserId();
         int isExpenseInt;
         float totalAmount = 0.0f;

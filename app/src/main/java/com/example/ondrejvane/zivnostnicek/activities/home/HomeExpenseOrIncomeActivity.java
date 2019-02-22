@@ -205,7 +205,7 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         pieChart.setData(pieData);
         pieChart.invalidate();
         pieChart.getLegend().setEnabled(false);
-        //pieChart.animateXY(700, 700);
+        pieChart.animateXY(700, 700);
         pieChart.getDescription().setEnabled(false);
     }
 

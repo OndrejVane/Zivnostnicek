@@ -19,43 +19,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabLayoutHome"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:tabMode="scrollable">
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Příjmy a výdaje" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Příjmy" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Výdaje" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Roční přehled" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Přehled DPH" />
-
-            <android.support.design.widget.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0bchodníci" />
-        </android.support.design.widget.TabLayout>
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_home" />

@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.home;
 
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -50,11 +51,19 @@ public class HomeTradersFragment extends Fragment {
         //inicializace aktivity
         initActivity(view);
 
-        //získání dat z databáze
-        getDataFromDatabase();
 
-        //nastavení dat do grafu
-        setDataToGraph(tradersName, tradersEvaluation);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                //získání dat z databáze
+                getDataFromDatabase();
+
+                //nastavení dat do grafu
+                setDataToGraph(tradersName, tradersEvaluation);
+            }
+        });
+
+
 
         return view;
     }

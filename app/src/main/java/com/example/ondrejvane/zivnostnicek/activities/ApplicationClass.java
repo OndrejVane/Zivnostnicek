@@ -14,7 +14,7 @@ import com.squareup.leakcanary.LeakCanary;
 public class ApplicationClass extends Application {
 
     private final String TAG = "ApplicationClass";
-    private boolean isLeakCanaryOn = false;
+    private boolean isLeakCanaryOn = true;
     public static int screenWidth;
     public static int screenHeight;
 

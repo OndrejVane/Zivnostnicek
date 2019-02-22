@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.activities.home;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -57,6 +58,17 @@ public class HomeVatFragment extends Fragment {
 
         //inicializace nastavení
         setSettings();
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                //nastavení dat do aktivity
+                getDataAndSetToActivity();
+            }
+        });
+
+
 
 
         //akce při výběru roku ze spinner

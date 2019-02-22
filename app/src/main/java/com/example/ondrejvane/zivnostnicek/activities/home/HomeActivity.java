@@ -40,9 +40,21 @@ public class HomeActivity extends AppCompatActivity
 
     private static final String TAG = "HomeActivity";
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private TabPagerHomeAdapter tabPagerHomeAdapter;
+    //prvky fragmentu
+    private Spinner spinnerPickedYear;
+    private Spinner spinnerPickedMonth;
+    private PieChart pieChart;
+    private TextView textViewIncome;
+    private TextView textViewExpense;
+    private TextView textViewBalance;
+
+    //pomocné globální proměnné
+    private BillDatabaseHelper billDatabaseHelper;
+    private int pickedYear = -1;
+    private int pickedMonth = -1;
+    float incomes;
+    float expense;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,32 +79,159 @@ public class HomeActivity extends AppCompatActivity
         Header header = new Header(navigationView);
         header.setTextToHeader();
 
-
         //inicializace aktivity
         initActivity();
 
+        //implementace nastavení
+        setSettings();
+
+        //načtení dat z databáze
+        incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
+        expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+
+
+        //zobrazení dat do grafu
+        addDataToChart(incomes, expense);
+
+
+
+        //akce při výběru roku ze spinner
+        spinnerPickedYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    pickedYear = Integer.parseInt(spinnerPickedYear.getSelectedItem().toString());
+                } else {
+                    pickedYear = -1;
+                }
+
+                getDataAndSetToActivity();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        //akce při výběru mesíce ze spinneru
+        spinnerPickedMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    pickedMonth = position;
+                } else {
+                    pickedMonth = -1;
+                }
+                getDataAndSetToActivity();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
     }
 
-    /**
-     * Inicializace všech potřebných prvků v aktivitě.
-     */
     private void initActivity() {
         //inicializace prvků v aktivitě
-        tabLayout = findViewById(R.id.tabLayoutHome);
-        viewPager = findViewById(R.id.viewPagerHome);
+        spinnerPickedYear = findViewById(R.id.spinnerHomeYear);
+        spinnerPickedMonth = findViewById(R.id.spinnerHomeMonth);
+        pieChart = findViewById(R.id.pieGraphHome);
+        textViewIncome = findViewById(R.id.textViewHomeIncome);
+        textViewExpense = findViewById(R.id.textViewHomeExpense);
+        textViewBalance = findViewById(R.id.textViewHomeBalance);
 
-        //načtení titulků pro jednotlivé fragmenty
-        String[] titles = new String[4];
-        titles[0] = getResources().getString(R.string.income_and_expense);
-        titles[1] = getResources().getString(R.string.year_summary);
-        titles[2] = getResources().getString(R.string.vat_summary);
-        titles[3] = getResources().getString(R.string.traders_summary);
+        //inicializace databáze
+        billDatabaseHelper = new BillDatabaseHelper(this);
+    }
 
-        //inicializace oken
-        tabPagerHomeAdapter = new TabPagerHomeAdapter(getSupportFragmentManager(), titles, 4);
-        viewPager.setAdapter(tabPagerHomeAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+    private void addDataToChart(float incomes, float expense) {
+        //inicializace grafu
+        pieChart.setRotationEnabled(true);
+        pieChart.setCenterText(getString(R.string.income_and_expense_space));
+        pieChart.setCenterTextSize(20);
+        pieChart.setCenterTextRadiusPercent(80);
 
+        ArrayList<PieEntry> arrayData = new ArrayList<>();
+        ArrayList<String> arrayDataStrings = new ArrayList<>();
+
+        arrayData.add(new PieEntry(incomes, 0));
+        arrayData.add(new PieEntry(expense, 1));
+
+        arrayDataStrings.add(getString(R.string.income));
+        arrayDataStrings.add(getString(R.string.expense));
+
+        PieDataSet pieDataSet = new PieDataSet(arrayData, null);
+        pieDataSet.setSliceSpace(2);
+        pieDataSet.setValueTextSize(15);
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(getResources().getColor(R.color.income));
+        colors.add(getResources().getColor(R.color.expense));
+
+        pieDataSet.setColors(colors);
+
+
+        PieData pieData = new PieData(pieDataSet);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+        pieChart.getLegend().setEnabled(false);
+        pieChart.animateXY(700, 700);
+        pieChart.getDescription().setEnabled(false);
+
+    }
+
+    private void setSettings() {
+        Settings settings = Settings.getInstance();
+        //pokud je vybraný jeden rok
+        if (settings.isIsPickedOneYear()) {
+            spinnerPickedYear.setEnabled(false);
+            spinnerPickedYear.setSelection(settings.getArrayYearId());
+            pickedYear = Integer.parseInt(settings.getYear());
+        }
+
+        if (settings.isPickedOneMonth()) {
+            spinnerPickedMonth.setEnabled(false);
+            spinnerPickedMonth.setSelection(settings.getArrayMonthId());
+            pickedMonth = settings.getArrayMonthId();
+        }
+    }
+
+    private void getDataAndSetToActivity() {
+        //načtení dat z databáze
+        float incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
+        float expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+        float balance = incomes - expense;
+
+        //nastavení dat do grafu
+        addDataToChart(incomes, expense);
+
+        //nastavení dat do text view
+        String formattedIncomes = FormatUtility.formatIncomeAmount(Float.toString(incomes));
+        String formattedExpense = FormatUtility.formatExpenseAmount(Float.toString(expense));
+        String formattedBalance;
+        textViewIncome.setText(formattedIncomes);
+        textViewExpense.setText(formattedExpense);
+
+        if(balance > 0){
+            formattedBalance = FormatUtility.formatBalanceAmount(balance);
+            textViewBalance.setTextColor(getResources().getColor(R.color.income));
+            textViewBalance.setText(formattedBalance);
+            return;
+        }
+
+        if(balance < 0){
+            formattedBalance = FormatUtility.formatBalanceAmount(balance);
+            textViewBalance.setTextColor(getResources().getColor(R.color.expense));
+            textViewBalance.setText(formattedBalance);
+            return;
+        }
+
+        if (balance == 0) {
+            textViewBalance.setTextColor(getResources().getColor(R.color.zero));
+            textViewBalance.setText(getString(R.string.zero));
+        }
     }
 
     @Override

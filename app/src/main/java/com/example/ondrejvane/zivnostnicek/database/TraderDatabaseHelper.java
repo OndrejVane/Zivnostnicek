@@ -40,7 +40,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public String[][] getTradersData(int userID){
+    public synchronized String[][] getTradersData(int userID){
         String data[][];
 
         String[] columns = { COLUMN_TRADER_ID, COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON};
@@ -79,7 +79,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
-    public Trader getTraderById(int traderId){
+    public synchronized Trader getTraderById(int traderId){
 
         Trader trader = new Trader();
 
@@ -119,7 +119,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
     }
 
-    public boolean deleteTraderById(int traderId){
+    public synchronized boolean deleteTraderById(int traderId){
 
         boolean result;
 
@@ -137,7 +137,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
-    public void updateTraderById(Trader trader){
+    public synchronized void updateTraderById(Trader trader){
 
         String where = COLUMN_TRADER_ID + " = ?";
 
