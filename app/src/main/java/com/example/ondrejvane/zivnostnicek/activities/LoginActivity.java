@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void displayLoader() {
         pDialog = new ProgressDialog(LoginActivity.this);
-        pDialog.setMessage(getString(R.string.registration_in_progress));
+        pDialog.setMessage(getString(R.string.login_in_progress));
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
         pDialog.show();

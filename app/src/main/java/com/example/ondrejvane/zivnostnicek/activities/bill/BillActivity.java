@@ -174,7 +174,7 @@ public class BillActivity extends AppCompatActivity
                     }
 
                     if(found){
-                        ID = holderId;
+                        ID = tempIdYear;
                         setAdapterToList(tempBillNameYear, tempBillDateYear, tempBillAmountYear, tempBillTypeName, tempBillTypeColor);
                     }else {
                         tempBillNameYear = new String[1];
@@ -271,7 +271,7 @@ public class BillActivity extends AppCompatActivity
                     }
 
                     if(found){
-                        ID = holderId;
+                        ID = tempId;
                         setAdapterToList(tempBillNameYearAndMonth, tempBillDateYearAndMonth, tempBillAmountYearAndMonth, tempBillTypeNameYearAndMonth, tempBillTypeColorYearAndMonth);
                     }else {
                         tempBillNameYearAndMonth = new String[1];
