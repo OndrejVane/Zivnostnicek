@@ -24,7 +24,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public long addBill(Bill bill) {
+    public synchronized long addBill(Bill bill) {
         SQLiteDatabase db = this.getWritableDatabase();
         long billId;
 
@@ -182,26 +182,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
 
-                //nevybrán měsíc ani rok
-                if (year == -1 && month == -1) {
+                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
                     result = result + cursor.getFloat(0);
-                    //vybrán pouze rok
-                } else if (year != -1 && month == -1) {
-
-                    if(year == foundYear){
-                        result = result + cursor.getFloat(0);
-                    }
-
-                    //vybrán rok i měsíc
-                } else if (year != -1 && month != -1) {
-
-                    if( year == foundYear && month == foundMonth){
-                        result = result + cursor.getFloat(0);
-                    }
-
-                    //vybrán měsíc ale ne rok
-                } else {
-                    result = 0;
                 }
             } while (cursor.moveToNext());
 
@@ -245,35 +227,9 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
                 int vat = cursor.getInt(2);
 
-                if(isRightDate(year, month, foundYear, foundMonth)){
+                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
                     temp = cursor.getDouble(0);
                 }
-                /*
-
-                //nevybrán měsíc ani rok
-                if (year == -1 && month == -1) {
-
-                    temp =  cursor.getDouble(0);
-                    //vybrán pouze rok
-                } else if (year != -1 && month == -1) {
-
-                    if(year == foundYear){
-                        temp =  cursor.getDouble(0);
-                    }
-
-                    //vybrán rok i měsíc
-                } else if (year != -1 && month != -1) {
-
-                    if( year == foundYear && month == foundMonth){
-                        temp = cursor.getDouble(0);
-                    }
-
-                    //vybrán měsíc ale ne rok
-                } else {
-                    temp = 0;
-                }
-                */
-
                 switch (vat){
                     case 21:
                         result = result + (temp * coefficient21);
@@ -329,7 +285,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
 
-                if(isRightDate(year, month, foundYear, foundMonth)){
+                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
                     totalAmount = totalAmount + cursor.getFloat(0);
                 }
             } while (cursor.moveToNext());
@@ -342,7 +298,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return totalAmount;
     }
 
-    public void updateBill(Bill bill){
+    public synchronized void updateBill(Bill bill){
         String where = COLUMN_BILL_ID + " = ?";
 
         String[] updateArgs = {Integer.toString(bill.getId())};
@@ -362,32 +318,4 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.update(TABLE_BILL, values, where, updateArgs);
         db.close();
     }
-
-    private boolean isRightDate(int year, int month, int foundYear, int foundMonth) {
-        //nevybrán měsíc ani rok
-        if (year == -1 && month == -1) {
-            return true;
-            //vybrán pouze rok
-        } else if (year != -1 && month == -1) {
-
-            if(year == foundYear){
-                return true;
-            }
-
-            //vybrán rok i měsíc
-        } else if (year != -1 && month != -1) {
-
-            if( year == foundYear && month == foundMonth){
-                return true;
-            }
-
-            //vybrán měsíc ale ne rok
-        } else {
-            return false;
-        }
-
-        return false;
-    }
-
-
 }

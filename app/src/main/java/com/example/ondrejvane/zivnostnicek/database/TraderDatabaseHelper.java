@@ -21,7 +21,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addTrader(Trader trader){
+    public synchronized void addTrader(Trader trader){
         SQLiteDatabase db = this.getWritableDatabase();
 
         UserInformation userInformation = UserInformation.getInstance();

@@ -22,7 +22,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addItemQuantity(ItemQuantity itemQuantity) {
+    public synchronized void addItemQuantity(ItemQuantity itemQuantity) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -33,7 +33,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public float getQuantityWithStorageItemId(int storageItemId) {
+    public synchronized float getQuantityWithStorageItemId(int storageItemId) {
         float quantity = 0;
 
         String[] columns = {COLUMN_ITEM_QUANTITY_QUANTITY};
@@ -64,7 +64,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return quantity;
     }
 
-    public ArrayList<ItemQuantity> getItemQuantityByBillId(int billId) {
+    public synchronized ArrayList<ItemQuantity> getItemQuantityByBillId(int billId) {
         ArrayList<ItemQuantity> arrayList = new ArrayList<>();
 
         String[] columns = {COLUMN_ITEM_QUANTITY_ID, COLUMN_ITEM_QUANTITY_QUANTITY, COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID};
@@ -100,7 +100,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public boolean deleteItemQuantityByBillId(int billId) {
+    public synchronized boolean deleteItemQuantityByBillId(int billId) {
         boolean result;
 
         String where = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
@@ -128,7 +128,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
-    public ArrayList<StorageItemBox> getItemQuantityAndStorageItemByBillId(int billId) {
+    public synchronized ArrayList<StorageItemBox> getItemQuantityAndStorageItemByBillId(int billId) {
 
         ArrayList<ItemQuantity> arrayItemQuantity = getItemQuantityByBillId(billId);
         ArrayList<StorageItemBox> arrayStorageItemBox = new ArrayList<>();

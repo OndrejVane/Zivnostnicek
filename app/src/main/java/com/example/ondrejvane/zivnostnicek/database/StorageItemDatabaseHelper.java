@@ -2,12 +2,10 @@ package com.example.ondrejvane.zivnostnicek.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
-import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 import java.util.ArrayList;
 
@@ -17,13 +15,13 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
     /**
      * Constructor
      *
-     * @param context
+     * @param context kontext aktivity
      */
     public StorageItemDatabaseHelper(Context context) {
         super(context);
     }
 
-    public long addStorageItem(StorageItem storageItem){
+    public synchronized long addStorageItem(StorageItem storageItem){
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue;
 
@@ -38,7 +36,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public ArrayList<StorageItem> getStorageItemByUserId(int userID){
+    public synchronized ArrayList<StorageItem> getStorageItemByUserId(int userID){
 
         ArrayList<StorageItem> storageItemsList = new ArrayList<>();
 
@@ -77,7 +75,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageItemsList;
     }
 
-    public StorageItem getStorageItemById(int storageItemId){
+    public synchronized StorageItem getStorageItemById(int storageItemId){
         String[] columns = { COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -110,7 +108,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageItem;
     }
 
-    public boolean deleteStorageItemById(int storageItemId){
+    public synchronized boolean deleteStorageItemById(int storageItemId){
         boolean result;
 
         String where = COLUMN_STORAGE_ITEM_ID + " = ?";
@@ -124,7 +122,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
-    public void updateStorageItemById(StorageItem storageItem){
+    public synchronized void updateStorageItemById(StorageItem storageItem){
 
         String where = COLUMN_STORAGE_ITEM_ID + " = ?";
 
@@ -143,7 +141,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
     }
 
-    public String[][] getStorageItemData(int userId){
+    public synchronized String[][] getStorageItemData(int userId){
         ArrayList<StorageItem> arrayList = getStorageItemByUserId(userId);
         String[][] storageData = new String[2][arrayList.size()];
         for (int i = 0; i < arrayList.size(); i++) {

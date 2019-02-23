@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
@@ -28,7 +27,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
      * @param typeBill přidáváný prvek
      * @return id přidané položky
      */
-    public long addTypeBill(TypeBill typeBill) {
+    public synchronized long addTypeBill(TypeBill typeBill) {
         SQLiteDatabase db = this.getWritableDatabase();
         long typeBillId;
 
@@ -42,7 +41,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return typeBillId;
     }
 
-    public String[][] getTypeBillData(int userId) {
+    public synchronized String[][] getTypeBillData(int userId) {
         String data[][];
 
         String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_NAME};
@@ -80,7 +79,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
-    public TypeBill getTypeBillById(int typeId) {
+    public synchronized TypeBill getTypeBillById(int typeId) {
         TypeBill typeBill = new TypeBill();
 
         String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_NAME, COLUMN_TYPE_COLOR, COLUMN_TYPE_USER_ID};
@@ -114,7 +113,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return typeBill;
     }
 
-    public ArrayList<TypeBill> getAllTypeByUserId(int userId){
+    public synchronized ArrayList<TypeBill> getAllTypeByUserId(int userId){
         ArrayList<TypeBill> billTypes = new ArrayList<>();
 
         String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_NAME, COLUMN_TYPE_COLOR};

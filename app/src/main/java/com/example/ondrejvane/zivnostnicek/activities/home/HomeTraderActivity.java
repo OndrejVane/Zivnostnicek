@@ -97,7 +97,7 @@ public class HomeTraderActivity extends AppCompatActivity
 
         for (int i = 0; i < tradersName.length; i++) {
             int tempTraderId = Integer.parseInt(tempTraders[0][i]);
-            tradersEvaluation[i] = noteDatabaseHelper.getAvarageTatingByTraderId(tempTraderId);
+            tradersEvaluation[i] = noteDatabaseHelper.getAverageRatingByTraderId(tempTraderId);
         }
     }
 

@@ -1,6 +1,5 @@
 package com.example.ondrejvane.zivnostnicek.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,7 +19,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addNote(Note note) {
+    public synchronized void addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -33,7 +32,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public boolean deleteNoteById(int noteId) {
+    public synchronized boolean deleteNoteById(int noteId) {
         boolean result;
 
         String where = COLUMN_NOTE_ID + " = ?";
@@ -47,7 +46,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         return result;
     }
 
-    public boolean deleteNotesByTraderId(int traderId) {
+    public synchronized boolean deleteNotesByTraderId(int traderId) {
         boolean result;
 
         String where = COLUMN_NOTE_TRADER_ID + " = ?";
@@ -63,7 +62,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
 
     }
 
-    public void updateNoteById(Note note) {
+    public synchronized void updateNoteById(Note note) {
         String where = COLUMN_NOTE_ID + " = ?";
 
         String[] updateArgs = {Integer.toString(note.getId())};
@@ -80,7 +79,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public Note getNoteById(int noteId) {
+    public synchronized Note getNoteById(int noteId) {
 
         Note note = new Note();
 
@@ -114,7 +113,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         return note;
     }
 
-    public String[][] getNotesData(int traderID) {
+    public synchronized String[][] getNotesData(int traderID) {
         String data[][];
 
         String[] columns = {COLUMN_NOTE_ID, COLUMN_NOTE_TITLE, COLUMN_NOTE_RATING};
@@ -153,7 +152,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
-    public float getAvarageTatingByTraderId(int traderID) {
+    public synchronized float getAverageRatingByTraderId(int traderID) {
         double temp = 0;
         int count;
 
@@ -167,7 +166,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         // selection arguments
         String[] selectionArgs = {Integer.toString(traderID)};
 
-        @SuppressLint("Recycle") Cursor cursor = db.query(TABLE_NOTE, //Table to query
+        Cursor cursor = db.query(TABLE_NOTE, //Table to query
                 columns,                    //columns to return
                 selection,                  //columns for the WHERE clause
                 selectionArgs,              //The values for the WHERE clause

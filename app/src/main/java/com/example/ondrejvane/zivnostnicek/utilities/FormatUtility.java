@@ -91,4 +91,30 @@ public class FormatUtility {
         output = date.substring(date.length() - 4, date.length());
         return output;
     }
+
+    public static boolean isRightDate(int year, int month, int foundYear, int foundMonth) {
+        //nevybrán měsíc ani rok
+        if (year == -1 && month == -1) {
+            return true;
+            //vybrán pouze rok
+        } else if (year != -1 && month == -1) {
+
+            if(year == foundYear){
+                return true;
+            }
+
+            //vybrán rok i měsíc
+        } else if (year != -1 && month != -1) {
+
+            if( year == foundYear && month == foundMonth){
+                return true;
+            }
+
+            //vybrán měsíc ale ne rok
+        } else {
+            return false;
+        }
+
+        return false;
+    }
 }
