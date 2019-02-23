@@ -31,9 +31,27 @@ public class Settings {
     //id vybraného měsíce
     private int arrayMonthId = -1;
 
+    //udržuje informaci o tom, jestli je synchronizace zapnuta
+    private boolean isSyncOn = false;
+
+    private boolean isSyncAllowWifi = false;
 
     //instance této třídy (Singleton)
     private static Settings self = null;
+
+    //klíče ke všem nastavením
+    private static final String SETTINGS_NAME_SP = "SETTINGS";
+    private static final String FOREIGN_IN_KEY = "FOREIGN_IN_ID_";
+    private static final String FOREIGN_TIN_KEY = "FOREIGN_TIN_ID_";
+    private static final String PICKED_YEAR_KEY = "PICKED_YEAR_ID_";
+    private static final String ARRAY_INDEX_YEAR_KEY = "ARRAY_INDEX_YEAR_ID_";
+    private static final String YEAR_KEY = "YEAR_ID_";
+    private static final String PICKED_MONTH_KEY = "PICKED_MONTH_ID_";
+    private static final String ARRAY_INDEX_MONTH_KEY = "ARRAY_INDEX_MONTH_ID_";
+    private static final String MONTH_KEY = "MONTH_ID_";
+    private static final String SYNC_ON_KEY = "SYNC_ON_ID_";
+    private static final String SYNC_WIFI_ON_KEY = "SYNC_WIFI_ON_ID_";
+
 
     /**
      * Privátní konstruktor třídy protože se jedná o singleton
@@ -120,6 +138,22 @@ public class Settings {
         this.arrayMonthId = arrayMonthId;
     }
 
+    public boolean isSyncOn() {
+        return isSyncOn;
+    }
+
+    public void setSyncOn(boolean syncOn) {
+        isSyncOn = syncOn;
+    }
+
+    public boolean isSyncAllowWifi() {
+        return isSyncAllowWifi;
+    }
+
+    public void setSyncAllowWifi(boolean syncAllowWifi) {
+        isSyncAllowWifi = syncAllowWifi;
+    }
+
     public void resetInstance() {
         self = null;
     }
@@ -132,16 +166,18 @@ public class Settings {
      */
     public void saveSettingsToSharedPreferences(Activity activity) {
         String userId = Integer.toString(UserInformation.getInstance().getUserId());
-        SharedPreferences sp = activity.getSharedPreferences("SETTINGS", MODE_PRIVATE);
+        SharedPreferences sp = activity.getSharedPreferences(SETTINGS_NAME_SP, MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean("FOREIGN_IN_ID_" + userId, isForeignIdentificationNumberPossible);            //uložení hodnoty pro zobrazení zaharaničního IČ
-        editor.putBoolean("FOREIGN_IN_TID_" + userId, isForeignTaxIdentificationNumberPossible);        //uložení hodnoty pro zobrazení zahraníčního DIČ
-        editor.putBoolean("PICKED_YEAR_ID_" + userId, isPickedOneYear);                                 //uložení hodnoty pro zobrazování dat v aplikaci pouze pro jeden rok
-        editor.putInt("ARRAY_INDEX_YEAR_ID_" + userId, arrayYearId);                                    //uložení indexu v seznamu roku podle vybraného roku ve spinneru
-        editor.putString("YEAR_ID_" + userId, year);                                                    //uložení vybraného roku pro zobrazování dat
-        editor.putBoolean("PICKED_MONTH_ID_" + userId, isPickedOneMonth);                               //uložení hodnoty, zda je vybranný jeden měsíc
-        editor.putInt("ARRAY_INDEX_MONTH_ID_" + userId, arrayMonthId);                                  //uložení indexu měsíce
-        editor.putString("MONTH_ID_" + userId, month);                                                  //uložení názvu vybraného měsíce
+        editor.putBoolean(FOREIGN_IN_KEY + userId, isForeignIdentificationNumberPossible);            //uložení hodnoty pro zobrazení zaharaničního IČ
+        editor.putBoolean(FOREIGN_TIN_KEY + userId, isForeignTaxIdentificationNumberPossible);        //uložení hodnoty pro zobrazení zahraníčního DIČ
+        editor.putBoolean(PICKED_YEAR_KEY + userId, isPickedOneYear);                                 //uložení hodnoty pro zobrazování dat v aplikaci pouze pro jeden rok
+        editor.putInt(ARRAY_INDEX_YEAR_KEY + userId, arrayYearId);                                    //uložení indexu v seznamu roku podle vybraného roku ve spinneru
+        editor.putString(YEAR_KEY + userId, year);                                                    //uložení vybraného roku pro zobrazování dat
+        editor.putBoolean(PICKED_MONTH_KEY + userId, isPickedOneMonth);                               //uložení hodnoty, zda je vybranný jeden měsíc
+        editor.putInt(ARRAY_INDEX_MONTH_KEY + userId, arrayMonthId);                                  //uložení indexu měsíce
+        editor.putString(MONTH_KEY + userId, month);                                                  //uložení názvu vybraného měsíce
+        editor.putBoolean(SYNC_ON_KEY + userId, isSyncOn);                                            //uložení nastavení o zapnuté synchronizaci
+        editor.putBoolean(SYNC_WIFI_ON_KEY + userId, isSyncAllowWifi);                                //uložení zda je poovlená synchroniza puze přes wifi
         editor.apply();
     }
 
@@ -152,16 +188,18 @@ public class Settings {
      */
     public void readSettingsFromSharedPreferences(Activity activity) {
         String userId = Integer.toString(UserInformation.getInstance().getUserId());
-        SharedPreferences sp = activity.getSharedPreferences("SETTINGS", MODE_PRIVATE);
+        SharedPreferences sp = activity.getSharedPreferences(SETTINGS_NAME_SP, MODE_PRIVATE);
 
-        isForeignIdentificationNumberPossible = sp.getBoolean("FOREIGN_IN_ID_" + userId, false);
-        isForeignTaxIdentificationNumberPossible = sp.getBoolean("FOREIGN_IN_TID_" + userId, false);
-        isPickedOneYear = sp.getBoolean("PICKED_YEAR_ID_" + userId, false);
-        year = sp.getString("YEAR_ID_" + userId, null);
-        arrayYearId = sp.getInt("ARRAY_INDEX_YEAR_ID_" + userId, -1);
-        isPickedOneMonth = sp.getBoolean("PICKED_MONTH_ID_" + userId, false);
-        arrayMonthId = sp.getInt("ARRAY_INDEX_MONTH_ID_" + userId, -1);
-        month = sp.getString("MONTH_ID_" + userId, null);
+        isForeignIdentificationNumberPossible = sp.getBoolean(FOREIGN_IN_KEY + userId, false);
+        isForeignTaxIdentificationNumberPossible = sp.getBoolean(FOREIGN_TIN_KEY + userId, false);
+        isPickedOneYear = sp.getBoolean(PICKED_YEAR_KEY + userId, false);
+        arrayYearId = sp.getInt(ARRAY_INDEX_YEAR_KEY + userId, -1);
+        year = sp.getString(YEAR_KEY + userId, null);
+        isPickedOneMonth = sp.getBoolean(PICKED_MONTH_KEY + userId, false);
+        arrayMonthId = sp.getInt(ARRAY_INDEX_MONTH_KEY + userId, -1);
+        month = sp.getString(MONTH_KEY + userId, null);
+        isSyncOn = sp.getBoolean(SYNC_ON_KEY + userId, false);
+        isSyncAllowWifi = sp.getBoolean(SYNC_WIFI_ON_KEY + userId, false);
     }
 
 }

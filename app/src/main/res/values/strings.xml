@@ -221,6 +221,11 @@
     <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
     <string name="generate_pdf">Generate PDF</string>
     <string name="not_assigned">Not assigned</string>
+    <string name="sync_data_with_server">Synchronize data with server</string>
+    <string name="sync_allow_only_on_wifi">Synchronization allow only on Wi-Fi</string>
+    <string name="sync_info_1">Data will be automatically synchronize with server every hour, if you will be connect to the internet.</string>
+    <string name="sync_info_2">You can synchronize data now by clicking on button below.</string>
+    <string name="sync_now">Synchronize now</string>
 
     <string-array name="vat_amount">
         <item>21</item>

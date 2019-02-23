@@ -1,137 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nestedScrollView"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/white"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp"
     tools:context="com.example.ondrejvane.zivnostnicek.activities.settings.SettingsActivity"
     tools:showIn="@layout/app_bar_settings">
 
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings1"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal">
-
-        <CheckBox
-            android:id="@+id/checkBoxSettingsIN"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/allow_foreign_IN"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings2"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/linearLayoutSettings1">
-
-        <CheckBox
-            android:id="@+id/checkBoxSettingsTIN"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/allow_foreign_TIN"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings3"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/linearLayoutSettings2">
-
-        <CheckBox
-            android:id="@+id/checkBoxSettingsYear"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/display_data_for_selected_year"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings4"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="60dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/linearLayoutSettings3">
-
-        <Spinner
-            android:id="@+id/spinnerSettingsYear"
-            android:layout_width="110dp"
-            android:layout_height="match_parent"
-            android:entries="@array/years"
-            >
-        </Spinner>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings5"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/linearLayoutSettings4">
-
-        <CheckBox
-            android:id="@+id/checkBoxSettingsMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/display_data_for_selected_month"/>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSettings6"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="60dp"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/linearLayoutSettings5">
-
-        <Spinner
-            android:id="@+id/spinnerSettingsMonth"
-            android:layout_width="110dp"
-            android:layout_height="match_parent"
-            android:entries="@array/months"
-            >
-        </Spinner>
-
-
-    </LinearLayout>
-
-
-    <Button
-        android:id="@+id/buttonAddTrader"
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:onClick="saveSettings"
-        android:layout_below="@+id/linearLayoutSettings6"
-        android:text="@string/save_settings"/>
-</RelativeLayout>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings1"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxSettingsIN"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/allow_foreign_IN" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings2"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/linearLayoutSettings1"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxSettingsTIN"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/allow_foreign_TIN" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings3"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/linearLayoutSettings2"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxSettingsYear"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/display_data_for_selected_year" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings4"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/linearLayoutSettings3"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerSettingsYear"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:entries="@array/years"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings5"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/linearLayoutSettings4"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBoxSettingsMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/display_data_for_selected_month" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSettings6"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_below="@id/linearLayoutSettings5"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerSettingsMonth"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:entries="@array/months"/>
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/buttonAddTrader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linearLayoutSettings6"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/colorPrimary"
+            android:onClick="saveSettings"
+            android:text="@string/save_settings"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</android.support.v4.widget.NestedScrollView>

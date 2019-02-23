@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.activities.SynchronizationActivity;
+import com.example.ondrejvane.zivnostnicek.activities.sync.SynchronizationActivity;
 import com.example.ondrejvane.zivnostnicek.activities.bill.BillActivity;
 import com.example.ondrejvane.zivnostnicek.activities.info.InfoActivity;
 import com.example.ondrejvane.zivnostnicek.activities.settings.SettingsActivity;

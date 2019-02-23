@@ -1,8 +1,11 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    private static final String login_url = "http://zivnostnicek.000webhostapp.com/api/login.php";
+    private static final String login_url = "http://zivnostnicek.000webhostapp.com/api2/login.php";
     private SessionHandler session;
 
 
