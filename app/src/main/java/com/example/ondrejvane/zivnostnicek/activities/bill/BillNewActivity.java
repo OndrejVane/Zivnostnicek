@@ -32,7 +32,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.helper.GeneratePDF;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.R;
@@ -55,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Kativity pro přidávání nové faktury
+ */
 public class BillNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -90,6 +92,12 @@ public class BillNewActivity extends AppCompatActivity
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
     private Uri pictureUri = null;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +118,7 @@ public class BillNewActivity extends AppCompatActivity
         Header header = new Header(navigationView);
         header.setTextToHeader();
 
+        //inicaliazace aktivity
         initActivity();
 
         //po stisknutí na položku faktury dojde ke smazání položky
@@ -127,7 +136,14 @@ public class BillNewActivity extends AppCompatActivity
      * Metoda, která inicializuje všechny prvky této aktivity
      */
     private void initActivity() {
-        isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        //kontrola, zda je nějaké extra
+        if (getIntent().hasExtra("IS_EXPENSE")) {
+            //načtení extra
+            isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        } else {
+            isExpense = false;
+        }
+
 
         mDisplayDate = findViewById(R.id.editTextDate);
         photoView = findViewById(R.id.photoView);
@@ -174,7 +190,7 @@ public class BillNewActivity extends AppCompatActivity
         mDisplayDate.setText(stringBuilder);
 
         //nastavení obchodníků do spinneru
-        setDataToTraderSpinner();
+        setDataToTraderSpinner(spinnerTrader);
 
         //nastavení druhu faktur do spinneru
         setDataToBillTypeSpinner();
@@ -216,7 +232,7 @@ public class BillNewActivity extends AppCompatActivity
      * Procedura, která zobrazí date picker a nechá uživatele vybrat
      * datum. Následně datum vloží do pole datum.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void showDateDialog(View view) {
         int year = cal.get(Calendar.YEAR);
@@ -228,7 +244,7 @@ public class BillNewActivity extends AppCompatActivity
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String date = day + "." + month + "." + year;
-                Log.d(TAG, "Picked date "+ date);
+                Log.d(TAG, "Picked date " + date);
                 mDisplayDate.setText(date);
             }
         };
@@ -243,7 +259,12 @@ public class BillNewActivity extends AppCompatActivity
 
     }
 
-    private void setDataToTraderSpinner() {
+    /**
+     * Nastavení obchodníků do spinneru
+     *
+     * @param spinnerTrader spinner s obchodníky
+     */
+    private void setDataToTraderSpinner(Spinner spinnerTrader) {
         List<String> userList = new ArrayList<>();
 
         userList.add(getString(R.string.select_trader));
@@ -257,6 +278,11 @@ public class BillNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Nastavení skladových položek do spinneru.
+     *
+     * @param spinnerStorageItem spinner se skl. polož.
+     */
     private void setDataToStorageItemSpinner(Spinner spinnerStorageItem) {
         List<String> storageItemList = new ArrayList<>();
 
@@ -277,7 +303,7 @@ public class BillNewActivity extends AppCompatActivity
      * vybrat fotku z galerie. Po té volá odpovídající
      * metody pro vyvolání aktivity.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void getPicture(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(BillNewActivity.this);
@@ -299,6 +325,12 @@ public class BillNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která zobrazí dialogové okno pro přídání
+     * nové položky aktury.
+     *
+     * @param view view aktivity
+     */
     public void getStorageItem(View view) {
         if (!isExpense) {
             showExistsItemDialog();
@@ -321,7 +353,13 @@ public class BillNewActivity extends AppCompatActivity
         }
     }
 
-
+    /**
+     * Metoda, která se spustí po načtení obrázku.
+     *
+     * @param requestCode kod požadavku
+     * @param resultCode  kod výsledku
+     * @param data        požadovaná data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -374,6 +412,9 @@ public class BillNewActivity extends AppCompatActivity
         finish();
     }
 
+    /**
+     * Vykreslení lsitu položek faktury do aktivity.
+     */
     private void setDataToList() {
 
         String[] itemName = new String[listOfItems.size()];
@@ -535,7 +576,7 @@ public class BillNewActivity extends AppCompatActivity
     /**
      * Metoda vloží záznam nového příjmu do databáze.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void submitNewBillForm(View view) {
 
@@ -559,7 +600,7 @@ public class BillNewActivity extends AppCompatActivity
         //druh faktury vybrán
         if (spinnerBillType.getSelectedItemId() != 0) {
             billTypeId = Integer.parseInt(billTypes[0][(int) spinnerBillType.getSelectedItemId() - 1]);
-        }else {
+        } else {
             billTypeId = -1;
         }
 

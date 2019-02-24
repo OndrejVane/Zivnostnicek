@@ -53,15 +53,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * Aktivity pro editaci faktury
+ */
 public class BillEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String TAG = "BillEditActivity";
 
-    private int billId;
-    private boolean isExpense;
-    private Bill bill;
-
+    //prvky aktivity
     private TextView textViewBillEditInfo;
     private TextInputLayout textLayoutInputBillEditName;
     private EditText textInputBillEditName;
@@ -74,6 +74,11 @@ public class BillEditActivity extends AppCompatActivity
     private ImageView photoViewBillEdit;
     private ExpandableHeightListView listViewEditBillStorageItems;
     private Button buttonSaveEditBill;
+
+    //pomocné globální proměnné
+    private int billId;
+    private boolean isExpense;
+    private Bill bill;
     private Calendar cal;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private Uri pictureUri = null;
@@ -82,13 +87,17 @@ public class BillEditActivity extends AppCompatActivity
     private String[][] storageItems;
     private ArrayList<StorageItemBox> listBillItems;
     private ArrayList<StorageItemBox> listBillItemsDeleted;
-
     private StorageItemDatabaseHelper storageItemDatabaseHelper;
-    private TraderDatabaseHelper traderDatabaseHelper;
     private BillDatabaseHelper billDatabaseHelper;
     private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,17 +127,32 @@ public class BillEditActivity extends AppCompatActivity
         listViewEditBillStorageItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    listBillItemsDeleted.add(listBillItems.remove(position));
-                    showBillItemsToActivity(listBillItems);
+                listBillItemsDeleted.add(listBillItems.remove(position));
+                showBillItemsToActivity(listBillItems);
             }
         });
 
     }
 
+    /**
+     * Procedura, která porvádí inicializaci aktivity
+     */
     private void initActivity() {
-        //načtení dar z shared preferences
-        billId = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
-        isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        //načtení dat z shared preferences
+        //načtení bill id
+        if (getIntent().hasExtra("BILL_ID")) {
+            billId = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
+        } else {
+            billId = 1;
+        }
+
+        //načtení, zda se jedná o příjem nebo výdaj
+        if (getIntent().hasExtra("IS_EXPENSE")) {
+            isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        } else {
+            isExpense = false;
+        }
+
 
         //inicializace prvků aktivity
         textViewBillEditInfo = findViewById(R.id.textViewBillEditInfo);
@@ -149,7 +173,7 @@ public class BillEditActivity extends AppCompatActivity
 
         //inicializace databáze
         storageItemDatabaseHelper = new StorageItemDatabaseHelper(this);
-        traderDatabaseHelper = new TraderDatabaseHelper(this);
+        TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(this);
         billDatabaseHelper = new BillDatabaseHelper(this);
         itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(this);
         typeBillDatabaseHelper = new TypeBillDatabaseHelper(this);
@@ -182,12 +206,17 @@ public class BillEditActivity extends AppCompatActivity
         listBillItemsDeleted = new ArrayList<>();
 
         //zobrazení obchodníků do spinneru
-        setDataToTraderSpinner();
+        setDataToTraderSpinner(spinnerTraderBillEdit);
 
         //zobrazení typu faktur do spinneru
-        setDataToBillTypeSpinner();
+        setDataToBillTypeSpinner(spinnerEditBillType);
     }
 
+    /**
+     * Zobrazení položek faktury do aktivity.
+     *
+     * @param arrayList list s položkam faktury
+     */
     private void showBillItemsToActivity(ArrayList<StorageItemBox> arrayList) {
 
         String[] billItemName;
@@ -215,7 +244,7 @@ public class BillEditActivity extends AppCompatActivity
         //nastavení adapteru do list view pro zobrazení
         ListViewBillItemAdapter listViewItemAdapter = new ListViewBillItemAdapter(this, billItemName, billItemQuantity, billItemUnit);
         //skryje obrázek koše
-        if (isEmpty){
+        if (isEmpty) {
             listViewItemAdapter.isTrashHidden(true);
         }
         listViewEditBillStorageItems.setAdapter(listViewItemAdapter);
@@ -227,14 +256,19 @@ public class BillEditActivity extends AppCompatActivity
      * nastaví příslušný text do aktivity
      */
     private void seTextToActivity() {
-        if(isExpense){
+        if (isExpense) {
             setTitle(getString(R.string.title_activity_expense_edit));
             buttonSaveEditBill.setText(R.string.save_expense);
             textViewBillEditInfo.setText(R.string.edit_information_about_expense);
         }
     }
 
-    private void setDataToTraderSpinner() {
+    /**
+     * Procedure, která nastaví všechny obchodníky do spinneru.
+     *
+     * @param spinnerTrader spinner s obchodníky
+     */
+    private void setDataToTraderSpinner(Spinner spinnerTrader) {
         List<String> traderList = new ArrayList<>();
 
         traderList.add(getString(R.string.select_trader));
@@ -245,11 +279,18 @@ public class BillEditActivity extends AppCompatActivity
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, traderList);
 
-        spinnerTraderBillEdit.setAdapter(adapter);
+        spinnerTrader.setAdapter(adapter);
 
     }
 
-    private void setDataToBillTypeSpinner() {
+
+    /**
+     * Procedura, která nastaví všechny existující
+     * typy faktur do spinneru.
+     *
+     * @param spinnerBillType spinner pro výběr typu faktury
+     */
+    private void setDataToBillTypeSpinner(Spinner spinnerBillType) {
         List<String> typeList = new ArrayList<>();
 
         typeList.add(getString(R.string.select_bill_type));
@@ -259,14 +300,14 @@ public class BillEditActivity extends AppCompatActivity
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, typeList);
 
-        spinnerEditBillType.setAdapter(adapter);
+        spinnerBillType.setAdapter(adapter);
     }
 
     /**
      * Procedura, která zobrazí date picker a nechá uživatele vybrat
      * datum. Následně datum vloží do pole datum.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void showDateDialog(View view) {
         int year = cal.get(Calendar.YEAR);
@@ -296,7 +337,7 @@ public class BillEditActivity extends AppCompatActivity
      * vybrat fotku z galerie. Po té volá odpovídající
      * metody pro vyvolání aktivity.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void getPicture(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -318,6 +359,12 @@ public class BillEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která vykreslí dialogové okno pro přidání položky
+     * katury. NOV8 vs EXISTUJÍCÍ
+     *
+     * @param view view aktivity
+     */
     public void getStorageItem(View view) {
         if (!isExpense) {
             showExistsItemDialog();
@@ -477,6 +524,11 @@ public class BillEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která zobrazí všechny skladové položky do spinneru.
+     *
+     * @param spinnerStorageItem spinner pro skladové položky
+     */
     private void setDataToStorageItemSpinner(Spinner spinnerStorageItem) {
         List<String> storageItemList = new ArrayList<>();
 
@@ -491,6 +543,13 @@ public class BillEditActivity extends AppCompatActivity
         spinnerStorageItem.setAdapter(adapter);
     }
 
+    /**
+     * Metoda, která se spustí po načtení obrázku.
+     *
+     * @param requestCode kod požadavku
+     * @param resultCode  kod výsledku
+     * @param data        požadovaná data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -579,6 +638,12 @@ public class BillEditActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Metoda, která zpracuje vstupní formulář a aktualizuje
+     * data v databázi.
+     *
+     * @param view
+     */
     public void updateBillForm(View view) {
 
         //načtení vstupních polí
@@ -616,7 +681,7 @@ public class BillEditActivity extends AppCompatActivity
         //druh faktury vybrán
         if (spinnerEditBillType.getSelectedItemId() != 0) {
             billTypeId = Integer.parseInt(billTypes[0][(int) spinnerEditBillType.getSelectedItemId() - 1]);
-        }else {
+        } else {
             billTypeId = -1;
         }
 
@@ -630,7 +695,7 @@ public class BillEditActivity extends AppCompatActivity
         bill.setTypeId(billTypeId);
 
         //pokud je pořízena fotka, tak uložit do db
-        if(pictureUri != null){
+        if (pictureUri != null) {
             bill.setPhoto(pictureUri.toString());
         }
 
@@ -646,21 +711,21 @@ public class BillEditActivity extends AppCompatActivity
         long storageItemId;
 
         //smazání všech smazaných položek z faktury
-        for (int i = 0; i<listBillItemsDeleted.size(); i++){
+        for (int i = 0; i < listBillItemsDeleted.size(); i++) {
             itemQuantityDatabaseHelper.deleteItemQuantityById(listBillItemsDeleted.get(i).getItemQuantity().getId());
         }
 
         //přídání všech nových položek faktruy do databáze
-        for (int i = 0; i<listBillItems.size(); i++){
+        for (int i = 0; i < listBillItems.size(); i++) {
             //pokud se jedná o novou
-            if(listBillItems.get(i).isNew()){
+            if (listBillItems.get(i).isNew()) {
                 //nově přidaná skladová položka
-                if(listBillItems.get(i).getItemQuantity().getId() == -1){
+                if (listBillItems.get(i).getItemQuantity().getId() == -1) {
                     storageItemId = storageItemDatabaseHelper.addStorageItem(listBillItems.get(i).getStorageItem());
                     listBillItems.get(i).getItemQuantity().setStorageItemId(storageItemId);
                     listBillItems.get(i).getItemQuantity().setBillId(billId);
                     itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
-                }else {
+                } else {
                     //položka je již evidivoaná ve skladu, přidám pouze nové množství
                     if (!isExpense) {
                         //pokud se jedná o výdaj, přidávám se zápornou hodnotou => jako vyskladění

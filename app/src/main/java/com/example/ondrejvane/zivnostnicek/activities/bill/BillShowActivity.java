@@ -41,8 +41,13 @@ import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivity pro zobrazení faktury.
+ */
 public class BillShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "BillShowActivity";
 
     //ptvky aktivity
     private EditText textViewBillName;
@@ -65,8 +70,6 @@ public class BillShowActivity extends AppCompatActivity
     private Bill bill;
     private boolean isExpense;
     private int billId;
-
-    private String TAG = "BillShowActivity";
 
 
     @Override
@@ -98,9 +101,25 @@ public class BillShowActivity extends AppCompatActivity
         Log.d(TAG, "Activity is successfully started");
     }
 
+    /**
+     * Inicializace aktivity
+     */
     private void initActivity() {
-        billId = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
-        isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+
+        //kontrola a získání dat z extra
+        if (getIntent().hasExtra("BILL_ID")) {
+            billId = Integer.parseInt(getIntent().getExtras().get("BILL_ID").toString());
+        } else {
+            billId = 1;
+        }
+
+        //kontrola a získání dat z extra
+        if (getIntent().hasExtra("IS_EXPENSE")) {
+            isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        } else {
+            isExpense = false;
+        }
+
 
         //nastaví příslušné texty, podle toho, jestli se jedná o příjem nebo výdaj
         setTextToActivity();
@@ -159,12 +178,20 @@ public class BillShowActivity extends AppCompatActivity
         showBillItemsToActivity(bill.getId());
     }
 
+    /**
+     * Nastavení titulku do aktivity podle příjmu nebo výdaje.
+     */
     private void setTextToActivity() {
         if (isExpense) {
             setTitle(getString(R.string.title_activity_expense_show));
         }
     }
 
+    /**
+     * Procedura, která zobrazí všechny položky faktruy do listu.
+     *
+     * @param billId id faktury
+     */
     private void showBillItemsToActivity(int billId) {
         ArrayList<ItemQuantity> arrayList = quantityDatabaseHelper.getItemQuantityByBillId(billId);
         String[] billItemName;
@@ -197,10 +224,17 @@ public class BillShowActivity extends AppCompatActivity
         expandableListView.setExpanded(true);
     }
 
+    /**
+     * Metoda, která po stisknutí text view nastartuje novou
+     * aktivittu pro zobrazení obrázku na celou obrazovku.
+     *
+     * @param view view aktivity
+     */
     public void showPicture(View view) {
         if (isPictureFound) {
             Intent intent = new Intent(BillShowActivity.this, ShowPictureActivity.class);
-            Log.d("BillShowActivity", "Start activity Show PictureActivity");
+            Log.d(TAG, "Start activity Show PictureActivity");
+            Log.d(TAG, "URI: " + bill.getPhoto());
             intent.putExtra("BITMAP_URI", bill.getPhoto());
             startActivity(intent);
         } else {
@@ -209,6 +243,9 @@ public class BillShowActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metoda, která se zavolá pokáždé, když je stisknuto tlačítko zpět.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -223,6 +260,12 @@ public class BillShowActivity extends AppCompatActivity
         finish();
     }
 
+    /**
+     * Metoda, která vykresluje boční navigační menu.
+     *
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -283,6 +326,9 @@ public class BillShowActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která odstraní fakturu z databáze.
+     */
     private void deleteBill() {
         if (billDatabaseHelper.deleteBillWithId(bill.getId())) {
 

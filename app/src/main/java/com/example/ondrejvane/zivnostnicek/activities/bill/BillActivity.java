@@ -57,7 +57,6 @@ public class BillActivity extends AppCompatActivity
     private ListView listViewBill;
 
 
-
     //pomocné globální proměnné
     private int[] ID;
     private int pickedYear = -1;
@@ -134,8 +133,8 @@ public class BillActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
-                if(firstPickYear){
-                    firstPickYear  = false;
+                if (firstPickYear) {
+                    firstPickYear = false;
                     return;
                 }
 
@@ -161,8 +160,8 @@ public class BillActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
-                if(firstPickMonth){
-                    firstPickMonth  = false;
+                if (firstPickMonth) {
+                    firstPickMonth = false;
                     return;
                 }
 
@@ -187,7 +186,12 @@ public class BillActivity extends AppCompatActivity
      */
     private void initActivity() {
 
-        isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        //zjištění, jestli je přiložené nějaké extra
+        if (getIntent().hasExtra("IS_EXPENSE")) {
+            isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
+        } else {
+            isExpense = false;
+        }
         //pokud se jedná o výdaj, tak nastavím title
         setTitle();
 
@@ -273,7 +277,8 @@ public class BillActivity extends AppCompatActivity
 
     /**
      * Nastavení adapteru do listu pro zobrazení.
-     * @param billBox   array list (faktury + typy faktur)
+     *
+     * @param billBox array list (faktury + typy faktur)
      */
     private void setAdapterToList(ArrayList<BillBox> billBox) {
         final ListViewBillAdapter listViewBillAdapter = new ListViewBillAdapter(BillActivity.this, billBox);
