@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.example.ondrejvane.zivnostnicek.model.BillBox;
+import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
@@ -42,6 +45,78 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.close();
 
         return billId;
+    }
+
+    public synchronized ArrayList<BillBox> getAllBillsWithTypesByDate(int year, int month, int isExpense) {
+        ArrayList<BillBox> arrayList = new ArrayList<>();
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] columns = {COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_AMOUNT, COLUMN_BILL_VAT, COLUMN_BILL_DATE, COLUMN_BILL_TRADER_ID, COLUMN_BILL_PHOTO, COLUMN_BILL_IS_EXPENSE, COLUMN_BILL_TYPE_ID};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?";
+
+        String orderBy = COLUMN_BILL_NUMBER + " ASC";
+
+        String[] selectionArgs = {Integer.toString(userId), Integer.toString(isExpense)};
+
+        Cursor cursor = db.query(TABLE_BILL,        //Table to query
+                columns,                            //columns to return
+                selection,                          //columns for the WHERE clause
+                selectionArgs,                      //The values for the WHERE clause
+                null,                      //group the rows
+                null,                        //filter by row groups
+                orderBy);
+
+        if (cursor.moveToFirst()) {
+            do{
+                //zjištení data faktury
+                String date = cursor.getString(4);
+                int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
+                int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
+
+                //Kontrola, zda faktura spadá do vybraného data
+                if (FormatUtility.isRightDate(year, month, foundYear, foundMonth)) {
+                    Bill bill = new Bill();
+                    BillBox billBox;
+
+                    //vytvoření faktury a načtení všech dat
+                    bill.setId(cursor.getInt(0));
+                    bill.setName(cursor.getString(1));
+                    bill.setAmount(cursor.getFloat(2));
+                    bill.setVAT(cursor.getInt(3));
+                    bill.setDate(cursor.getString(4));
+                    bill.setTraderId(cursor.getInt(5));
+                    bill.setPhoto(cursor.getString(6));
+                    bill.setIsExpense(cursor.getInt(7));
+                    bill.setTypeId(cursor.getInt(8));
+
+                    //načtení typu faktury
+                    if (bill.getTypeId() != -1) {
+                        TypeBill typeBill = typeBillDatabaseHelper.getTypeBillById(bill.getTypeId());
+                        billBox = new BillBox(bill, typeBill);
+
+                    } else {
+                        TypeBill typeBill = new TypeBill();
+                        typeBill.setName("Žándý typ");
+                        typeBill.setColor(-9901676);
+                        typeBill.setId(-1);
+                        typeBill.setUserId(userId);
+                        billBox = new BillBox(bill, typeBill);
+                    }
+
+                    //přidání do listu
+                    arrayList.add(billBox);
+                }
+            }while (cursor.moveToNext());
+        }
+
+        db.close();
+        cursor.close();
+
+        return arrayList;
     }
 
     public synchronized String[][] getBillData(int userID, int isExpense) {
@@ -182,7 +257,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
 
-                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
+                if (FormatUtility.isRightDate(year, month, foundYear, foundMonth)) {
                     result = result + cursor.getFloat(0);
                 }
             } while (cursor.moveToNext());
@@ -227,10 +302,10 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
                 int vat = cursor.getInt(2);
 
-                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
+                if (FormatUtility.isRightDate(year, month, foundYear, foundMonth)) {
                     temp = cursor.getDouble(0);
                 }
-                switch (vat){
+                switch (vat) {
                     case 21:
                         result = result + (temp * coefficient21);
                         break;
@@ -254,16 +329,16 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return Math.round(result * 100.0) / 100.0;
     }
 
-    public synchronized float getTotalAmountByTypeId(int year, int month,int typeId, boolean isExpense){
+    public synchronized float getTotalAmountByTypeId(int year, int month, int typeId, boolean isExpense) {
         int userId = UserInformation.getInstance().getUserId();
         int isExpenseInt;
         float totalAmount = 0.0f;
-        if(isExpense){
+        if (isExpense) {
             isExpenseInt = 1;
-        }else {
+        } else {
             isExpenseInt = 0;
         }
-        String[] columns = { COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE};
+        String[] columns = {COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -285,7 +360,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
                 int foundMonth = Integer.parseInt(FormatUtility.getMonthFromDate(date));
 
-                if(FormatUtility.isRightDate(year, month, foundYear, foundMonth)){
+                if (FormatUtility.isRightDate(year, month, foundYear, foundMonth)) {
                     totalAmount = totalAmount + cursor.getFloat(0);
                 }
             } while (cursor.moveToNext());
@@ -298,7 +373,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return totalAmount;
     }
 
-    public synchronized void updateBill(Bill bill){
+    public synchronized void updateBill(Bill bill) {
         String where = COLUMN_BILL_ID + " = ?";
 
         String[] updateArgs = {Integer.toString(bill.getId())};

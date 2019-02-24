@@ -10,26 +10,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
+import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
+
+import java.util.ArrayList;
 
 public class ListViewBillAdapter extends BaseAdapter {
 
     private Activity context;
-    private String[] billName;
-    private String[] billDate;
-    private String[] billAmount;
-    private int[] typeBillColor;
-    private String[] typeBillName;
+    private ArrayList<BillBox> billBox;
     private boolean isExpense = false;
 
-    public ListViewBillAdapter(Activity context, String[] billName, String[] billDate, String[] billAmount, String[] typeBillName, String[] typeBillColor){
+    public ListViewBillAdapter(Activity context, ArrayList<BillBox> billBox){
+        this.billBox = billBox;
         this.context = context;
-        this.billName = billName;
-        this.billDate = billDate;
-        this.billAmount = billAmount;
-        this.typeBillName = typeBillName;
-        this.typeBillColor = ArrayUtility.arrayStringToInteger(typeBillColor);
     }
 
     public void isExpense(boolean isExpense){
@@ -37,7 +31,7 @@ public class ListViewBillAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        return billName.length;
+        return billBox.size();
     }
 
     public Object getItem(int position) {
@@ -86,20 +80,21 @@ public class ListViewBillAdapter extends BaseAdapter {
             holder = (ListViewBillAdapter.ViewHolder) convertView.getTag();
         }
 
-        holder.txtViewBillName.setText(billName[position]);
-        holder.txtViewBillDate.setText(billDate[position]);
+        holder.txtViewBillName.setText(billBox.get(position).getBill().getName());
+        holder.txtViewBillDate.setText(billBox.get(position).getBill().getDate());
+        String amountTemp = Float.toString(billBox.get(position).getBill().getAmount());
         if(isExpense){
-            holder.txtViewBillAmount.setText(FormatUtility.formatExpenseAmount(billAmount[position]));
+            holder.txtViewBillAmount.setText(FormatUtility.formatExpenseAmount(amountTemp));
         }else {
-            holder.txtViewBillAmount.setText(FormatUtility.formatIncomeAmount(billAmount[position]));
+            holder.txtViewBillAmount.setText(FormatUtility.formatIncomeAmount(amountTemp));
         }
 
         //nastavení prvního písmena názvu typu do kruhu
-        holder.txtViewBillCapitalLetter.setText(Character.toString(typeBillName[position].toUpperCase().charAt(0)));
-
+        String typeName = billBox.get(position).getTypeBill().getName();
+        holder.txtViewBillCapitalLetter.setText(Character.toString(typeName.toUpperCase().charAt(0)));
         //nastavení barvy podle typu výdaje
         GradientDrawable gradientDrawable = (GradientDrawable) holder.txtViewBillCapitalLetter.getBackground().mutate();
-        gradientDrawable.setColor(typeBillColor[position]);
+        gradientDrawable.setColor(billBox.get(position).getTypeBill().getColor());
 
         if(isExpense){
             holder.txtViewBillAmount.setTextColor(Color.RED);

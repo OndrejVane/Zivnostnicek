@@ -1,11 +1,13 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,14 +28,15 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
-import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
+import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
+
+import java.util.ArrayList;
 
 import top.defaults.colorpicker.ColorPickerPopup;
 
@@ -43,43 +46,43 @@ import top.defaults.colorpicker.ColorPickerPopup;
 public class BillActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private boolean isExpense;      //proměnná, která udáváa, zda jsou zobrazovány příjmy neb výdaje
+    private static final String TAG = "BillActivity";
 
+    //proměnná, která udává, zda jsou zobrazovány příjmy neb výdaje
+    private boolean isExpense;
+
+    //prvky aktivity
     private Spinner spinnerBillYear;
     private Spinner spinnerBillMonth;
     private ListView listViewBill;
 
-    //proměnné, které obsahují všechny příjmy načtené z databáze
-    private String[] billName;
-    private String[] billDate;
-    private String[] billAmount;
-    private String[] billTypeName;
-    private String[] billTypeColor;
+
+
+    //pomocné globální proměnné
     private int[] ID;
-    private int[] holderId;
-
-    //pomocné proměnné pro vyhledávání
-    private int[] tempIdYear;
-    private String[] tempBillNameYear;
-    private String[] tempBillDateYear;
-    private String[] tempBillAmountYear;
-    private String[] tempBillTypeName;
-    private String[] tempBillTypeColor;
-
+    private int pickedYear = -1;
+    private int pickedMonth = -1;
+    private boolean firstPickYear = true;
+    private boolean firstPickMonth = true;
 
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
+     *
      * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "Starting activity");
+
         setContentView(R.layout.activity_bill);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        //po stisknutí na floating button spuštění aktivity pr přídání záznamu
+        final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,17 +102,22 @@ public class BillActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        //nastavení headeru do aktivity
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
+
+        Log.d(TAG, "Successfully initialized");
 
         //click listener, který spustí aktivitu pro náhled faktury po kliknutí na položku v listu
         listViewBill.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int incomeId = ID[position];
-                if(incomeId != -1){
+                if (incomeId != -1) {
+                    Log.d(TAG, "Picked bill " + position);
                     Intent intent = new Intent(BillActivity.this, BillShowActivity.class);
                     intent.putExtra("BILL_ID", incomeId);
                     intent.putExtra("IS_EXPENSE", isExpense);
@@ -120,89 +128,26 @@ public class BillActivity extends AppCompatActivity
         });
 
 
+        //po vybrání roku ze spinneru se provede následující kod (vyhledání po)
         spinnerBillYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(position != 0){
-                    String findingYear= spinnerBillYear.getSelectedItem().toString();
-                    if(billName.length == 0){
-                        tempBillNameYear = new String[1];
-                        tempBillDateYear = new String[1];
-                        tempBillAmountYear = new String[1];
-                        tempBillTypeName = new String[1];
-                        tempBillTypeColor = new String[1];
-                        tempIdYear = new int[1];
-                        tempBillNameYear[0] = getString(R.string.no_result);
-                        tempBillDateYear[0] = getString(R.string.no_result);
-                        tempBillAmountYear[0] = "";
-                        tempBillTypeName[0] = getString(R.string.no_result);
-                        tempBillTypeColor[0] = Integer.toString(getResources().getColor(R.color.colorPrimary));
-                        tempIdYear[0] = -1;
-                        ID = tempIdYear;
-                        setAdapterToList(tempBillNameYear, tempBillDateYear, tempBillAmountYear, tempBillTypeName, tempBillTypeColor);
-                        return;
-                    }else {
-                        int foundIncomes = 0;
-                        for (int i = 0; i < billName.length; i++){
-                            if(FormatUtility.getYearFromDate(billDate[i]).equals(findingYear)){
-                                foundIncomes++;
-                            }
-                        }
-                        tempBillNameYear = new String[foundIncomes];
-                        tempBillDateYear = new String[foundIncomes];
-                        tempBillAmountYear = new String[foundIncomes];
-                        tempBillTypeName = new String[foundIncomes];
-                        tempBillTypeColor = new String[foundIncomes];
-                        tempIdYear = new int[foundIncomes];
-                    }
-
-                    int tempI=0;
-                    boolean found = false;
-
-                    for (int i = 0; i < billName.length; i++){
-                        if(FormatUtility.getYearFromDate(billDate[i]).equals(findingYear)){
-                            tempBillNameYear[tempI] = billName[i];
-                            tempBillDateYear[tempI] = billDate[i];
-                            tempBillAmountYear[tempI] = billAmount[i];
-                            tempBillTypeName[tempI] = billTypeName[i];
-                            tempBillTypeColor[tempI] = billTypeColor[i];
-                            tempIdYear[tempI] = holderId[i];
-                            tempI++;
-                            found = true;
-                        }
-                    }
-
-                    if(found){
-                        ID = tempIdYear;
-                        setAdapterToList(tempBillNameYear, tempBillDateYear, tempBillAmountYear, tempBillTypeName, tempBillTypeColor);
-                    }else {
-                        tempBillNameYear = new String[1];
-                        tempBillDateYear = new String[1];
-                        tempBillAmountYear = new String[1];
-                        tempBillTypeName = new String[1];
-                        tempBillTypeColor = new String[1];
-                        tempIdYear = new int[1];
-                        tempBillNameYear[0] = getString(R.string.no_result);
-                        tempBillDateYear[0] = getString(R.string.no_result);
-                        tempBillAmountYear[0] = "";
-                        tempBillTypeName[0] = getString(R.string.no_result);
-                        tempBillTypeColor[0] = Integer.toString(getResources().getColor(R.color.colorPrimary));
-                        tempIdYear[0] = -1;
-                        ID = tempIdYear;
-                        setAdapterToList(tempBillNameYear, tempBillDateYear, tempBillAmountYear, tempBillTypeName, tempBillTypeColor);
-                    }
-                }else {
-                    tempIdYear = holderId;
-                    tempBillNameYear = billName;
-                    tempBillDateYear = billDate;
-                    tempBillAmountYear = billAmount;
-                    tempBillTypeName = billTypeName;
-                    tempBillTypeColor = billTypeColor;
-                    //nastavení dat do adapteru pro zobrazení
-                    setAdapterToList(billName, billDate, billAmount, tempBillTypeName, tempBillTypeColor);
-                    ID = holderId;
+                //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
+                if(firstPickYear){
+                    firstPickYear  = false;
+                    return;
                 }
+
+
+                if (position != 0) {
+                    pickedYear = Integer.parseInt(spinnerBillYear.getSelectedItem().toString());
+                } else {
+                    pickedYear = -1;
+                }
+
+                readDataFromDatabase();
+
             }
 
             @Override
@@ -210,160 +155,143 @@ public class BillActivity extends AppCompatActivity
             }
         });
 
+        //po vybrání měsíce ze spinneru se provede následující kod (vyhledání po)
         spinnerBillMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                int[] tempId;
-                String[] tempBillNameYearAndMonth;
-                String[] tempBillDateYearAndMonth;
-                String[] tempBillAmountYearAndMonth;
-                String[] tempBillTypeNameYearAndMonth;
-                String[] tempBillTypeColorYearAndMonth;
-                if(position != 0) {
-                    String findingMonth = Integer.toString(position);
-                    String findingYear = spinnerBillYear.getSelectedItem().toString();
-                    if(billName.length == 0){
-                        tempBillNameYearAndMonth = new String[1];
-                        tempBillDateYearAndMonth = new String[1];
-                        tempBillAmountYearAndMonth = new String[1];
-                        tempBillTypeNameYearAndMonth = new String[1];
-                        tempBillTypeColorYearAndMonth = new String[1];
-                        tempId = new int[1];
-                        tempBillNameYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillDateYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillTypeNameYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillTypeColorYearAndMonth[0] = Integer.toString(getResources().getColor(R.color.colorPrimary));
-                        tempBillAmountYearAndMonth[0] = "";
-                        tempId[0] = -1;
-                        ID = tempId;
-                        setAdapterToList(tempBillNameYearAndMonth, tempBillDateYearAndMonth, tempBillAmountYearAndMonth, tempBillTypeNameYearAndMonth, tempBillTypeColorYearAndMonth);
-                        return;
-                    }else {
-                        int foundIncomes = 0;
-                        for (int i = 0; i < billName.length; i++){
-                            if(FormatUtility.getYearFromDate(billDate[i]).equals(findingYear) && FormatUtility.getMonthFromDate(billDate[i]).equals(findingMonth)){
-                                foundIncomes++;
-                            }
-                        }
-                        tempBillNameYearAndMonth = new String[foundIncomes];
-                        tempBillDateYearAndMonth = new String[foundIncomes];
-                        tempBillAmountYearAndMonth = new String[foundIncomes];
-                        tempBillTypeNameYearAndMonth = new String[foundIncomes];
-                        tempBillTypeColorYearAndMonth = new String[foundIncomes];
-                        tempId = new int[foundIncomes];
-                    }
-
-                    int tempI=0;
-                    boolean found = false;
-
-                    for (int i = 0; i < billName.length; i++){
-                        if(FormatUtility.getYearFromDate(billDate[i]).equals(findingYear) && FormatUtility.getMonthFromDate(billDate[i]).equals(findingMonth)){
-                            tempBillNameYearAndMonth[tempI] = billName[i];
-                            tempBillDateYearAndMonth[tempI] = billDate[i];
-                            tempBillAmountYearAndMonth[tempI] = billAmount[i];
-                            tempBillTypeNameYearAndMonth[tempI] = billTypeName[i];
-                            tempBillTypeColorYearAndMonth[tempI] = billTypeColor[i];
-                            tempId[tempI] = holderId[i];
-                            tempI++;
-                            found = true;
-                        }
-                    }
-
-                    if(found){
-                        ID = tempId;
-                        setAdapterToList(tempBillNameYearAndMonth, tempBillDateYearAndMonth, tempBillAmountYearAndMonth, tempBillTypeNameYearAndMonth, tempBillTypeColorYearAndMonth);
-                    }else {
-                        tempBillNameYearAndMonth = new String[1];
-                        tempBillDateYearAndMonth = new String[1];
-                        tempBillAmountYearAndMonth = new String[1];
-                        tempBillTypeNameYearAndMonth = new String[1];
-                        tempBillTypeColorYearAndMonth = new String[1];
-                        tempId = new int[1];
-                        tempBillNameYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillDateYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillTypeNameYearAndMonth[0] = getString(R.string.no_result);
-                        tempBillTypeColorYearAndMonth[0] = Integer.toString(getResources().getColor(R.color.colorPrimary));
-                        tempBillAmountYearAndMonth[0] = "";
-                        tempId[0] = -1;
-                        ID = tempId;
-                        setAdapterToList(tempBillNameYearAndMonth, tempBillDateYearAndMonth, tempBillAmountYearAndMonth, tempBillTypeNameYearAndMonth, tempBillTypeColorYearAndMonth);
-                    }
-                }else {
-                    ID = tempIdYear;
-                    setAdapterToList(tempBillNameYear, tempBillDateYear, tempBillAmountYear, tempBillTypeName, tempBillTypeColor);
+                //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
+                if(firstPickMonth){
+                    firstPickMonth  = false;
+                    return;
                 }
 
+                if (position != 0) {
+                    pickedMonth = position;
+                } else {
+                    pickedMonth = -1;
                 }
+
+                readDataFromDatabase();
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
     }
 
+
+    /**
+     * Funkce, která inicializuje aktivitu.
+     */
     private void initActivity() {
 
         isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
         //pokud se jedná o výdaj, tak nastavím title
         setTitle();
 
-        String[][] temp;
+        //inicializace prvků v aktivitě
         spinnerBillYear = findViewById(R.id.spinnerIncomeYear);
         spinnerBillMonth = findViewById(R.id.spinnerIncomeMonth);
         listViewBill = findViewById(R.id.listViewIncome);
 
+        //implementace nastavení do aktivity
+        setSettings();
 
-        //pokud je v nastavení vybrán pouze jeden rok, tak zobrazím do spinneru a zablokuji ho
-        if(Settings.getInstance().isIsPickedOneYear()){
-            spinnerBillYear.setEnabled(false);
-            spinnerBillYear.setSelection(Settings.getInstance().getArrayYearId());
-        }
-
-        //pokud je v nastavení vybrán pouze jeden měsíc, tak zobrazím do spinneru a zablokuji ho
-        if(Settings.getInstance().isPickedOneMonth()){
-            spinnerBillMonth.setEnabled(false);
-            spinnerBillMonth.setSelection(Settings.getInstance().getArrayMonthId());
-        }
-
-        //inicializace databáze
-        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(BillActivity.this);
-        //načtení příslušných faktur z databáze
-        if(isExpense){
-            temp = billDatabaseHelper.getBillData(UserInformation.getInstance().getUserId(), 1); // 1 = hledám pouze výdaje
-        }else {
-            temp = billDatabaseHelper.getBillData(UserInformation.getInstance().getUserId(), 0); // 0 = hledám pouze příjmy
-        }
-        ID = ArrayUtility.arrayStringToInteger(temp[0]);
-        holderId = ArrayUtility.arrayStringToInteger(temp[0]);
-        billName = temp[1];
-        billDate = temp[2];
-        billAmount = temp[3];
-        billTypeName = temp[4];
-        billTypeColor = temp[5];
-
-        //nastavení dat do adapteru pro zobrazení
-        setAdapterToList(billName, billDate, billAmount, billTypeName, billTypeColor);
+        //načtení dat z databáze
+        readDataFromDatabase();
 
     }
 
-    private void setTitle(){
-        if(isExpense){
+    /**
+     * Funkce, která načte data z databáze a uloží je do
+     * globálních proměnných. tato akce je prováděna v jiném
+     * vlákně něž vlákno GUI.
+     */
+    private void readDataFromDatabase() {
+        Log.d(TAG, "Reading data from db");
+
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(BillActivity.this);
+
+                ArrayList<BillBox> billBox;
+
+
+                if (isExpense) {
+                    billBox = billDatabaseHelper.getAllBillsWithTypesByDate(pickedYear, pickedMonth, 1);
+                } else {
+                    billBox = billDatabaseHelper.getAllBillsWithTypesByDate(pickedYear, pickedMonth, 0);
+                }
+
+                ID = new int[billBox.size()];
+
+                for (int i = 0; i < billBox.size(); i++) {
+                    ID[i] = billBox.get(i).getBill().getId();
+                }
+
+                setAdapterToList(billBox);
+            }
+        });
+    }
+
+    /**
+     * Načtení nastevení aktuálního uživatele do aktivity.
+     */
+    private void setSettings() {
+        Settings settings = Settings.getInstance();
+        //pokud je v nastavení vybrán pouze jeden rok, tak zobrazím do spinneru a zablokuji ho
+        if (settings.isIsPickedOneYear()) {
+            spinnerBillYear.setEnabled(false);
+            spinnerBillYear.setSelection(settings.getArrayYearId());
+            pickedYear = Integer.parseInt(settings.getYear());
+            Log.d(TAG, "Picked year " + pickedYear);
+        }
+
+        //pokud je v nastavení vybrán pouze jeden měsíc, tak zobrazím do spinneru a zablokuji ho
+        if (settings.isPickedOneMonth()) {
+            spinnerBillMonth.setEnabled(false);
+            spinnerBillMonth.setSelection(settings.getArrayMonthId());
+            pickedMonth = settings.getArrayMonthId();
+            Log.d(TAG, "Picked month " + pickedMonth);
+        }
+    }
+
+    /**
+     * Nastavení nadpisu do aktivity, podle toho jestli se jedná o
+     * příjem nebo výdaj.
+     */
+    private void setTitle() {
+        if (isExpense) {
             setTitle(getString(R.string.title_activity_expense));
-        }else {
+        } else {
             setTitle(getString(R.string.title_activity_income));
         }
     }
 
-    private void setAdapterToList(String[] billName, String[] billDate, String[] billAmount, String[] typeBillName, String[] typeBillColor){
-        ListViewBillAdapter listViewBillAdapter = new ListViewBillAdapter(BillActivity.this, billName, billDate, billAmount, typeBillName, typeBillColor);
-        if(isExpense){
+    /**
+     * Nastavení adapteru do listu pro zobrazení.
+     * @param billBox   array list (faktury + typy faktur)
+     */
+    private void setAdapterToList(ArrayList<BillBox> billBox) {
+        final ListViewBillAdapter listViewBillAdapter = new ListViewBillAdapter(BillActivity.this, billBox);
+        if (isExpense) {
             listViewBillAdapter.isExpense(true);
         }
-        listViewBill.setAdapter(listViewBillAdapter);
+        listViewBill.post(new Runnable() {
+            @Override
+            public void run() {
+                listViewBill.setAdapter(listViewBillAdapter);
+            }
+        });
     }
 
+    /**
+     * Funkce, která zobrazí dialogové okno pro přidání typu
+     * faktury. Po stisknutí tlačítka přidá záznam do databáze.
+     */
     private void addTypeBillDialogShow() {
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(BillActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.type_bill_add_dialog, null);
@@ -413,7 +341,7 @@ public class BillActivity extends AppCompatActivity
             public void onClick(View v) {
                 String billTypeName = editTextBillTypeName.getText().toString();
 
-                if(!InputValidation.validateIsEmpty(billTypeName)){
+                if (!InputValidation.validateIsEmpty(billTypeName)) {
                     layouBillTypeName.setError(getString(R.string.bill_type_name_is_empty));
                     return;
                 }
@@ -432,6 +360,12 @@ public class BillActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Metoda, která se stará o vykreslení menu v prvém rohu.
+     *
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -442,8 +376,9 @@ public class BillActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -474,8 +409,9 @@ public class BillActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -491,10 +427,10 @@ public class BillActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();
