@@ -31,6 +31,9 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivity, která zobrazuje hlavní přehled přímů a výdajů.
+ */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,10 +51,17 @@ public class HomeActivity extends AppCompatActivity
     private BillDatabaseHelper billDatabaseHelper;
     private int pickedYear = -1;
     private int pickedMonth = -1;
-    float incomes;
-    float expense;
+    private boolean isFisrtPickYear = true;
+    private boolean isFisrtPickMonth = true;
+    private float incomes = 0.0f;
+    private float expense = 0.0f;
 
-
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,20 +91,19 @@ public class HomeActivity extends AppCompatActivity
         //implementace nastavení
         setSettings();
 
-        //načtení dat z databáze
-        incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
-        expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
-
-
-        //zobrazení dat do grafu
-        addDataToChart(incomes, expense);
-
+        getDataAndSetToActivity();
 
 
         //akce při výběru roku ze spinner
         spinnerPickedYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Pokud se jedná o první výber data se nenastavují
+                if (isFisrtPickYear) {
+                    isFisrtPickYear = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedYear = Integer.parseInt(spinnerPickedYear.getSelectedItem().toString());
                 } else {
@@ -114,6 +123,12 @@ public class HomeActivity extends AppCompatActivity
         spinnerPickedMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Pokud se jedná o první výber data se nenastavují
+                if (isFisrtPickMonth) {
+                    isFisrtPickMonth = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedMonth = position;
                 } else {
@@ -129,6 +144,9 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která inicializuje všechyn prvky aktivity
+     */
     private void initActivity() {
         //inicializace prvků v aktivitě
         spinnerPickedYear = findViewById(R.id.spinnerHomeYear);
@@ -140,8 +158,15 @@ public class HomeActivity extends AppCompatActivity
 
         //inicializace databáze
         billDatabaseHelper = new BillDatabaseHelper(this);
+
     }
 
+    /**
+     * Metoda, která vykresluje data do grafu.
+     *
+     * @param incomes příjmy
+     * @param expense výdaje
+     */
     private void addDataToChart(float incomes, float expense) {
         //inicializace grafu
         pieChart.setRotationEnabled(true);
@@ -178,6 +203,10 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která načte nastavení ze třídy Settings
+     * a implementuje ho do aktivity.
+     */
     private void setSettings() {
         Settings settings = Settings.getInstance();
         //pokud je vybraný jeden rok
@@ -194,10 +223,13 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Získání dat az databáze a zobrazení do aktivity
+     */
     private void getDataAndSetToActivity() {
-        //načtení dat z databáze
-        float incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
-        float expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+
+        readDataFromDatabase();
+
         float balance = incomes - expense;
 
         //nastavení dat do grafu
@@ -210,26 +242,46 @@ public class HomeActivity extends AppCompatActivity
         textViewIncome.setText(formattedIncomes);
         textViewExpense.setText(formattedExpense);
 
-        if(balance > 0){
+        //pokud je bilance kladná
+        if (balance > 0) {
             formattedBalance = FormatUtility.formatBalanceAmount(balance);
             textViewBalance.setTextColor(getResources().getColor(R.color.income));
             textViewBalance.setText(formattedBalance);
             return;
         }
 
-        if(balance < 0){
+        //pokud je bilance záporná
+        if (balance < 0) {
             formattedBalance = FormatUtility.formatBalanceAmount(balance);
             textViewBalance.setTextColor(getResources().getColor(R.color.expense));
             textViewBalance.setText(formattedBalance);
             return;
         }
 
+        //pokud je bilance nulová
         if (balance == 0) {
             textViewBalance.setTextColor(getResources().getColor(R.color.zero));
             textViewBalance.setText(getString(R.string.zero));
         }
     }
 
+    /**
+     * Načtení dat z databáze
+     */
+    private void readDataFromDatabase() {
+        Log.d(TAG, "Reading data from db");
+        //načtení dat z databáze
+        incomes = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 0);
+        expense = billDatabaseHelper.getBillDataByDate(pickedYear, pickedMonth, 1);
+
+    }
+
+    /**
+     * Meotda, která vykreslí boční navigační menu.
+     *
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -253,6 +305,9 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Metoda, která se porvede po stisknutí talčítka zpět
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

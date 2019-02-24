@@ -30,6 +30,9 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivita, která zobrazuje graf s obchodníky a jejich hodnocením
+ */
 public class HomeTraderActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -79,6 +82,9 @@ public class HomeTraderActivity extends AppCompatActivity
         Log.d(TAG, "Activity HomeActivity successfully started");
     }
 
+    /**
+     * Inicializace prvků v aktivitě
+     */
     private void initActivity() {
 
         barChart = findViewById(R.id.barChartTraders);
@@ -88,6 +94,9 @@ public class HomeTraderActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Načtení data za databáze.
+     */
     private void getDataFromDatabase() {
         String[][] tempTraders;
         tempTraders = traderDatabaseHelper.getTradersData(UserInformation.getInstance().getUserId());
@@ -101,12 +110,19 @@ public class HomeTraderActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Nastavení data do grafu
+     *
+     * @param tradersName       pole s názvy obchodníků
+     * @param tradersEvaluation pole s hodnocením obchodníků
+     */
     private void setDataToGraph(String[] tradersName, float[] tradersEvaluation) {
-        // Create bars
+        // vytvoření seznamu vstupů
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        // Create explanation labels for each bar
+        // vytvoření sezanmu pro labely
         final ArrayList<String> barLabels = new ArrayList<>();
 
+        //přidání data do listů
         for (int i = 0; i < tradersEvaluation.length; i++) {
             barEntries.add(new BarEntry((float) i, tradersEvaluation[i]));
             barLabels.add(tradersName[i]);
@@ -120,31 +136,25 @@ public class HomeTraderActivity extends AppCompatActivity
         // Create a data object from the data set
         BarData data = new BarData(dataSet);
 
-        // Make the chart use the acquired data
+        //natavení data do grafu
         barChart.setData(data);
 
-        // Display explanation labels
+        // zobrazení popisků
         barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(barLabels));
         barChart.getXAxis().setGranularity(1f);
-        // Set the minimum and maximum bar values
         barChart.getAxisLeft().setAxisMaximum((float) 5.7);
         barChart.getAxisLeft().setAxisMinimum(0);
 
-
-        // Set a color for each bar in the chart based on its value
-
-        // Animate chart so that bars are sliding from left to right
+        //nastavení animace grafu
         barChart.animateXY(1000, 1000);
 
-        // Hide grid lines
+        //schování gridu
         barChart.getAxisLeft().setEnabled(false);
         barChart.getAxisRight().setEnabled(false);
-        // Hide graph description
         barChart.getDescription().setEnabled(false);
-        // Hide graph legend
         barChart.getLegend().setEnabled(false);
 
-        // Set colors and font style
+        // nastavení barevného schéma
         dataSet.setColors(ColorTemplate.VORDIPLOM_COLORS);
         data.setValueTextSize(13f);
         data.setValueTextColor(Color.DKGRAY);
@@ -152,6 +162,9 @@ public class HomeTraderActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která se porvede po stisknutí talčítka zpět
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -162,6 +175,13 @@ public class HomeTraderActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metoda, která se stará o boční navigační menu a přechod
+     * mezi aktivitami
+     *
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

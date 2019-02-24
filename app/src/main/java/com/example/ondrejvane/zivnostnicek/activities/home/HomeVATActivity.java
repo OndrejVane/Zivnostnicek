@@ -31,6 +31,9 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivita, která zobrazuje graf s DPH na vstupu a na výstupu
+ */
 public class HomeVATActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,6 +53,8 @@ public class HomeVATActivity extends AppCompatActivity
     private int pickedYear = -1;
     private int pickedMonth = -1;
     private Settings settings;
+    private boolean isFirstPickYear = true;
+    private boolean isFirstPickMonth = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,12 @@ public class HomeVATActivity extends AppCompatActivity
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (isFirstPickYear) {
+                    isFirstPickYear = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedYear = Integer.parseInt(spinnerYear.getSelectedItem().toString());
                 } else {
@@ -105,6 +116,12 @@ public class HomeVATActivity extends AppCompatActivity
         spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (isFirstPickMonth) {
+                    isFirstPickMonth = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedMonth = position;
                 } else {
@@ -121,6 +138,9 @@ public class HomeVATActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * procedura, která inicializuje prvky aktivity
+     */
     private void initActivity() {
 
         spinnerYear = findViewById(R.id.spinnerHomeVATYear);
@@ -135,6 +155,9 @@ public class HomeVATActivity extends AppCompatActivity
         billDatabaseHelper = new BillDatabaseHelper(this);
     }
 
+    /**
+     * Procedura, která implementuje nastavení do aktivity
+     */
     private void setSettings() {
 
         //pokud je vybraný jeden rok
@@ -144,6 +167,7 @@ public class HomeVATActivity extends AppCompatActivity
             pickedYear = Integer.parseInt(settings.getYear());
         }
 
+        //pokud je vabranný jeden měsíc
         if (settings.isPickedOneMonth()) {
             spinnerMonth.setEnabled(false);
             spinnerMonth.setSelection(settings.getArrayMonthId());
@@ -152,6 +176,9 @@ public class HomeVATActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Načtení dat z databáze a nastavení do aktivity
+     */
     private void getDataAndSetToActivity() {
         double inputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 1);
         double outputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 0);
@@ -167,6 +194,8 @@ public class HomeVATActivity extends AppCompatActivity
         textViewInputVAT.setText(formattedIncomes);
         textViewOutputVAT.setText(formattedExpense);
 
+
+        //pokud je DPH na vstupu větší než na výstupu
         if (balanceVAT > 0) {
             formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
             textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.income));
@@ -175,6 +204,7 @@ public class HomeVATActivity extends AppCompatActivity
             return;
         }
 
+        //pokud je DPH na vstupu nižší než na výstupu
         if (balanceVAT < 0) {
             formattedBalance = FormatUtility.formatBalanceAmount((float) balanceVAT).substring(1);
             textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.expense));
@@ -183,12 +213,19 @@ public class HomeVATActivity extends AppCompatActivity
             return;
         }
 
+        //DPH na vstupu == DPH na výstupu
         if (balanceVAT == 0) {
             textViewBalancVATAmount.setTextColor(getResources().getColor(R.color.zero));
             textViewBalancVATAmount.setText(getString(R.string.zero));
         }
     }
 
+    /**
+     * Nastavení dat do  koláčového grafu
+     *
+     * @param inputAmountVAT  hodnota DPH na vstupu
+     * @param outputAmountVAT hodnota DPH na vystupu
+     */
     private void addDataToChart(double inputAmountVAT, double outputAmountVAT) {
         //inicializace grafu
         pieChart.setRotationEnabled(true);
@@ -224,6 +261,9 @@ public class HomeVATActivity extends AppCompatActivity
         pieChart.getDescription().setEnabled(false);
     }
 
+    /**
+     * Metoda, která se porvede po stisknutí talčítka zpět
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -234,6 +274,12 @@ public class HomeVATActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Meotda, která vykreslí boční navigační menu.
+     *
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

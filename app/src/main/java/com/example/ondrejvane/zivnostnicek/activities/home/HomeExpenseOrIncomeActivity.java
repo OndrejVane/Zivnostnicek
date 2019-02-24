@@ -34,6 +34,9 @@ import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivity, která zobrazuje příjmy nebo výdaje členěné podle druhů.
+ */
 public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,6 +58,8 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
     private int pickedYear = -1;
     private int pickedMonth = -1;
     private boolean isExpense;
+    private boolean isFirstPickYear = true;
+    private boolean isFirstPickMonth = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,13 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                //kontrola, zda se jjedná o první výber
+                if (isFirstPickYear) {
+                    isFirstPickYear = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedYear = Integer.parseInt(spinnerYear.getSelectedItem().toString());
                 } else {
@@ -113,6 +125,12 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         spinnerMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //kontrola, zda se jjedná o první výber
+                if (isFirstPickMonth) {
+                    isFirstPickMonth = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedMonth = position;
                 } else {
@@ -135,21 +153,26 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
      */
     private void initActivity() {
         //zjištění, zda se jedná o náhled příjmu
-        if(getIntent().hasExtra("IS_EXPENSE")){
+        if (getIntent().hasExtra("IS_EXPENSE")) {
             isExpense = getIntent().getExtras().getBoolean("IS_EXPENSE", false);
-        }else {
+        } else {
             isExpense = false;
         }
 
+        //inicializace graf prvků aktivity
         spinnerYear = findViewById(R.id.spinnerHomeYearExpense);
         spinnerMonth = findViewById(R.id.spinnerHomeMonthExpense);
         pieChart = findViewById(R.id.pieGraphHomeExpense);
         listViewExpense = findViewById(R.id.listViewHomeExpense);
 
+        //inicializace databáze
         typeBillDatabaseHelper = new TypeBillDatabaseHelper(this);
         billDatabaseHelper = new BillDatabaseHelper(this);
     }
 
+    /**
+     * Načtení data z databáze a zobrazení do aktivity
+     */
     private void setDataToActivity() {
         ArrayList<TypeBill> tempTypeBill = typeBillDatabaseHelper.getAllTypeByUserId(UserInformation.getInstance().getUserId());
         tempTypeBill.get(0).setColor(getResources().getColor(R.color.colorPrimary));
@@ -165,29 +188,39 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
             typeAmount[i] = billDatabaseHelper.getTotalAmountByTypeId(pickedYear, pickedMonth, tempTypeBill.get(i).getId(), isExpense);
         }
 
+        //nastavení dat do lsitu
         setAdapterToList(typeName, typeColor, typeAmount);
 
+        //nastavení dat do grafu
         setDataToGraph(typeName, typeColor, typeAmount);
 
     }
 
+    /**
+     * Metoda, která nastavuje načtená data z databáze do grafu.
+     * @param typeName  pole s názvem typu
+     * @param typeColor pole s barvou typu
+     * @param typeAmount    pole se součtem všech P/V v daném typu
+     */
     private void setDataToGraph(String[] typeName, int[] typeColor, float[] typeAmount) {
         //inicializace grafu
         pieChart.setRotationEnabled(true);
-        if(isExpense){
+        if (isExpense) {
             pieChart.setCenterText(getString(R.string.expense));
-        }else {
+        } else {
             pieChart.setCenterText(getString(R.string.income));
         }
         pieChart.setCenterTextSize(20);
         pieChart.setCenterTextRadiusPercent(80);
 
+        //inciilaizace potřebných listů (vstupy do grafu)
         ArrayList<PieEntry> arrayData = new ArrayList<>();
         ArrayList<String> arrayDataStrings = new ArrayList<>();
         ArrayList<Integer> colors = new ArrayList<>();
 
+        //přidání prvků do listů
         for (int i = 0; i < typeAmount.length; i++) {
-            if(typeAmount[i] != 0.0) {
+            if (typeAmount[i] != 0.0) {
                 arrayData.add(new PieEntry(typeAmount[i], i));
                 arrayDataStrings.add(typeName[i]);
                 colors.add(typeColor[i]);
@@ -201,6 +234,7 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         pieDataSet.setColors(colors);
 
 
+        //upraga zobrazení grafu
         PieData pieData = new PieData(pieDataSet);
         pieChart.setData(pieData);
         pieChart.invalidate();
@@ -210,6 +244,12 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Nastavení dat do do listu pomocí adapteru
+     * @param typeName  pole s názvem typu
+     * @param typeColor pole s barvou typu
+     * @param typeAmount    pole se součtem všech P/V v daném typu
+     */
     private void setAdapterToList(String[] typeName, int[] typeColor, float[] typeAmount) {
         ListViewHomeAdapter listViewHomeAdapter = new ListViewHomeAdapter(this, typeColor, typeName, typeAmount);
         listViewHomeAdapter.setExpense(isExpense);
@@ -234,6 +274,9 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metoda, která se porvede po stisknutí talčítka zpět
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -244,6 +287,11 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metoda, která se stará o vykreslení bočního navigačního menu.
+     * @param menu menu
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

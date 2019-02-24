@@ -35,6 +35,9 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Kativity, která zobrazouje roční přehled příjmů a výdajů po měsících.
+ */
 public class HomeYearSummaryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -52,6 +55,7 @@ public class HomeYearSummaryActivity extends AppCompatActivity
     private BillDatabaseHelper billDatabaseHelper;
     private float expenseYear;
     private float incomeYear;
+    private boolean isFisrtPick = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +91,17 @@ public class HomeYearSummaryActivity extends AppCompatActivity
 
         Log.d(TAG, "Activity successfully init");
 
+
+        //nastavení click listenneru na spinner pro výběr roku
         yearSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if (isFisrtPick) {
+                    isFisrtPick = false;
+                    return;
+                }
+
                 if (position != 0) {
                     pickedYear = Integer.parseInt(yearSpinner.getSelectedItem().toString());
                 } else {
@@ -113,26 +125,30 @@ public class HomeYearSummaryActivity extends AppCompatActivity
         });
     }
 
-
-
+    /**
+     * Inicializace všech prvků aktivity
+     */
     private void initActivity() {
         yearSpinner = findViewById(R.id.spinnerHomeYearSummary);
         lineChart = findViewById(R.id.lineGraphYearSummary);
-        Settings settings = Settings.getInstance();
         billDatabaseHelper = new BillDatabaseHelper(this);
         incomeTextView = findViewById(R.id.textViewHomeYearSummaryIncome);
         expenseTextView = findViewById(R.id.textViewHomeYearSummaryExpense);
         bilancTextView = findViewById(R.id.textViewHomeYearSummaryBalance);
         pickedYear = Calendar.getInstance().get(Calendar.YEAR);
 
+        Settings settings = Settings.getInstance();
         //pokud je vybrán jeden rok
-        if(settings.isIsPickedOneYear()){
+        if (settings.isIsPickedOneYear()) {
             yearSpinner.setEnabled(false);
             yearSpinner.setSelection(settings.getArrayYearId());
             pickedYear = Integer.parseInt(settings.getYear());
         }
     }
 
+    /**
+     * Nastavení dat do text view.
+     */
     private void setDataToTextView() {
 
         //zjištění výnosu
@@ -147,31 +163,34 @@ public class HomeYearSummaryActivity extends AppCompatActivity
         incomeTextView.setText(formattedIncome);
         expenseTextView.setText(formattedExpense);
 
-        if(balance > 0){
+        //bilance je kladná
+        if (balance > 0) {
             formattedBalance = FormatUtility.formatBalanceAmount(balance);
             bilancTextView.setTextColor(getResources().getColor(R.color.income));
             bilancTextView.setText(formattedBalance);
             return;
         }
 
-        if(balance < 0){
+        //bilance je záporná
+        if (balance < 0) {
             formattedBalance = FormatUtility.formatBalanceAmount(balance);
             bilancTextView.setTextColor(getResources().getColor(R.color.expense));
             bilancTextView.setText(formattedBalance);
             return;
         }
 
+        //bilance je rovna nule
         if (balance == 0) {
             bilancTextView.setTextColor(getResources().getColor(R.color.zero));
             bilancTextView.setText(getString(R.string.zero));
         }
 
 
-
-
-
     }
 
+    /**
+     * Zobrazení dat do grafu.
+     */
     private void setDataToGraph() {
         ArrayList<Entry> expenseValues = new ArrayList<>();
         ArrayList<Entry> incomeValues = new ArrayList<>();
@@ -180,19 +199,19 @@ public class HomeYearSummaryActivity extends AppCompatActivity
         expenseYear = 0;
         incomeYear = 0;
         String[] months = getResources().getStringArray(R.array.months);
-        for(int i = 0; i < 12; i++){
+        for (int i = 0; i < 12; i++) {
             //načtení výdajů z databáze
-            temp = billDatabaseHelper.getBillDataByDate(pickedYear, i+1, 1);
+            temp = billDatabaseHelper.getBillDataByDate(pickedYear, i + 1, 1);
             expenseValues.add(new Entry(i, temp));
             expenseYear = expenseYear + temp;
 
             //načtení příjmů z databáze
-            temp = billDatabaseHelper.getBillDataByDate(pickedYear, i+1, 0);
+            temp = billDatabaseHelper.getBillDataByDate(pickedYear, i + 1, 0);
             incomeValues.add(new Entry(i, temp));
             incomeYear = incomeYear + temp;
 
             //načtení měsíců pro zobrazení do osy
-            labels.add(months[i+1]);
+            labels.add(months[i + 1]);
 
         }
 
@@ -226,16 +245,16 @@ public class HomeYearSummaryActivity extends AppCompatActivity
         lineChart.getAxisLeft().setDrawGridLines(false);
 
         XAxis xAxis = lineChart.getXAxis();
-        xAxis.setValueFormatter(new IAxisValueFormatter(){
-        @Override
-        public String getFormattedValue(float value, AxisBase axis) {
-            if(value%1 == 0){
-                return labels.get((int) value);
-            }else{
-                return "";
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                if (value % 1 == 0) {
+                    return labels.get((int) value);
+                } else {
+                    return "";
+                }
             }
-        }
-    });
+        });
 
     }
 
@@ -254,8 +273,8 @@ public class HomeYearSummaryActivity extends AppCompatActivity
     /**
      * Metoda pro zobrazení postraního menu.
      *
-     * @param menu
-     * @return
+     * @param menu menu
+     * @return boolena
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
