@@ -85,6 +85,9 @@ public class HomeVATActivity extends AppCompatActivity
         //inicializace nastavení
         setSettings();
 
+        //nastavení dat do aktivity
+        getDataAndSetToActivity();
+
         Log.d(TAG, "Activity successfully init");
 
         //akce při výběru roku ze spinner
