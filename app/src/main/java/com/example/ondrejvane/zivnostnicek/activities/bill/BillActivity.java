@@ -61,7 +61,7 @@ public class BillActivity extends AppCompatActivity
     private int[] ID;
     private int pickedYear = -1;
     private int pickedMonth = -1;
-    private boolean firstPickYear = true;
+    //private boolean firstPickYear = true;
     private boolean firstPickMonth = true;
 
     /**
@@ -133,10 +133,12 @@ public class BillActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
+                /*
                 if (firstPickYear) {
                     firstPickYear = false;
                     return;
                 }
+                */
 
 
                 if (position != 0) {
@@ -223,12 +225,16 @@ public class BillActivity extends AppCompatActivity
 
                 ArrayList<BillBox> billBox;
 
+                Log.d(TAG, "Picked year: " + pickedYear);
+                Log.d(TAG, "Picked month: " + pickedMonth);
 
                 if (isExpense) {
                     billBox = billDatabaseHelper.getAllBillsWithTypesByDate(pickedYear, pickedMonth, 1);
                 } else {
                     billBox = billDatabaseHelper.getAllBillsWithTypesByDate(pickedYear, pickedMonth, 0);
                 }
+
+                Log.d(TAG, "Number of bills: " + billBox.size());
 
                 ID = new int[billBox.size()];
 
