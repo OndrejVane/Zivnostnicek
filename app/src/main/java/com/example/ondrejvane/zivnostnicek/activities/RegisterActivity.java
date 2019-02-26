@@ -104,13 +104,12 @@ public class RegisterActivity extends AppCompatActivity {
             displayLoader();
             JSONObject request = new JSONObject();
             try {
+                //zahashování hesla
                 String hashedPassword = hashPassword.hashPassword(password);
-                //Populate the request parameters
+                //naplněné JSONu daty
                 request.put(KEY_EMAIL, email);
                 request.put(KEY_PASSWORD, hashedPassword);
                 request.put(KEY_FULL_NAME, fullName);
-
-
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -139,7 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                                 }else{
                                     Toast.makeText(getApplicationContext(),
-                                            response.getString(KEY_MESSAGE), Toast.LENGTH_SHORT).show();
+                                            getResources().getString(R.string.fill_all_columns),
+                                            Toast.LENGTH_SHORT).show();
 
 
                                 }
@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error) {
                             pDialog.dismiss();
 
-                            //Display error message whenever an error occurs
+                            //vypsání erroru do konzole a uživatele informovat o nedostupném serveru
                             Toast.makeText(getApplicationContext(),
                                     getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
                             Log.d(TAG, error.getMessage());
