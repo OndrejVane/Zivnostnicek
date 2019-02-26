@@ -81,14 +81,14 @@
 
                 <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/spinnerVATBillEdit"
-                    android:layout_width="60dp"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:entries="@array/vat_amount"
                     android:prompt="@string/VAT"
                     style="@style/Widget.AppCompat.Spinner.Underlined" />
                 <TextView
                     android:layout_width="60dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginStart="10dp"
                     android:layout_height="wrap_content"
                     android:text="@string/date"/>
 
