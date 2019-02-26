@@ -75,6 +75,11 @@ public class InputValidation {
         int expectedValue;
         int trueValue;
 
+        //pokud je prázdné je to ok
+        if(identificationNumber.isEmpty()){
+            return true;
+        }
+
         //kontrola délky řetězce
         if (identificationNumber.length() == 8) {
 

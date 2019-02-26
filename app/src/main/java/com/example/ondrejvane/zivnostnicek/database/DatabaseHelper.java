@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 13;
+    public static final int DATABASE_VERSION = 14;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -31,6 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_PASSWORD = "user_password";                     //zašifrovaný hash hesla uživatele
     public static final String COLUMN_USER_SYNC_NUMBER = "user_sync_number";               //synchronizační číslo uživatele
 
+
     //Názvy atributů v tabulce trader
     public static final String COLUMN_TRADER_ID = "trader_id";                             //Primární klíč
     public static final String COLUMN_TRADER_USER_ID = "trader_user_id";                   //Cizí klíč
@@ -42,6 +43,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TRADER_CITY = "trader_city";                         //Město obchodníka
     public static final String COLUMN_TRADER_STREET = "trader_street";                     //Ulice obchodníka
     public static final String COLUMN_TRADER_HOUSE_NUMBER = "trader_house_number";         //Číslo popisné obchodníka
+    public static final String COLUMN_TRADER_IS_DIRTY = "trader_is_dirty";                 //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_TRADER_IS_DELETED = "trader_is_deleted";             //SYNC => příznak, který určuje, zda je záznam smazán
 
     //názvy atributů v tabulce note
     public static final String COLUMN_NOTE_ID = "note_id";                                 //primární klíč
@@ -50,6 +53,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NOTE_NOTE = "note_note";                             //obsah poznáky
     public static final String COLUMN_NOTE_DATE = "note_date";                             //datum založení poznámky
     public static final String COLUMN_NOTE_RATING = "note_rating";                         //hodnocení obchodníka
+    public static final String COLUMN_NOTE_IS_DIRTY = "note_is_dirty";                     //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_NOTE_IS_DELETED = "note_is_deleted";                 //SYNC => příznak, který určuje, zda je záznam smazán
+
 
     //názvy atributů v tabulce bill(faktura)
     public static final String COLUMN_BILL_ID = "bill_id";                                 //primární klíč
@@ -63,6 +69,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_BILL_TYPE_ID = "bill_type_id";                       //cizí klíč do tabulky typ faktury
     public static final String COLUMN_BILL_USER_ID = "bill_user_id";                       //cizí klíč do tabulky uživatele
     public static final String COLUMN_BILL_IS_EXPENSE = "bill_is_expense";                 //atribut, který určuje, zda se jedná o P=0/V=1
+    public static final String COLUMN_BILL_IS_DIRTY = "bill_is_dirty";                     //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_BILL_IS_DELETED = "bill_is_deleted";                 //SYNC => příznak, který určuje, zda je záznam smazán
+
 
     //názvy atributů v tabulce skladové položky(storage item)
     public static final String COLUMN_STORAGE_ITEM_ID = "storage_item_id";                 //primární klíč
@@ -70,63 +79,102 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_STORAGE_ITEM_NAME = "storage_item_name";             //název skladové položky
     public static final String COLUMN_STORAGE_ITEM_UNIT = "storage_item_unit";             //jednotka skladové položky
     public static final String COLUMN_STORAGE_ITEM_NOTE = "storage_item_note";             //poznámka ke skladové položce
+    public static final String COLUMN_STORAGE_ITEM_IS_DIRTY = "storage_item_is_dirty";                 //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_STORAGE_ITEM_IS_DELETED = "storage_item_is_deleted";             //SYNC => příznak, který určuje, zda je záznam smazán
 
     //názvy atributů v tabulce množštví skladové položky
     public static final String COLUMN_ITEM_QUANTITY_ID = "item_quantity_id";               //primární klíč
     public static final String COLUMN_ITEM_QUANTITY_BILL_ID = "item_quantity_bill_id";     //cizí klíč do tabulky faktur
     public static final String COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID = "item_quantity_storage_item_id";  //cizí klíč do tabulky skladových položek
     public static final String COLUMN_ITEM_QUANTITY_QUANTITY = "item_quantity_quantity";   //atribut množství
+    public static final String COLUMN_ITEM_QUANTITY_IS_DIRTY = "item_quantity_is_dirty";                 //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_ITEM_QUANTITY_IS_DELETED = "item_quantity_is_deleted";             //SYNC => příznak, který určuje, zda je záznam smazán
 
     //názvy atributů tabulky druhů faktur
     public static final String COLUMN_TYPE_ID = "type_id";                                 //primární klíč
     public static final String COLUMN_TYPE_COLOR = "type_color";                           //číslo vybrané barvy
     public static final String COLUMN_TYPE_NAME = "type_name";                             //název typu
     public static final String COLUMN_TYPE_USER_ID = "type_user_id";                       //cizí klíč do tabulk user (každý uživatel má své druhy)
+    public static final String COLUMN_TYPE_IS_DIRTY = "type_is_dirty";                     //SYNC => příznak, který označuje, že musí dojít k aktualizaci
+    public static final String COLUMN_TYPE_IS_DELETED = "type_is_deleted";                 //SYNC => příznak, který určuje, zda je záznam smazán
 
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
-            + COLUMN_USER_ID + " INTEGER PRIMARY KEY, " + COLUMN_USER_FULL_NAME + " TEXT,"
-            + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_SYNC_NUMBER + " INTEGER" + ")";
+            + COLUMN_USER_ID + " INTEGER PRIMARY KEY, "
+            + COLUMN_USER_FULL_NAME + " TEXT,"
+            + COLUMN_USER_EMAIL + " TEXT,"
+            + COLUMN_USER_PASSWORD + " TEXT,"
+            + COLUMN_USER_SYNC_NUMBER + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky Trader
     private String CREATE_TRADER_TABLE = "CREATE TABLE " + TABLE_TRADER + "("
-            + COLUMN_TRADER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_TRADER_USER_ID + " INTEGER,"
-            + COLUMN_TRADER_NAME + " TEXT," + COLUMN_TRADER_PHONE_NUMBER + " TEXT," + COLUMN_TRADER_CONTACT_PERSON + " TEXT,"
-            + COLUMN_TRADER_IN + " TEXT," + COLUMN_TRADER_TIN + " TEXT," + COLUMN_TRADER_CITY + " TEXT,"
-            + COLUMN_TRADER_STREET + " TEXT," + COLUMN_TRADER_HOUSE_NUMBER + " INTEGER" + ")";
+            + COLUMN_TRADER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_TRADER_USER_ID + " INTEGER,"
+            + COLUMN_TRADER_NAME + " TEXT,"
+            + COLUMN_TRADER_PHONE_NUMBER + " TEXT,"
+            + COLUMN_TRADER_CONTACT_PERSON + " TEXT,"
+            + COLUMN_TRADER_IN + " TEXT,"
+            + COLUMN_TRADER_TIN + " TEXT,"
+            + COLUMN_TRADER_CITY + " TEXT,"
+            + COLUMN_TRADER_STREET + " TEXT,"
+            + COLUMN_TRADER_HOUSE_NUMBER + " INTEGER,"
+            + COLUMN_TRADER_IS_DIRTY + " INTEGER,"
+            + COLUMN_TRADER_IS_DELETED + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky Note
     private String CREATE_NOTE_TABLE = "CREATE TABLE " + TABLE_NOTE + "("
-            + COLUMN_NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_NOTE_TRADER_ID + " INTEGER,"
-            + COLUMN_NOTE_TITLE + " TEXT," + COLUMN_NOTE_NOTE + " TEXT,"
-            + COLUMN_NOTE_DATE +  " TEXT," + COLUMN_NOTE_RATING + " INTEGER" + ")";
+            + COLUMN_NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_NOTE_TRADER_ID + " INTEGER,"
+            + COLUMN_NOTE_TITLE + " TEXT,"
+            + COLUMN_NOTE_NOTE + " TEXT,"
+            + COLUMN_NOTE_DATE +  " TEXT,"
+            + COLUMN_NOTE_RATING + " INTEGER,"
+            + COLUMN_NOTE_IS_DIRTY + " INTEGER,"
+            + COLUMN_NOTE_IS_DELETED + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky Bill
     private String CREATE_BILL_TABLE = "CREATE TABLE " + TABLE_BILL + "("
-            + COLUMN_BILL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_BILL_NUMBER + " TEXT,"
-            + COLUMN_BILL_AMOUNT + " REAL," + COLUMN_BILL_VAT + " INTEGER,"
-            + COLUMN_BILL_TRADER_ID +  " INTEGER," + COLUMN_BILL_DATE + " TEXT,"
-            + COLUMN_BILL_PHOTO +  " TEXT," + COLUMN_BILL_PLACE + " TEXT,"
-            + COLUMN_BILL_TYPE_ID +  " INTEGER," + COLUMN_BILL_USER_ID + " INTEGER,"
-            + COLUMN_BILL_IS_EXPENSE +  " INTEGER" + ")";
+            + COLUMN_BILL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_BILL_NUMBER + " TEXT,"
+            + COLUMN_BILL_AMOUNT + " REAL,"
+            + COLUMN_BILL_VAT + " INTEGER,"
+            + COLUMN_BILL_TRADER_ID +  " INTEGER,"
+            + COLUMN_BILL_DATE + " TEXT,"
+            + COLUMN_BILL_PHOTO +  " TEXT,"
+            + COLUMN_BILL_PLACE + " TEXT,"
+            + COLUMN_BILL_TYPE_ID +  " INTEGER,"
+            + COLUMN_BILL_USER_ID + " INTEGER,"
+            + COLUMN_BILL_IS_EXPENSE +  " INTEGER,"
+            + COLUMN_BILL_IS_DIRTY + " INTEGER,"
+            + COLUMN_BILL_IS_DELETED + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky Storage Item
     private String CREATE_STORAGE_ITEM_TABLE = "CREATE TABLE " + TABLE_STORAGE_ITEM + "("
             + COLUMN_STORAGE_ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COLUMN_STORAGE_ITEM_USER_ID + " INTEGER," + COLUMN_STORAGE_ITEM_NAME + " TEXT,"
-            + COLUMN_STORAGE_ITEM_UNIT + " TEXT," + COLUMN_STORAGE_ITEM_NOTE + " TEXT" + ")";
+            + COLUMN_STORAGE_ITEM_USER_ID + " INTEGER,"
+            + COLUMN_STORAGE_ITEM_NAME + " TEXT,"
+            + COLUMN_STORAGE_ITEM_UNIT + " TEXT,"
+            + COLUMN_STORAGE_ITEM_NOTE + " TEXT,"
+            + COLUMN_STORAGE_ITEM_IS_DIRTY + " INTEGER,"
+            + COLUMN_STORAGE_ITEM_IS_DELETED + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky item quantity
     private String CREATE_QUANTITY_ITEM_TABLE = "CREATE TABLE " + TABLE_ITEM_QUANTITY+ "("
-            + COLUMN_ITEM_QUANTITY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_ITEM_QUANTITY_BILL_ID + " INTEGER,"
-            + COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " INTEGER," + COLUMN_ITEM_QUANTITY_QUANTITY + " REAL" + ")";
+            + COLUMN_ITEM_QUANTITY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + COLUMN_ITEM_QUANTITY_BILL_ID + " INTEGER,"
+            + COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " INTEGER,"
+            + COLUMN_ITEM_QUANTITY_QUANTITY + " REAL,"
+            + COLUMN_ITEM_QUANTITY_IS_DIRTY + " INTEGER,"
+            + COLUMN_ITEM_QUANTITY_IS_DELETED + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky type
     private String CREATE_TYPE_TABLE = "CREATE TABLE " + TABLE_TYPE + "("
             + COLUMN_TYPE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + COLUMN_TYPE_COLOR + " INTEGER,"
             + COLUMN_TYPE_USER_ID + " INTEGER,"
-            + COLUMN_TYPE_NAME + " TEXT" + ")";
+            + COLUMN_TYPE_NAME + " TEXT,"
+            + COLUMN_TYPE_IS_DIRTY + " INTEGER,"
+            + COLUMN_TYPE_IS_DELETED + " INTEGER" + ")";
 
 
     // drop table user

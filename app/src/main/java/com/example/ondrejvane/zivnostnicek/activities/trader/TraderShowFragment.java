@@ -52,14 +52,14 @@ public class TraderShowFragment extends Fragment {
     }
 
     private void setTextToFragment() {
-        inputCompanyNameShow.setText(trader.getTraderName());
-        inputContactPersonShow.setText(trader.getTraderContactPerson());
-        inputTelephoneNumberShow.setText(trader.getTraderPhoneNumber());
-        inputIdentificationNumberShow.setText(trader.getTraderIN());
-        inputTaxIdentificationNumberShow.setText(trader.getTraderTIN());
-        inputCityShow.setText(trader.getTraderCity());
-        inputStreetShow.setText(trader.getTraderStreet());
-        inputHouseNumberShow.setText(trader.getTraderHouseNumber());
+        inputCompanyNameShow.setText(trader.getName());
+        inputContactPersonShow.setText(trader.getContactPerson());
+        inputTelephoneNumberShow.setText(trader.getPhoneNumber());
+        inputIdentificationNumberShow.setText(trader.getIN());
+        inputTaxIdentificationNumberShow.setText(trader.getTIN());
+        inputCityShow.setText(trader.getCity());
+        inputStreetShow.setText(trader.getStreet());
+        inputHouseNumberShow.setText(trader.getHouseNumber());
     }
 
     private void initFragment(View view) {

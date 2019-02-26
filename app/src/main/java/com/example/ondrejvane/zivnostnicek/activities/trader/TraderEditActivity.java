@@ -95,14 +95,14 @@ public class TraderEditActivity extends AppCompatActivity
      * activity, které se načetli z databáze.
      */
     private void setTextToActivity() {
-        inputCompanyNameEdit.setText(trader.getTraderName());
-        inputContactPersonEdit.setText(trader.getTraderContactPerson());
-        inputTelephoneNumberEdit.setText(trader.getTraderPhoneNumber());
-        inputIdentificationNumberEdit.setText(trader.getTraderIN());
-        inputTaxIdentificationNumberEdit.setText(trader.getTraderTIN());
-        inputCityEdit.setText(trader.getTraderCity());
-        inputStreetEdit.setText(trader.getTraderStreet());
-        inputHouseNumberEdit.setText(trader.getTraderHouseNumber());
+        inputCompanyNameEdit.setText(trader.getName());
+        inputContactPersonEdit.setText(trader.getContactPerson());
+        inputTelephoneNumberEdit.setText(trader.getPhoneNumber());
+        inputIdentificationNumberEdit.setText(trader.getIN());
+        inputTaxIdentificationNumberEdit.setText(trader.getTIN());
+        inputCityEdit.setText(trader.getCity());
+        inputStreetEdit.setText(trader.getStreet());
+        inputHouseNumberEdit.setText(trader.getHouseNumber());
     }
 
     /**
@@ -173,14 +173,16 @@ public class TraderEditActivity extends AppCompatActivity
 
         trader = new Trader();
         trader.setId(traderID);
-        trader.setTraderName(inputCompanyNameEdit.getText().toString());
-        trader.setTraderContactPerson(inputContactPersonEdit.getText().toString());
-        trader.setTraderPhoneNumber(inputTelephoneNumberEdit.getText().toString());
-        trader.setTraderIN(inputIdentificationNumberEdit.getText().toString());
-        trader.setTraderTIN(inputTaxIdentificationNumberEdit.getText().toString());
-        trader.setTraderCity(inputCityEdit.getText().toString());
-        trader.setTraderStreet(inputStreetEdit.getText().toString());
-        trader.setTraderHouseNumber(inputHouseNumberEdit.getText().toString());
+        trader.setName(inputCompanyNameEdit.getText().toString());
+        trader.setContactPerson(inputContactPersonEdit.getText().toString());
+        trader.setPhoneNumber(inputTelephoneNumberEdit.getText().toString());
+        trader.setIN(inputIdentificationNumberEdit.getText().toString());
+        trader.setTIN(inputTaxIdentificationNumberEdit.getText().toString());
+        trader.setCity(inputCityEdit.getText().toString());
+        trader.setStreet(inputStreetEdit.getText().toString());
+        trader.setHouseNumber(inputHouseNumberEdit.getText().toString());
+        trader.setIsDirty(1);
+        trader.setIsDeleted(0);
 
         traderDatabaseHelper.updateTraderById(trader);
         String message = getString(R.string.trader_is_created);

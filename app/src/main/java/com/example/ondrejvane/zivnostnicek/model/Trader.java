@@ -4,14 +4,16 @@ public class Trader {
 
     private int id;
     private int userId;
-    private String traderName;
-    private String traderPhoneNumber;
-    private String traderContactPerson;
-    private String traderIN;
-    private String traderTIN;
-    private String traderCity;
-    private String traderStreet;
-    private String traderHouseNumber;
+    private String name;
+    private String phoneNumber;
+    private String contactPerson;
+    private String IN;
+    private String TIN;
+    private String city;
+    private String street;
+    private String houseNumber;
+    private int isDirty;
+    private int isDeleted;
 
 
 
@@ -31,70 +33,86 @@ public class Trader {
         this.userId = userId;
     }
 
-    public String getTraderName() {
-        return traderName;
+    public String getName() {
+        return name;
     }
 
-    public void setTraderName(String traderName) {
+    public void setName(String name) {
         String temp = "";
-        temp = temp + traderName.substring( 0, 1).toUpperCase();
-        temp = temp + traderName.substring(1);
-        this.traderName = temp;
+        temp = temp + name.substring( 0, 1).toUpperCase();
+        temp = temp + name.substring(1);
+        this.name = temp;
     }
 
-    public String getTraderPhoneNumber() {
-        return traderPhoneNumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTraderPhoneNumber(String traderPhoneNumber) {
-        this.traderPhoneNumber = traderPhoneNumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getTraderContactPerson() {
-        return traderContactPerson;
+    public String getContactPerson() {
+        return contactPerson;
     }
 
-    public void setTraderContactPerson(String traderContactPerson) {
-        this.traderContactPerson = traderContactPerson;
+    public void setContactPerson(String contactPerson) {
+        this.contactPerson = contactPerson;
     }
 
-    public String getTraderIN() {
-        return traderIN;
+    public String getIN() {
+        return IN;
     }
 
-    public void setTraderIN(String traderIN) {
-        this.traderIN = traderIN;
+    public void setIN(String IN) {
+        this.IN = IN;
     }
 
-    public String getTraderTIN() {
-        return traderTIN;
+    public String getTIN() {
+        return TIN;
     }
 
-    public void setTraderTIN(String traderTIN) {
-        this.traderTIN = traderTIN;
+    public void setTIN(String TIN) {
+        this.TIN = TIN;
     }
 
-    public String getTraderCity() {
-        return traderCity;
+    public String getCity() {
+        return city;
     }
 
-    public void setTraderCity(String traderCity) {
-        this.traderCity = traderCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getTraderHouseNumber() {
-        return traderHouseNumber;
+    public String getHouseNumber() {
+        return houseNumber;
     }
 
-    public void setTraderHouseNumber(String traderHouseNumber) {
-        this.traderHouseNumber = traderHouseNumber;
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
     }
 
-    public String getTraderStreet() {
-        return traderStreet;
+    public String getStreet() {
+        return street;
     }
 
-    public void setTraderStreet(String traderStreet) {
-        this.traderStreet = traderStreet;
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public int getIsDirty() {
+        return isDirty;
+    }
+
+    public void setIsDirty(int isDirty) {
+        this.isDirty = isDirty;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

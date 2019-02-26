@@ -156,14 +156,16 @@ public class TraderNewActivity extends AppCompatActivity
         }
 
         Trader trader = new Trader();
-        trader.setTraderName(inputCompanyName.getText().toString());
-        trader.setTraderContactPerson(inputContactPerson.getText().toString());
-        trader.setTraderPhoneNumber(inputTelephoneNumber.getText().toString());
-        trader.setTraderIN(inputIdentificationNumber.getText().toString());
-        trader.setTraderTIN(inputTaxIdentificationNumber.getText().toString());
-        trader.setTraderCity(inputCity.getText().toString());
-        trader.setTraderStreet(inputStreet.getText().toString());
-        trader.setTraderHouseNumber(inputHouseNumber.getText().toString());
+        trader.setName(inputCompanyName.getText().toString());
+        trader.setContactPerson(inputContactPerson.getText().toString());
+        trader.setPhoneNumber(inputTelephoneNumber.getText().toString());
+        trader.setIN(inputIdentificationNumber.getText().toString());
+        trader.setTIN(inputTaxIdentificationNumber.getText().toString());
+        trader.setCity(inputCity.getText().toString());
+        trader.setStreet(inputStreet.getText().toString());
+        trader.setHouseNumber(inputHouseNumber.getText().toString());
+        trader.setIsDirty(1);
+        trader.setIsDeleted(0);
 
         traderDatabaseHelper.addTrader(trader);
 

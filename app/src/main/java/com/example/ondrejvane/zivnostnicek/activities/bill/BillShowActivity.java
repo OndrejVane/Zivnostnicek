@@ -147,7 +147,7 @@ public class BillShowActivity extends AppCompatActivity
         bill = billDatabaseHelper.getBillById(billId);
         if (bill.getTraderId() != -1) {
             Trader trader = traderDatabaseHelper.getTraderById(bill.getTraderId());
-            textViewBillTrader.setText(trader.getTraderName());
+            textViewBillTrader.setText(trader.getName());
         } else {
             textViewBillTrader.setText(getString(R.string.not_selected));
         }

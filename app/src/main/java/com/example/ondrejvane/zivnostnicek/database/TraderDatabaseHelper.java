@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.ondrejvane.zivnostnicek.activities.trader.TraderNewActivity;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
@@ -13,7 +12,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
 
     /**
-     * Constructor
+     * Konstruktor pro trader database helper
      *
      * @param context context
      */
@@ -21,6 +20,11 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
+    /**
+     * Přidání obchodníka do databázace
+     *
+     * @param trader trader
+     */
     public synchronized void addTrader(Trader trader){
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -28,18 +32,26 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());     //cizí klíč
-        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
-        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
-        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
-        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
-        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
-        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
-        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
-        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
+        values.put(COLUMN_TRADER_NAME, trader.getName());
+        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getContactPerson());
+        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getPhoneNumber());
+        values.put(COLUMN_TRADER_IN, trader.getIN());
+        values.put(COLUMN_TRADER_TIN, trader.getTIN());
+        values.put(COLUMN_TRADER_CITY, trader.getCity());
+        values.put(COLUMN_TRADER_STREET, trader.getStreet());
+        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getHouseNumber());
+        values.put(COLUMN_TRADER_IS_DIRTY, trader.getIsDirty());
+        values.put(COLUMN_TRADER_IS_DELETED, trader.getIsDeleted());
         db.insert(TABLE_TRADER, null, values);
         db.close();
     }
 
+    /**
+     * Získání dat pro zobrazení do listu.
+     *
+     * @param userID    id uživatele
+     * @return          pole všech potřebných údajů do listu
+     */
     public synchronized String[][] getTradersData(int userID){
         String data[][];
 
@@ -47,12 +59,12 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_TRADER_USER_ID + " = ?";
+        String selection = COLUMN_TRADER_USER_ID + " = ? AND " + COLUMN_TRADER_IS_DELETED + " = ?";
 
         String orderBy = COLUMN_TRADER_NAME + " ASC";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(userID)};
+        String[] selectionArgs = {Integer.toString(userID), "0"};
 
         Cursor cursor = db.query(TABLE_TRADER, //Table to query
                 columns,                    //columns to return
@@ -79,6 +91,12 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
+    /**
+     * Metoda, která nalezne obchodníka se příslušnám id.
+     *
+     * @param traderId id obchodníka
+     * @return  obchodník
+     */
     public synchronized Trader getTraderById(int traderId){
 
         Trader trader = new Trader();
@@ -102,14 +120,14 @@ public class TraderDatabaseHelper extends DatabaseHelper {
                 null);
 
         if(cursor.moveToFirst()){
-            trader.setTraderName(cursor.getString(0));
-            trader.setTraderContactPerson(cursor.getString(1));
-            trader.setTraderPhoneNumber(cursor.getString(2));
-            trader.setTraderIN(cursor.getString(3));
-            trader.setTraderTIN(cursor.getString(4));
-            trader.setTraderCity(cursor.getString(5));
-            trader.setTraderStreet(cursor.getString(6));
-            trader.setTraderHouseNumber(cursor.getString(7));
+            trader.setName(cursor.getString(0));
+            trader.setContactPerson(cursor.getString(1));
+            trader.setPhoneNumber(cursor.getString(2));
+            trader.setIN(cursor.getString(3));
+            trader.setTIN(cursor.getString(4));
+            trader.setCity(cursor.getString(5));
+            trader.setStreet(cursor.getString(6));
+            trader.setHouseNumber(cursor.getString(7));
         }
 
         db.close();
@@ -119,24 +137,36 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
     }
 
+    /**
+     * Meotda, která "smaže" obchodníka z databáze s příslušným id.
+     * Nedojde k fyzickému smazání, pouze k nastavení příznaku is delete na
+     * 1. Záznam budu potřebovat pro synchronizaci na server.
+     *
+     * @param traderId id obchodníka
+     * @return  zda došo ke smazání obchodníka
+     */
     public synchronized boolean deleteTraderById(int traderId){
-
-        boolean result;
-
         String where = COLUMN_TRADER_ID + " = ?";
 
-        String[] deleteArgs = {Integer.toString(traderId)};
+        String[] updateArgs = {Integer.toString(traderId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        NoteDatabaseHelper noteDatabaseHelper =  new NoteDatabaseHelper(getContext());
-        noteDatabaseHelper.deleteNotesByTraderId(traderId);
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TRADER_IS_DELETED, 1);
+        values.put(COLUMN_TRADER_IS_DIRTY, 1);
 
-        result = db.delete(TABLE_TRADER, where, deleteArgs) > 0;
+        db.update(TABLE_TRADER, values, where, updateArgs);
+        db.close();
 
-        return result;
+        return true;
     }
 
+    /**
+     * Aktualizace obchodníka.
+     *
+     * @param trader aktualizovaný obchodník
+     */
     public synchronized void updateTraderById(Trader trader){
 
         String where = COLUMN_TRADER_ID + " = ?";
@@ -146,14 +176,16 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_TRADER_NAME, trader.getTraderName());
-        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getTraderContactPerson());
-        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getTraderPhoneNumber());
-        values.put(COLUMN_TRADER_IN, trader.getTraderIN());
-        values.put(COLUMN_TRADER_TIN, trader.getTraderTIN());
-        values.put(COLUMN_TRADER_CITY, trader.getTraderCity());
-        values.put(COLUMN_TRADER_STREET, trader.getTraderStreet());
-        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getTraderHouseNumber());
+        values.put(COLUMN_TRADER_NAME, trader.getName());
+        values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getContactPerson());
+        values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getPhoneNumber());
+        values.put(COLUMN_TRADER_IN, trader.getIN());
+        values.put(COLUMN_TRADER_TIN, trader.getTIN());
+        values.put(COLUMN_TRADER_CITY, trader.getCity());
+        values.put(COLUMN_TRADER_STREET, trader.getStreet());
+        values.put(COLUMN_TRADER_HOUSE_NUMBER, trader.getHouseNumber());
+        values.put(COLUMN_TRADER_IS_DIRTY, trader.getIsDirty());
+        values.put(COLUMN_TRADER_IS_DELETED, trader.getIsDeleted());
 
         db.update(TABLE_TRADER, values, where, updateArgs);
         db.close();
