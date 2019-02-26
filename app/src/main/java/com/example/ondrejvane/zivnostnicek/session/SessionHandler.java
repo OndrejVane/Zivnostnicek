@@ -12,11 +12,9 @@ import java.util.Date;
 
 public class SessionHandler {
 
-    private static final int NUMBER_OF_DAYS = 7;
 
     private static final String PREF_NAME = "UserSession";
     private static final String KEY_EMAIL = "email";
-    private static final String KEY_EXPIRES = "expires";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_USER_ID = "id";
     private static final String KEY_EMPTY = "";
@@ -33,18 +31,12 @@ public class SessionHandler {
     /**
      * Logs in the user by saving user details and setting session
      *
-     * @param email
-     * @param fullName
+     * @param user uživatel
      */
-    public void loginUser(String email, String fullName, int userId) {
-        mEditor.putString(KEY_EMAIL, email);
-        mEditor.putString(KEY_FULL_NAME, fullName);
-        mEditor.putInt(KEY_USER_ID, userId);
-        Date date = new Date();
-
-        //Set user session for next 7 days
-        long millis = date.getTime() + (NUMBER_OF_DAYS * 24 * 60 * 60 * 1000);
-        mEditor.putLong(KEY_EXPIRES, millis);
+    public void loginUser(User user) {
+        mEditor.putString(KEY_EMAIL, user.getEmail());
+        mEditor.putString(KEY_FULL_NAME, user.getFullName());
+        mEditor.putInt(KEY_USER_ID, user.getId());
         mEditor.commit();
     }
 
@@ -55,22 +47,15 @@ public class SessionHandler {
      * @return
      */
     public boolean isLoggedIn() {
-        Date currentDate = new Date();
 
-        long millis = mPreferences.getLong(KEY_EXPIRES, 0);
 
-        /* If shared preferences does not have a value
-         then user is not logged in
-         */
-        if (millis == 0) {
+        int userId = mPreferences.getInt(KEY_USER_ID, -1);
+
+        if(userId == -1){
             return false;
+        }else {
+            return true;
         }
-        Date expiryDate = new Date(millis);
-
-        /* Check if session is expired by comparing
-        current date and Session expiry date
-        */
-        return currentDate.before(expiryDate);
     }
 
     /**
@@ -86,7 +71,6 @@ public class SessionHandler {
         User user = new User();
         user.setEmail(mPreferences.getString(KEY_EMAIL, KEY_EMPTY));
         user.setFullName(mPreferences.getString(KEY_FULL_NAME, KEY_EMPTY));
-        user.setSessionExpiryDate(new Date(mPreferences.getLong(KEY_EXPIRES, 0)));
         user.setId(mPreferences.getInt(KEY_USER_ID, 0));
 
         return user;

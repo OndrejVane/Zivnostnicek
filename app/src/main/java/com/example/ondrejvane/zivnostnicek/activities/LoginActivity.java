@@ -1,11 +1,8 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
     private static final String KEY_STATUS = "status";
-    private static final String KEY_MESSAGE = "message";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
@@ -69,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         //zákaz orientace na šířku
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_login);
 
         //inicializace aktivity
@@ -98,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Metoda, která po kliknutí na textView přepne aktivitu do RegisterActivity.
+     *
      * @param view view
      */
     public void goToRegisterActivity(View view) {
@@ -108,14 +105,15 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Metoda, která zkotroluje, zda jsou všechna pole správně vyplněna.
-     * @return  logická hodnota true/false
+     *
+     * @return logická hodnota true/false
      */
     private boolean checkIfIsAllFilled() {
         String emailAddress = userAddressET.getText().toString().trim();
         String passwordLoad = passwordET.getText().toString().trim();
         String message;
 
-        if(emailAddress.isEmpty()){
+        if (emailAddress.isEmpty()) {
             message = getString(R.string.empty_user_name);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
@@ -127,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
 
-        if (passwordLoad.isEmpty()){
+        if (passwordLoad.isEmpty()) {
             message = getString(R.string.empty_password1);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
@@ -154,56 +152,79 @@ public class LoginActivity extends AppCompatActivity {
 
     public void logIn(View view) {
 
-        if(checkIfIsAllFilled()) {
+        if (checkIfIsAllFilled()) {
             displayLoader();
             JSONObject request = new JSONObject();
             try {
                 String hashedPassword = hashPassword.hashPassword(password);
-                //Populate the request parameters
+                //vložení uživatelských dat do JSONu
                 request.put(KEY_EMAIL, email);
                 request.put(KEY_PASSWORD, hashedPassword);
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            //poslání JSONu na server a čekání na odpověd
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest
                     (Request.Method.POST, login_url, request, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();
                             try {
-                                //Kontrola, zda byl uživatel úspěšně přihlášen
 
-                                Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
-                                Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
 
+                                Log.d(TAG, "KEY_STATUS = " + response.getString(KEY_STATUS));
+
+                                //uživatel byl úspěšně autentizován serverem
                                 if (response.getInt(KEY_STATUS) == 0) {
-                                    //pokud je zaškrtnuto pole pro zustat přihlášen
-                                    if (rememberMeBox.isChecked()) {
-                                        session.loginUser(email, response.getString(KEY_FULL_NAME), response.getInt(KEY_ID));
-                                    }
-                                    //nastavení informací do pomocné třídy, aby byli přístupné všude v aplikaci
-                                    UserInformation userInformation = UserInformation.getInstance();
-                                    userInformation.setMail(email);
-                                    userInformation.setFullName(response.getString(KEY_FULL_NAME));
-                                    userInformation.setUserId(response.getInt(KEY_ID));
 
+                                    //načtení informací o uživateli
                                     User user = new User();
                                     user.setId(response.getInt(KEY_ID));
                                     user.setEmail(email);
                                     user.setFullName(response.getString(KEY_FULL_NAME));
-                                    user.setPassword(hashPassword.hashPassword(password));
 
-                                    //vložení záznamu uživatele do databáze, pokud ještě neexistuje
-                                    userDatabaseHelper.addUser(user);
+                                    //je lokálně uložen v databázi??
+                                    if (userDatabaseHelper.getUserById(user.getId()) == null) {
+                                        //není uložen, musím ho vložit do lokální databáze
+                                        //jeho synchronizační číslo bude 0, protože nemá zatím žádná data synchronizována
+                                        user.setSyncNumber(0);
+                                        //vložení uživatele do databáze
+                                        userDatabaseHelper.addUser(user);
+                                    } else {
+                                        //už je uložen v lokální databázi a jen si načtu aktuální synchronizační číslo z db
+                                        int syncNumber = userDatabaseHelper.getSyncNumberByUserId(user.getId());
+                                        user.setSyncNumber(syncNumber);
+                                    }
 
+
+                                    //pokud je zaškrtnuto pole pro zustat přihlášen
+                                    if (rememberMeBox.isChecked()) {
+                                        session.loginUser(user);
+                                    }
+
+                                    //nastavení informací o uživateli do singletonu, aby byla přístupná všude v aplikaci
+                                    UserInformation userInformation = UserInformation.getInstance();
+                                    userInformation.setDataFromUser(user);
+
+                                    //nastartování hlavní aktivity aplikace
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(intent);
                                     finish();
 
-                                } else {
+                                    //přihlášení neproběhlo správně, heslo nebo mail není strávné
+                                } else if (response.getInt(KEY_STATUS) == 1) {
+                                    //vypsání uživateli
                                     Toast.makeText(getApplicationContext(),
-                                            response.getString(KEY_MESSAGE), Toast.LENGTH_SHORT).show();
+                                            getResources().getString(R.string.wrong_password_or_address),
+                                            Toast.LENGTH_SHORT).show();
+
+                                    //nevyplněné údaje
+                                } else {
+                                    //vypsání informace uživateli
+                                    Toast.makeText(getApplicationContext(),
+                                            getResources().getString(R.string.fill_all_columns),
+                                            Toast.LENGTH_SHORT).show();
 
                                 }
                             } catch (JSONException e) {
@@ -219,7 +240,7 @@ public class LoginActivity extends AppCompatActivity {
                             //zobrazení informace uživateli, pokud došlo k chybě
                             Toast.makeText(getApplicationContext(),
                                     getResources().getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "Error message: "+ error.getMessage());
+                            Log.d(TAG, "Error message: " + error.getMessage());
 
                         }
                     });
