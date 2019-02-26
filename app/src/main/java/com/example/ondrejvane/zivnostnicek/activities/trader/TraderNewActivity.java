@@ -40,7 +40,8 @@ public class TraderNewActivity extends AppCompatActivity
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState    savedInstanceState
+     *
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,7 @@ public class TraderNewActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         initView();
@@ -109,37 +110,44 @@ public class TraderNewActivity extends AppCompatActivity
     /**
      * Metoda, která načte všechny vstupní pole. Zvaliduje data
      * vložená uživatelem a vloží záznam obchodníka do databáze.
-     * @param view  view příslušné aktivity
+     *
+     * @param view view příslušné aktivity
      */
     public void submitTraderForm(View view) {
-        if(!InputValidation.validateCompanyName(inputCompanyName.getText().toString())){
+        if (!InputValidation.validateCompanyName(inputCompanyName.getText().toString())) {
             String message = getString(R.string.company_name_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutCompanyName.setError(getString(R.string.company_name_is_empty));
             return;
         }
 
-        if(!InputValidation.validatePhoneNumber(inputTelephoneNumber.getText().toString())){
+        if (!InputValidation.validatePhoneNumber(inputTelephoneNumber.getText().toString())) {
             String message = getString(R.string.telephone_has_wrong_format);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutTelephoneNumber.setError(getString(R.string.telephone_has_wrong_format));
             return;
         }
 
-        if(!InputValidation.validateIdentificationNumber(inputIdentificationNumber.getText().toString())){
+        if (!InputValidation.validateIdentificationNumber(inputIdentificationNumber.getText().toString())) {
             //implementace nastavení
-            if(!Settings.getInstance().isIsForeignIdentificationNumberPossible()){
+            if (!Settings.getInstance().isIsForeignIdentificationNumberPossible()) {
                 String message = getString(R.string.wrong_id_number);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 inputLayoutIdentificationNumber.setError(getString(R.string.wrong_id_number));
                 return;
             }
-
         }
 
-        if(!InputValidation.validateTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())){
+        //validace českého dič
+        if (!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())) {
             //implementace nastavení
-            if(!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()){
+            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
+                return;
+            //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
+            } else if (!InputValidation.validateForeignTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())) {
                 String message = getString(R.string.wrong_format_of_tid);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
@@ -170,8 +178,9 @@ public class TraderNewActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -187,10 +196,10 @@ public class TraderNewActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

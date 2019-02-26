@@ -154,7 +154,7 @@ public class TraderEditActivity extends AppCompatActivity
             }
         }
 
-        if(!InputValidation.validateTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())){
+        if(!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())){
             //implementace nastavení
             if(!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()){
                 String message = getString(R.string.wrong_format_of_tid);

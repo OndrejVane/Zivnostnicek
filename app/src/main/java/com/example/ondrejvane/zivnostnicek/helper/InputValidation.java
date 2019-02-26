@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.helper;
 
+import android.util.Log;
+
 /**
  * Třída, která obsahuje statické funkce pro validování
  * vstupů od uživatele napříč celou apliakcí.
@@ -58,41 +60,73 @@ public class InputValidation {
     }
 
     /**
-     * Metoda, která validuje IČO. Kontroluje, zda obsahuje první dva znaky a po té 8
-     * číslic. Následně ověří validitu iča podle algoritmu pro ověření iča.
-     * Pokud je pole prázdné vrací true protože je to nepovinný údaj.
-     * Odkaz na algoritmus: https://phpfashion.com/jak-overit-platne-ic-a-rodne-cislo
+     * Metoda, která validuje IČO. Formát iča je 8 číslic.
+     * Poslední číslice je kontrolní. Algoritmus pro ověření iča
+     * zde => https://cs.wikipedia.org/wiki/Identifika%C4%8Dn%C3%AD_%C4%8D%C3%ADslo_osoby
+     * <p>
+     * Validní tvar iča je : 12345678
      *
      * @return boolean
      */
     public static boolean validateIdentificationNumber(String identificationNumber) {
-        int temp = 0;
-        int a, c;
-        if (identificationNumber.isEmpty()) {
+        identificationNumber = identificationNumber.toUpperCase();
+        int count = 8;
+        int sum = 0;
+        int expectedValue;
+        int trueValue;
+
+        //kontrola délky řetězce
+        if (identificationNumber.length() == 8) {
+
+            for (int i = 0; i < (identificationNumber.length() - 1); i++) {
+                //kontrola, zda jde o číslici
+                if (Character.isDigit(identificationNumber.charAt(i))) {
+
+                    int temp = Character.getNumericValue(identificationNumber.charAt(i));
+                    sum = sum + (count * temp);
+                    count--;
+                } else {
+
+                    return false;
+                }
+
+            }
+
+            expectedValue = (11 - (sum % 11)) % 10;
+            trueValue = Integer.parseInt(identificationNumber.substring(identificationNumber.length() - 1));
+
+            return expectedValue == trueValue;
+
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Metoda, která validuje české DIČ. Kontroluje, zda obsahuje první dvě písmena CZ,
+     * která označují kod země. Po té musí následovat 8-10 číslic.
+     * https://cs.wikipedia.org/wiki/Da%C5%88ov%C3%A9_identifika%C4%8Dn%C3%AD_%C4%8D%C3%ADslo
+     *
+     * Validní tvar DIč je : CZ12345678
+     *@param taxIdentificationNumber české DIČ
+     * @return boolean, zda je dič správné
+     */
+    public static boolean validateCzechTaxIdentificationNumber(String taxIdentificationNumber) {
+        taxIdentificationNumber = taxIdentificationNumber.toUpperCase();
+        int inputLength = taxIdentificationNumber.length();
+        if (taxIdentificationNumber.isEmpty()) {
             return true;
         } else {
-            if (identificationNumber.length() == 10) {
-                if (Character.isLetter(identificationNumber.charAt(0)) && Character.isLetter(identificationNumber.charAt(1))) {
-                    for (int i = 2; i < identificationNumber.length() - 1; i++) {
-                        if (Character.isDigit(identificationNumber.charAt(i))) {
-                            temp = temp + (Character.getNumericValue(identificationNumber.charAt(i)) * (10 - i));
-                        } else {
+            if (inputLength >= 10 && inputLength <= 12) {
+                if ((Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1)))
+                        &&
+                        (taxIdentificationNumber.charAt(0) == 'C' && taxIdentificationNumber.charAt(1) == 'Z')) {
+                    for (int i = 2; i < inputLength; i++) {
+                        if (!Character.isDigit(taxIdentificationNumber.charAt(i))) {
                             return false;
                         }
                     }
-                    a = temp % 11;
-                    if (a == 0) {
-                        c = 1;
-                    } else if (a == 1) {
-                        c = 0;
-                    } else {
-                        c = 11 - temp;
-                    }
-                    if (Character.getNumericValue(identificationNumber.charAt(9)) == c) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return true;
                 }
             }
         }
@@ -100,22 +134,19 @@ public class InputValidation {
     }
 
     /**
-     * Metoda, která validuje DIČ.
+     * Metoda, která validuje zahraniční identifikační číslo
      *
-     * @return
+     * @param taxIdentificationNumber zahraniční identifikační číslo
+     * @return boolean, zda je DIČ správné
      */
-    public static boolean validateTaxIdentificationNumber(String taxIdentificationNumber) {
+    public static boolean validateForeignTaxIdentificationNumber(String taxIdentificationNumber) {
+        taxIdentificationNumber = taxIdentificationNumber.toUpperCase();
         int inputLength = taxIdentificationNumber.length();
         if (taxIdentificationNumber.isEmpty()) {
             return true;
         } else {
-            if (inputLength >= 10 && inputLength <= 12) {
-                if (Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))) {
-                    for (int i = 2; i < inputLength; i++) {
-                        if (!Character.isDigit(taxIdentificationNumber.charAt(i))) {
-                            return false;
-                        }
-                    }
+            if (inputLength >= 10 ) {
+                if (Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))){
                     return true;
                 }
             }
