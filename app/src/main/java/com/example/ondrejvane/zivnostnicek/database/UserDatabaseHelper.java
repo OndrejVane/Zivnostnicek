@@ -32,6 +32,7 @@ public class UserDatabaseHelper extends DatabaseHelper {
             values.put(COLUMN_USER_ID, user.getId());
             values.put(COLUMN_USER_FULL_NAME, user.getFullName());
             values.put(COLUMN_USER_EMAIL, user.getEmail());
+            values.put(COLUMN_USER_PASSWORD, user.getPassword());
             values.put(COLUMN_USER_SYNC_NUMBER, user.getSyncNumber());
 
             // Inserting Row
@@ -46,7 +47,7 @@ public class UserDatabaseHelper extends DatabaseHelper {
     public synchronized User getUserById(int userId){
         User user = new User();
 
-        String[] columns = { COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL, COLUMN_USER_SYNC_NUMBER};
+        String[] columns = { COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL, COLUMN_USER_PASSWORD, COLUMN_USER_SYNC_NUMBER};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -67,7 +68,8 @@ public class UserDatabaseHelper extends DatabaseHelper {
             user.setId(userId);
             user.setFullName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
-            user.setSyncNumber(cursor.getInt(2));
+            user.setPassword(cursor.getString(2));
+            user.setSyncNumber(cursor.getInt(3));
         }else {
             user = null;
         }

@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 12;
+    public static final int DATABASE_VERSION = 13;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -28,6 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_USER_ID = "user_id";                                 //Primární klíč
     public static final String COLUMN_USER_FULL_NAME = "user_full_name";                   //Jméno uživatele
     public static final String COLUMN_USER_EMAIL = "user_email";                           //Mail uživatele
+    public static final String COLUMN_USER_PASSWORD = "user_password";                     //zašifrovaný hash hesla uživatele
     public static final String COLUMN_USER_SYNC_NUMBER = "user_sync_number";               //synchronizační číslo uživatele
 
     //Názvy atributů v tabulce trader
@@ -85,7 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
             + COLUMN_USER_ID + " INTEGER PRIMARY KEY, " + COLUMN_USER_FULL_NAME + " TEXT,"
-            + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_SYNC_NUMBER + " INTEGER" + ")";
+            + COLUMN_USER_EMAIL + " TEXT," + COLUMN_USER_PASSWORD + " TEXT," + COLUMN_USER_SYNC_NUMBER + " INTEGER" + ")";
 
     //SQL pro vytvoření tabulky Trader
     private String CREATE_TRADER_TABLE = "CREATE TABLE " + TABLE_TRADER + "("

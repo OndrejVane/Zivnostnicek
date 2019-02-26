@@ -6,6 +6,7 @@ public class User {
     private int id;
     private String fullName;
     private String email;
+    private String password;
     private int syncNumber;
 
     public int getId() {
@@ -30,6 +31,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getSyncNumber() {

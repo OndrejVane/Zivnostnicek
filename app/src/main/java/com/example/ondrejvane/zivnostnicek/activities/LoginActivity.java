@@ -22,6 +22,8 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
+import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
+import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
@@ -43,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     //pomocné globální proměnné
     private UserDatabaseHelper userDatabaseHelper;
     private HashPassword hashPassword;
+    private SecureSending secureSending;
     private static final String KEY_STATUS = "status";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_EMAIL = "email";
@@ -86,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
         hashPassword = new HashPassword();
         session = new SessionHandler(getApplicationContext());
+        secureSending = new SecureSending(null, null);
 
         //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
         Glide.with(this).load(R.drawable.logo1).into(imageViewLogo);
@@ -158,8 +162,8 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 String hashedPassword = hashPassword.hashPassword(password);
                 //vložení uživatelských dat do JSONu
-                request.put(KEY_EMAIL, email);
-                request.put(KEY_PASSWORD, hashedPassword);
+                request.put(KEY_EMAIL, secureSending.encrypt(email));
+                request.put(KEY_PASSWORD, secureSending.encrypt(hashedPassword));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -172,17 +176,20 @@ public class LoginActivity extends AppCompatActivity {
                             pDialog.dismiss();
                             try {
 
+                                int status = Integer.parseInt(secureSending.decrypt(response.getString(KEY_STATUS)));
 
-                                Log.d(TAG, "KEY_STATUS = " + response.getString(KEY_STATUS));
+                                Log.d(TAG, "KEY_STATUS = " + status);
 
                                 //uživatel byl úspěšně autentizován serverem
-                                if (response.getInt(KEY_STATUS) == 0) {
+                                if (status == 0) {
 
                                     //načtení informací o uživateli
                                     User user = new User();
                                     user.setId(response.getInt(KEY_ID));
                                     user.setEmail(email);
                                     user.setFullName(response.getString(KEY_FULL_NAME));
+                                    //uložení hesla v šifrované podobě
+                                    user.setPassword(SecurePassword.encrypt(hashPassword.hashPassword(password)));
 
                                     //je lokálně uložen v databázi??
                                     if (userDatabaseHelper.getUserById(user.getId()) == null) {
@@ -213,7 +220,7 @@ public class LoginActivity extends AppCompatActivity {
                                     finish();
 
                                     //přihlášení neproběhlo správně, heslo nebo mail není strávné
-                                } else if (response.getInt(KEY_STATUS) == 1) {
+                                } else if (status == 1) {
                                     //vypsání uživateli
                                     Toast.makeText(getApplicationContext(),
                                             getResources().getString(R.string.wrong_password_or_address),

@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
+import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
 
+    private SecureSending secureSending;
     private HashPassword hashPassword;
     private String email;
     private String password;
@@ -69,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
         password1ET = findViewById(R.id.userPassword);
         password2ET = findViewById(R.id.userConfirmPassword);
         hashPassword = new HashPassword();
+        secureSending = new SecureSending(null, null);
     }
 
     /**
@@ -107,9 +110,9 @@ public class RegisterActivity extends AppCompatActivity {
                 //zahashování hesla
                 String hashedPassword = hashPassword.hashPassword(password);
                 //naplněné JSONu daty
-                request.put(KEY_EMAIL, email);
-                request.put(KEY_PASSWORD, hashedPassword);
-                request.put(KEY_FULL_NAME, fullName);
+                request.put(KEY_EMAIL, secureSending.encrypt(email));
+                request.put(KEY_PASSWORD, secureSending.encrypt(hashedPassword));
+                request.put(KEY_FULL_NAME, secureSending.encrypt(fullName));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -123,15 +126,16 @@ public class RegisterActivity extends AppCompatActivity {
                             try {
                                 Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
                                 Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
-                                //Check if user got registered successfully
-                                if (response.getInt(KEY_STATUS) == 0) {
+
+                                int status = Integer.parseInt(secureSending.decrypt(response.getString(KEY_STATUS)));
+                                if (status == 0) {
                                     //Set the user session
                                     Log.d(TAG, "User is successfully register");
                                     Toast.makeText(getApplicationContext(),
                                             getString(R.string.user_is_created), Toast.LENGTH_SHORT).show();
                                     finish();
 
-                                }else if(response.getInt(KEY_STATUS) == 1){
+                                }else if(status == 1){
                                     //Display error message if username is already existsing
                                     userAddressET.setError(getString(R.string.user_already_exists));
                                     userAddressET.requestFocus();
