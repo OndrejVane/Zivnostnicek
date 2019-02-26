@@ -154,9 +154,16 @@ public class TraderEditActivity extends AppCompatActivity
             }
         }
 
-        if(!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())){
+        //validace českého dič
+        if (!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())) {
             //implementace nastavení
-            if(!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()){
+            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));
+                return;
+                //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
+            } else if (!InputValidation.validateForeignTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())) {
                 String message = getString(R.string.wrong_format_of_tid);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));

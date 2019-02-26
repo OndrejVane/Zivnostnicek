@@ -53,9 +53,9 @@
     <string name="city">Město</string>
     <string name="street">Ulice</string>
     <string name="company_name_is_empty">Název obchodníka je prázdný</string>
-    <string name="telephone_has_wrong_format">Špatný formát telefoního čísla</string>
-    <string name="wrong_id_number">Špatný formát IČ</string>
-    <string name="wrong_format_of_tid">Špatný formát DIČ</string>
+    <string name="telephone_has_wrong_format">Špatný formát telefoního čísla př. +420123456789</string>
+    <string name="wrong_id_number">Špatný formát IČ př. 25596641</string>
+    <string name="wrong_format_of_tid">Špatný formát DIČ př. CZ25596641</string>
     <string name="search">Hledat</string>
     <string name="no_result">Žádné výsledky</string>
     <string name="title_activity_trader_show"> Náhled obchodníka</string>

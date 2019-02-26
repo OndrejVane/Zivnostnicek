@@ -64,9 +64,9 @@
     <string name="house_number">House number</string>
     <string name="mandatory_information">* Mandatory information</string>
     <string name="company_name_is_empty">Company name is empty</string>
-    <string name="telephone_has_wrong_format">Telephone has wrong format</string>
-    <string name="wrong_id_number">Wrong format of identification number</string>
-    <string name="wrong_format_of_tid">Wrong format of TID</string>
+    <string name="telephone_has_wrong_format">Telephone has wrong format e.g. +420123456789</string>
+    <string name="wrong_id_number">Wrong format of identification number e.g. 25596641</string>
+    <string name="wrong_format_of_tid">Wrong format of TID e.g. CZ25596641</string>
     <string name="trader_is_created">Trader is created</string>
     <string name="search">Search</string>
     <string name="no_result">No result</string>
