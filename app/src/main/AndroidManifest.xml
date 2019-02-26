@@ -109,24 +109,24 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.home.HomeYearSummaryActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/title_activity_home_year_summary"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.home.HomeExpenseOrIncomeActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/title_activity_home_income"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.home.HomeVATActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/title_activity_home_vat"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.home.HomeTraderActivity"
-            android:label="@string/title_activity_home"
+            android:label="@string/title_activity_home_traders"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.info.InfoAboutAppActivity"
             android:label="@string/title_activity_info_about_app"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -115,6 +115,8 @@ public class StorageEditActivity extends AppCompatActivity
         storageItem.setName(name);
         storageItem.setUnit(units);
         storageItem.setNote(note);
+        storageItem.setIsDirty(1);
+        storageItem.setIsDeleted(0);
         storageItem.setId(storageItemID);
 
         //pokud se nové množství a editované množství nebude rovnat, tak potřebuju provést výpočet nového množství
@@ -122,6 +124,8 @@ public class StorageEditActivity extends AppCompatActivity
             ItemQuantity itemQuantity = new ItemQuantity();
             itemQuantity.setBillId(-1);         //nepatří k žádné faktuře
             itemQuantity.setStorageItemId(storageItemID);
+            itemQuantity.setIsDirty(1);
+            itemQuantity.setIsDeleted(0);
             if(currentQuantity > Float.parseFloat(quantity)){
                 itemQuantity.setQuantity(-1*(currentQuantity - Float.parseFloat(quantity)));
                 itemQuantityDatabaseHelper.addItemQuantity(itemQuantity);

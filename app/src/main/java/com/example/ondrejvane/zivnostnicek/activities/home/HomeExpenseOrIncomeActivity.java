@@ -84,8 +84,12 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         Header header = new Header(navigationView);
         header.setTextToHeader();
 
+
         //inicializace aktivity
         initActivity();
+
+        //nastavení textu do aktivity
+        setTitle();
 
         //implementace nastavení
         setSettings();
@@ -146,6 +150,12 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void setTitle() {
+        if(isExpense){
+            setTitle(getResources().getString(R.string.title_activity_home_expense));
+        }
     }
 
     /**

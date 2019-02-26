@@ -15,6 +15,8 @@ public class Bill {
     private int typeId;
     private int userId;
     private int isExpense;
+    private int isDirty;
+    private int isDeleted;
 
 
     public Bill(int id, String name, float amount, int VAT, int traderId, String date, String photo, String place, int typeId, int userId, int isExpense) {
@@ -120,5 +122,21 @@ public class Bill {
 
     public void setIsExpense(int isExpense) {
         this.isExpense = isExpense;
+    }
+
+    public int getIsDirty() {
+        return isDirty;
+    }
+
+    public void setIsDirty(int isDirty) {
+        this.isDirty = isDirty;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

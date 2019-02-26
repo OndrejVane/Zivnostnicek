@@ -7,6 +7,8 @@ public class StorageItem {
     private String name;
     private String unit;
     private String note;
+    private int isDirty;
+    private int isDeleted;
 
     public StorageItem(int userId, String name, String unit){
         this.userId = userId;
@@ -56,5 +58,21 @@ public class StorageItem {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getIsDirty() {
+        return isDirty;
+    }
+
+    public void setIsDirty(int isDirty) {
+        this.isDirty = isDirty;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

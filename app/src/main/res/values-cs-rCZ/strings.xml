@@ -19,7 +19,7 @@
     <string name="passwords_is_too_short">Heslo je příliš krátké</string>
     <string name="email_is_not_valid">E-mailová adresa je ve špatném tvaru</string>
     <string name="wrong_password_or_address">Špatné heslo nebo e-mailová adresa</string>
-    <string name="you_are_succesful_login">Úspěšně přihlášen</string>
+    <string name="you_are_successfully_login">Úspěšně přihlášen</string>
     <string name="user_is_created">Uživatel je založen</string>
     <string name="logout">Odhlásit se</string>
     <string name="home">Přehled</string>
@@ -214,6 +214,10 @@
     <string name="sync_info_2">Data můžete synchronizovat i okamžitě kliknutím na tlačítko níže.</string>
     <string name="sync_now">Synchronizovat nyní</string>
     <string name="fill_all_columns">Vyplňte všechny údaje</string>
+    <string name="title_activity_home_income">Přehled příjmů</string>
+    <string name="title_activity_home_expense">Přehled výdajů</string>
+    <string name="title_activity_home_vat">Přehled DPH</string>
+    <string name="title_activity_home_traders">Přehled obchodníků</string>
 
     <string-array name="photo">
         <item>galerie</item>
@@ -235,11 +239,6 @@
         <item>2023</item>
         <item>2024</item>
         <item>2025</item>
-        <item>2026</item>
-        <item>2027</item>
-        <item>2028</item>
-        <item>2029</item>
-        <item>2030</item>
     </string-array>
 
     <string-array name="months">

@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class TypeBillDatabaseHelper extends DatabaseHelper {
 
     /**
-     * Constructor
+     * Kontruktor type bill database helper
      *
-     * @param context context
+     * @param context kontext aktivity
      */
     public TypeBillDatabaseHelper(Context context) {
         super(context);
@@ -35,12 +35,20 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_TYPE_USER_ID, typeBill.getUserId());
         values.put(COLUMN_TYPE_NAME, typeBill.getName());
         values.put(COLUMN_TYPE_COLOR, typeBill.getColor());
+        values.put(COLUMN_TYPE_IS_DIRTY, typeBill.getIsDirty());
+        values.put(COLUMN_TYPE_IS_DELETED, typeBill.getIsDeleted());
         typeBillId = db.insert(TABLE_TYPE, null, values);
         db.close();
 
         return typeBillId;
     }
 
+    /**
+     * Získání potžebných dat pro zobrazení typu faktur do spinneru.
+     *
+     * @param userId id uživatele
+     * @return
+     */
     public synchronized String[][] getTypeBillData(int userId) {
         String data[][];
 
@@ -48,11 +56,11 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_TYPE_USER_ID + " = ?";
+        String selection = COLUMN_TYPE_USER_ID + " = ?" + " AND " + COLUMN_TYPE_IS_DIRTY + " = ?";
 
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(userId)};
+        String[] selectionArgs = {Integer.toString(userId), "0"};
 
         Cursor cursor = db.query(TABLE_TYPE, //Table to query
                 columns,                    //columns to return
@@ -79,6 +87,12 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
+    /**
+     * Získání typu faktury podle id.
+     *
+     * @param typeId id typu
+     * @return typ faktury
+     */
     public synchronized TypeBill getTypeBillById(int typeId) {
         TypeBill typeBill = new TypeBill();
 
@@ -113,6 +127,13 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return typeBill;
     }
 
+    /**
+     *
+     * Načtení všech typů podle id uživatele.
+     *
+     * @param userId id uživatele
+     * @return  list typů faktur
+     */
     public synchronized ArrayList<TypeBill> getAllTypeByUserId(int userId){
         ArrayList<TypeBill> billTypes = new ArrayList<>();
 
@@ -120,10 +141,10 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_TYPE_USER_ID + " = ?";
+        String selection = COLUMN_TYPE_USER_ID + " = ?" + " AND " + COLUMN_TYPE_IS_DELETED + " = ?";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(userId)};
+        String[] selectionArgs = {Integer.toString(userId), "0"};
 
         Cursor cursor = db.query(TABLE_TYPE, //Table to query
                 columns,                    //columns to return

@@ -6,6 +6,8 @@ public class TypeBill {
     private int userId;
     private String name;
     private int color;
+    private int isDirty;
+    private int isDeleted;
 
     public TypeBill(int id,int userId, String name, int color) {
         this.id = id;
@@ -54,5 +56,21 @@ public class TypeBill {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getIsDirty() {
+        return isDirty;
+    }
+
+    public void setIsDirty(int isDirty) {
+        this.isDirty = isDirty;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

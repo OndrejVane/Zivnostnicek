@@ -693,6 +693,8 @@ public class BillEditActivity extends AppCompatActivity
         bill.setDate(date);
         bill.setTraderId(traderId);
         bill.setTypeId(billTypeId);
+        bill.setIsDirty(1);
+        bill.setIsDeleted(0);
 
         //pokud je pořízena fotka, tak uložit do db
         if (pictureUri != null) {
@@ -721,19 +723,27 @@ public class BillEditActivity extends AppCompatActivity
             if (listBillItems.get(i).isNew()) {
                 //nově přidaná skladová položka
                 if (listBillItems.get(i).getItemQuantity().getId() == -1) {
+                    listBillItems.get(i).getStorageItem().setIsDirty(1);
+                    listBillItems.get(i).getStorageItem().setIsDeleted(0);
                     storageItemId = storageItemDatabaseHelper.addStorageItem(listBillItems.get(i).getStorageItem());
                     listBillItems.get(i).getItemQuantity().setStorageItemId(storageItemId);
                     listBillItems.get(i).getItemQuantity().setBillId(billId);
+                    listBillItems.get(i).getItemQuantity().setIsDirty(1);
+                    listBillItems.get(i).getItemQuantity().setIsDirty(0);
                     itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
                 } else {
                     //položka je již evidivoaná ve skladu, přidám pouze nové množství
                     if (!isExpense) {
                         //pokud se jedná o výdaj, přidávám se zápornou hodnotou => jako vyskladění
                         listBillItems.get(i).getItemQuantity().setBillId(billId);
+                        listBillItems.get(i).getItemQuantity().setIsDirty(1);
+                        listBillItems.get(i).getItemQuantity().setIsDirty(0);
                         listBillItems.get(i).getItemQuantity().setQuantity(listBillItems.get(i).getItemQuantity().getQuantity() * (-1));
                         itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
                     } else {
                         listBillItems.get(i).getItemQuantity().setBillId(billId);
+                        listBillItems.get(i).getItemQuantity().setIsDirty(1);
+                        listBillItems.get(i).getItemQuantity().setIsDirty(0);
                         itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
                     }
                 }

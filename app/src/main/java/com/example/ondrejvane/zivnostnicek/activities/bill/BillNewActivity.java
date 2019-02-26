@@ -628,6 +628,8 @@ public class BillNewActivity extends AppCompatActivity
         bill.setDate(date);
         bill.setTraderId(traderId);
         bill.setTypeId(billTypeId);
+        bill.setIsDirty(1);
+        bill.setIsDeleted(0);
         //pokud je pořízen obrázek k faktuře
         if (pictureUri != null) {
             bill.setPhoto(pictureUri.toString());
@@ -648,19 +650,27 @@ public class BillNewActivity extends AppCompatActivity
 
             //jedná se o položku, která není ve skladu
             if (listOfItems.get(i).isNew()) {
+                listOfItems.get(i).getStorageItem().setIsDirty(1);
+                listOfItems.get(i).getStorageItem().setIsDeleted(0);
                 storageItemId = storageItemDatabaseHelper.addStorageItem(listOfItems.get(i).getStorageItem());
                 listOfItems.get(i).getItemQuantity().setStorageItemId(storageItemId);
                 listOfItems.get(i).getItemQuantity().setBillId(billId);
+                listOfItems.get(i).getItemQuantity().setIsDirty(1);
+                listOfItems.get(i).getItemQuantity().setIsDeleted(0);
                 itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
             } else {
                 //položka je již evidivoaná ve skladu
                 if (!isExpense) {
                     //pokud se jedná o výdaj, přidávám se zápornou hodnotou => jako vyskladění
                     listOfItems.get(i).getItemQuantity().setBillId(billId);
+                    listOfItems.get(i).getItemQuantity().setIsDirty(1);
+                    listOfItems.get(i).getItemQuantity().setIsDeleted(0);
                     listOfItems.get(i).getItemQuantity().setQuantity(listOfItems.get(i).getItemQuantity().getQuantity() * (-1));
                     itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
                 } else {
                     listOfItems.get(i).getItemQuantity().setBillId(billId);
+                    listOfItems.get(i).getItemQuantity().setIsDirty(1);
+                    listOfItems.get(i).getItemQuantity().setIsDeleted(0);
                     itemQuantityDatabaseHelper.addItemQuantity(listOfItems.get(i).getItemQuantity());
                 }
             }

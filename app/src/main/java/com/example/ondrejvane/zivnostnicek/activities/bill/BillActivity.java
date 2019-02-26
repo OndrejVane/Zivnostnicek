@@ -359,6 +359,8 @@ public class BillActivity extends AppCompatActivity
 
                 //vložení typu do databáze
                 TypeBill typeBill = new TypeBill(UserInformation.getInstance().getUserId(), billTypeName, pickedColor[0]);
+                typeBill.setIsDirty(1);
+                typeBill.setIsDeleted(0);
                 TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(BillActivity.this);
                 typeBillDatabaseHelper.addTypeBill(typeBill);
 

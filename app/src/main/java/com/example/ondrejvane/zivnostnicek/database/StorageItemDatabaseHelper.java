@@ -13,7 +13,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
 
     /**
-     * Constructor
+     * Konstruktor storage item databse helper
      *
      * @param context kontext aktivity
      */
@@ -21,6 +21,12 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
+    /**
+     * Přidání skladové položky do databáze.
+     *
+     * @param storageItem skladová položka
+     * @return id sladové položky
+     */
     public synchronized long addStorageItem(StorageItem storageItem){
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue;
@@ -30,12 +36,20 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
         values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());
         values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
+        values.put(COLUMN_STORAGE_ITEM_IS_DIRTY, storageItem.getIsDirty());
+        values.put(COLUMN_STORAGE_ITEM_IS_DELETED, storageItem.getIsDeleted());
         returnValue = db.insert(TABLE_STORAGE_ITEM, null, values);
         db.close();
         return returnValue;
     }
 
 
+    /**
+     * Získání všech skladových položek uživatele podle id.
+     *
+     * @param userID id uživatele
+     * @return list skladových položek
+     */
     public synchronized ArrayList<StorageItem> getStorageItemByUserId(int userID){
 
         ArrayList<StorageItem> storageItemsList = new ArrayList<>();
@@ -44,12 +58,12 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_STORAGE_ITEM_USER_ID + " = ?";
+        String selection = COLUMN_STORAGE_ITEM_USER_ID + " = ?" + " AND " + COLUMN_STORAGE_ITEM_IS_DELETED + " = ?";
 
         String orderBy = COLUMN_STORAGE_ITEM_NAME + " ASC";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(userID)};
+        String[] selectionArgs = {Integer.toString(userID), "0"};
 
         Cursor cursor = db.query(TABLE_STORAGE_ITEM,    //Table to query
                 columns,                                //columns to return
@@ -75,6 +89,13 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageItemsList;
     }
 
+
+    /**
+     * Získání skladové položky podle id.
+     *
+     * @param storageItemId id skladové položky
+     * @return skladová položka
+     */
     public synchronized StorageItem getStorageItemById(int storageItemId){
         String[] columns = { COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
 
@@ -108,20 +129,39 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageItem;
     }
 
+    /**
+     * Metoda, která nastaví atribut is deleted na jedničku a tím bude skladová
+     * položka označena za smazanou.
+     *
+     * @param storageItemId id skladové položky
+     * @return
+     */
     public synchronized boolean deleteStorageItemById(int storageItemId){
-        boolean result;
-
         String where = COLUMN_STORAGE_ITEM_ID + " = ?";
 
-        String[] deleteArgs = {Integer.toString(storageItemId)};
+        String[] updateArgs = {Integer.toString(storageItemId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        result = db.delete(TABLE_STORAGE_ITEM, where, deleteArgs) > 0;
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STORAGE_ITEM_IS_DELETED, 1);
+        values.put(COLUMN_STORAGE_ITEM_IS_DIRTY, 1);
 
-        return result;
+        db.update(TABLE_STORAGE_ITEM, values, where, updateArgs);
+        db.close();
+
+        //smazání všech množství, které patří ke skladové položce
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
+        itemQuantityDatabaseHelper.deleteAllItemQuantityByStorageItemId(storageItemId);
+
+        return true;
     }
 
+    /**
+     * Aktualizace skladové položky.
+     *
+     * @param storageItem skladová položka
+     */
     public synchronized void updateStorageItemById(StorageItem storageItem){
 
         String where = COLUMN_STORAGE_ITEM_ID + " = ?";
@@ -134,6 +174,8 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
         values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());
         values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
+        values.put(COLUMN_STORAGE_ITEM_IS_DIRTY, storageItem.getIsDirty());
+        values.put(COLUMN_STORAGE_ITEM_IS_DELETED, storageItem.getIsDeleted());
 
         int result = db.update(TABLE_STORAGE_ITEM, values, where, updateArgs);
         System.out.print(result);
@@ -141,6 +183,13 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
     }
 
+    /**
+     * Získání dato pro zobrazení skladových položek
+     * do spinneru.
+     *
+     * @param userId id uživatele
+     * @return  pole s daty o skladových položkách
+     */
     public synchronized String[][] getStorageItemData(int userId){
         ArrayList<StorageItem> arrayList = getStorageItemByUserId(userId);
         String[][] storageData = new String[2][arrayList.size()];

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
     /**
-     * Constructor
+     * Konstruktor item quantity database helper
      *
-     * @param context
+     * @param context kontext aktivity
      */
     public ItemQuantityDatabaseHelper(Context context) {
         super(context);
@@ -29,10 +29,18 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_ITEM_QUANTITY_BILL_ID, itemQuantity.getBillId());
         values.put(COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID, itemQuantity.getStorageItemId());
         values.put(COLUMN_ITEM_QUANTITY_QUANTITY, itemQuantity.getQuantity());
+        values.put(COLUMN_ITEM_QUANTITY_IS_DIRTY, itemQuantity.getIsDirty());
+        values.put(COLUMN_ITEM_QUANTITY_IS_DELETED, itemQuantity.getIsDeleted());
         db.insert(TABLE_ITEM_QUANTITY, null, values);
         db.close();
     }
 
+    /**
+     * Získání množství skladové položky na základě id skladové položky
+     *
+     * @param storageItemId id skladové položky
+     * @return  množství skladové položky
+     */
     public synchronized float getQuantityWithStorageItemId(int storageItemId) {
         float quantity = 0;
 
@@ -40,10 +48,11 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " = ?";
+        String selection = COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " = ?" + " AND "
+                + COLUMN_ITEM_QUANTITY_IS_DELETED + " = ?";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(storageItemId)};
+        String[] selectionArgs = {Integer.toString(storageItemId), "0"};
 
         Cursor cursor = db.query(TABLE_ITEM_QUANTITY,    //Table to query
                 columns,                                //columns to return
@@ -64,6 +73,12 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return quantity;
     }
 
+    /**
+     * Metoda, která získá množství skladových položek na základě id faktury.
+     *
+     * @param billId id faktury
+     * @return  list množství skladové položky
+     */
     public synchronized ArrayList<ItemQuantity> getItemQuantityByBillId(int billId) {
         ArrayList<ItemQuantity> arrayList = new ArrayList<>();
 
@@ -71,10 +86,10 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
+        String selection = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?" + " AND " + COLUMN_ITEM_QUANTITY_IS_DELETED + " = ?";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(billId)};
+        String[] selectionArgs = {Integer.toString(billId), "0"};
 
         Cursor cursor = db.query(TABLE_ITEM_QUANTITY,    //Table to query
                 columns,                                //columns to return
@@ -100,34 +115,38 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public synchronized boolean deleteItemQuantityByBillId(int billId) {
-        boolean result;
 
-        String where = COLUMN_ITEM_QUANTITY_BILL_ID + " = ?";
-
-        String[] deleteArgs = {Integer.toString(billId)};
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        result = db.delete(TABLE_ITEM_QUANTITY, where, deleteArgs) > 0;
-
-        return result;
-    }
-
+    /**
+     * Metoda, která nastaví atribut is deleted na jedničku a tím bude množství
+     * skladové položky označena za smazanou.
+     *
+     * @param itemId množství skladové položky  id
+     * @return smazáno
+     */
     public boolean deleteItemQuantityById(int itemId){
-        boolean result;
-
         String where = COLUMN_ITEM_QUANTITY_ID + " = ?";
 
-        String[] deleteArgs = {Integer.toString(itemId)};
+        String[] updateArgs = {Integer.toString(itemId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        result = db.delete(TABLE_ITEM_QUANTITY, where, deleteArgs) > 0;
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_QUANTITY_IS_DELETED, 1);
+        values.put(COLUMN_ITEM_QUANTITY_IS_DIRTY, 1);
 
-        return result;
+        db.update(TABLE_ITEM_QUANTITY, values, where, updateArgs);
+        db.close();
+
+        return true;
     }
 
+    /**
+     * Získání listu skladových položek, které patří k faktuře.
+     * K němu nadjde odpovídající množství.
+     *
+     * @param billId id faktury
+     * @return  list skladových položek a množství
+     */
     public synchronized ArrayList<StorageItemBox> getItemQuantityAndStorageItemByBillId(int billId) {
 
         ArrayList<ItemQuantity> arrayItemQuantity = getItemQuantityByBillId(billId);
@@ -143,5 +162,27 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         }
 
         return arrayStorageItemBox;
+    }
+
+    /**
+     * Metoda, která smaže všechny skladové množství na základě odpovídající
+     * skladové položky.
+     *
+     * @param storageItemId id sladové položky
+     */
+    public synchronized void deleteAllItemQuantityByStorageItemId(int storageItemId){
+        String where = COLUMN_ITEM_QUANTITY_ID + " = ?";
+
+        String[] updateArgs = {Integer.toString(storageItemId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_QUANTITY_IS_DELETED, 1);
+        values.put(COLUMN_ITEM_QUANTITY_IS_DIRTY, 1);
+
+        db.update(TABLE_ITEM_QUANTITY, values, where, updateArgs);
+        db.close();
+
     }
 }
