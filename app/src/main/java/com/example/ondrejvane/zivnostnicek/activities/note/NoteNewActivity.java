@@ -131,6 +131,8 @@ public class NoteNewActivity extends AppCompatActivity
         note.setTrader_id(traderID);
         note.setRating(Math.round(ratingBar.getRating()));
         note.setDate(dateFormat1.format(date));
+        note.setIsDirty(1);
+        note.setIsDeleted(0);
 
         noteDatabaseHelper.addNote(note);
 

@@ -11,7 +11,7 @@ public class NoteDatabaseHelper extends DatabaseHelper {
 
 
     /**
-     * Constructor
+     * Kontruktor pro note databse helper
      *
      * @param context context
      */
@@ -19,6 +19,11 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
+    /**
+     * Metoda, pro přidání nové poznámky do databáze.
+     *
+     * @param note poznámka
+     */
     public synchronized void addNote(Note note) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -28,40 +33,69 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_NOTE_NOTE, note.getNote());
         values.put(COLUMN_NOTE_DATE, note.getDate());
         values.put(COLUMN_NOTE_RATING, note.getRating());
+        values.put(COLUMN_NOTE_IS_DIRTY, note.getIsDirty());
+        values.put(COLUMN_NOTE_IS_DELETED, note.getIsDeleted());
         db.insert(TABLE_NOTE, null, values);
         db.close();
     }
 
+    /**
+     * Meotda, která "smaže" poznámku z databáze s příslušným id.
+     * Nedojde k fyzickému smazání, pouze k nastavení příznaku is delete na
+     * 1. Záznam budu potřebovat pro synchronizaci na server.
+     *
+     * @param noteId id poznámky
+     * @return  zda došo ke smazání poznámky
+     */
     public synchronized boolean deleteNoteById(int noteId) {
-        boolean result;
-
         String where = COLUMN_NOTE_ID + " = ?";
 
-        String[] deleteArgs = {Integer.toString(noteId)};
+        String[] updateArgs = {Integer.toString(noteId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NOTE_IS_DELETED, 1);
+        values.put(COLUMN_NOTE_IS_DIRTY, 1);
 
-        return result;
+        db.update(TABLE_NOTE, values, where, updateArgs);
+        db.close();
+
+        return true;
     }
 
+    /**
+     * Meotda, která "smaže" poznámky, které přísluší k obchodníkovi.
+     *
+     * @param traderId id obchodníka
+     * @return  zda došlo ke smazání poznámek
+     */
     public synchronized boolean deleteNotesByTraderId(int traderId) {
-        boolean result;
 
         String where = COLUMN_NOTE_TRADER_ID + " = ?";
 
-        String[] deleteArgs = {Integer.toString(traderId)};
+        String[] updateArgs = {Integer.toString(traderId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        result = db.delete(TABLE_NOTE, where, deleteArgs) > 0;
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NOTE_IS_DELETED, 1);
+        values.put(COLUMN_NOTE_IS_DIRTY, 1);
 
-        return result;
+        db.update(TABLE_NOTE, values, where, updateArgs);
+        db.close();
+
+        return true;
 
 
     }
 
+    /**
+     * Meotoda, která aktualizuje poznámku s příslušným
+     * id poznámky.
+     *
+     * @param note  poznámka
+     */
     public synchronized void updateNoteById(Note note) {
         String where = COLUMN_NOTE_ID + " = ?";
 
@@ -74,11 +108,19 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_NOTE_NOTE, note.getNote());
         values.put(COLUMN_NOTE_RATING, note.getRating());
         values.put(COLUMN_NOTE_DATE, note.getDate());
+        values.put(COLUMN_NOTE_IS_DIRTY, note.getIsDirty());
+        values.put(COLUMN_NOTE_IS_DELETED, note.getIsDeleted());
 
         db.update(TABLE_NOTE, values, where, updateArgs);
         db.close();
     }
 
+    /**
+     * Získání poznámky podle příslošného id.
+     *
+     * @param noteId id poznámky
+     * @return  poznámka
+     */
     public synchronized Note getNoteById(int noteId) {
 
         Note note = new Note();
@@ -113,6 +155,13 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         return note;
     }
 
+    /**
+     * Získání dat pro zobrazení poznámek do listu příslušného
+     * obchodníka.
+     *
+     * @param traderID id obchodníka
+     * @return  pole s potřebnými informacemi
+     */
     public synchronized String[][] getNotesData(int traderID) {
         String data[][];
 
@@ -120,12 +169,12 @@ public class NoteDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_NOTE_TRADER_ID + " = ?";
+        String selection = COLUMN_NOTE_TRADER_ID + " = ?" + " AND " + COLUMN_NOTE_IS_DELETED + " = ?";
 
         String orderBy = COLUMN_NOTE_TITLE + " ASC";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(traderID)};
+        String[] selectionArgs = {Integer.toString(traderID), "0"};
 
         Cursor cursor = db.query(TABLE_NOTE, //Table to query
                 columns,                    //columns to return
@@ -152,6 +201,12 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         return data;
     }
 
+    /**
+     * Získání průměrného hodnocení obchodníka
+     *
+     * @param traderID id obchodníka
+     * @return
+     */
     public synchronized float getAverageRatingByTraderId(int traderID) {
         double temp = 0;
         int count;
@@ -160,11 +215,10 @@ public class NoteDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_NOTE_TRADER_ID + " = ?";
-
+        String selection = COLUMN_NOTE_TRADER_ID + " = ?" + " AND " + COLUMN_NOTE_IS_DELETED + " = ?";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(traderID)};
+        String[] selectionArgs = {Integer.toString(traderID), "0"};
 
         Cursor cursor = db.query(TABLE_NOTE, //Table to query
                 columns,                    //columns to return

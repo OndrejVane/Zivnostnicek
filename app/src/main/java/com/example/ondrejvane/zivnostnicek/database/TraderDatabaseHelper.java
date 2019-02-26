@@ -140,7 +140,8 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     /**
      * Meotda, která "smaže" obchodníka z databáze s příslušným id.
      * Nedojde k fyzickému smazání, pouze k nastavení příznaku is delete na
-     * 1. Záznam budu potřebovat pro synchronizaci na server.
+     * 1. Záznam budu potřebovat pro synchronizaci na server. Dojde také
+     * ke "smazání" všech poznámek, které patří obhodníkovi.
      *
      * @param traderId id obchodníka
      * @return  zda došo ke smazání obchodníka
@@ -158,6 +159,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         db.update(TABLE_TRADER, values, where, updateArgs);
         db.close();
+
+        NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
+        noteDatabaseHelper.deleteNotesByTraderId(traderId);
 
         return true;
     }

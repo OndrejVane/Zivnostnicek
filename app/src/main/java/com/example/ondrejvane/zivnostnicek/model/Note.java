@@ -10,6 +10,8 @@ public class Note {
     private String note;
     private String date;
     private int rating;
+    private int isDirty;
+    private int isDeleted;
 
     public int getId() {
         return id;
@@ -57,5 +59,21 @@ public class Note {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public int getIsDirty() {
+        return isDirty;
+    }
+
+    public void setIsDirty(int isDirty) {
+        this.isDirty = isDirty;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
