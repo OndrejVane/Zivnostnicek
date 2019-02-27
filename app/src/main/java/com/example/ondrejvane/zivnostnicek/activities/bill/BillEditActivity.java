@@ -725,12 +725,12 @@ public class BillEditActivity extends AppCompatActivity
                 if (listBillItems.get(i).getItemQuantity().getId() == -1) {
                     listBillItems.get(i).getStorageItem().setIsDirty(1);
                     listBillItems.get(i).getStorageItem().setIsDeleted(0);
-                    storageItemId = storageItemDatabaseHelper.addStorageItem(listBillItems.get(i).getStorageItem());
+                    storageItemId = storageItemDatabaseHelper.addStorageItem(listBillItems.get(i).getStorageItem(), false);
                     listBillItems.get(i).getItemQuantity().setStorageItemId(storageItemId);
                     listBillItems.get(i).getItemQuantity().setBillId(billId);
                     listBillItems.get(i).getItemQuantity().setIsDirty(1);
                     listBillItems.get(i).getItemQuantity().setIsDirty(0);
-                    itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
+                    itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity(), false);
                 } else {
                     //položka je již evidivoaná ve skladu, přidám pouze nové množství
                     if (!isExpense) {
@@ -739,12 +739,12 @@ public class BillEditActivity extends AppCompatActivity
                         listBillItems.get(i).getItemQuantity().setIsDirty(1);
                         listBillItems.get(i).getItemQuantity().setIsDirty(0);
                         listBillItems.get(i).getItemQuantity().setQuantity(listBillItems.get(i).getItemQuantity().getQuantity() * (-1));
-                        itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
+                        itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity(), false);
                     } else {
                         listBillItems.get(i).getItemQuantity().setBillId(billId);
                         listBillItems.get(i).getItemQuantity().setIsDirty(1);
                         listBillItems.get(i).getItemQuantity().setIsDirty(0);
-                        itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity());
+                        itemQuantityDatabaseHelper.addItemQuantity(listBillItems.get(i).getItemQuantity(), false);
                     }
                 }
 

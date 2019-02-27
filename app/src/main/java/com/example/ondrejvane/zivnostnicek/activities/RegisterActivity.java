@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
+import com.example.ondrejvane.zivnostnicek.server_comunication.Server;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 
 import org.json.JSONException;
@@ -32,7 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password2ET;
 
     private static final String KEY_STATUS = "status";
-    private static final String KEY_MESSAGE = "message";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String fullName;
     private ProgressDialog pDialog;
-    private static final String register_url = "http://zivnostnicek.000webhostapp.com/api2/register.php";
+    private static final String register_url = "/api2/register.php";
 
 
     @Override
@@ -105,6 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         if(checkIfIsAllFilled()){
             displayLoader();
+
             JSONObject request = new JSONObject();
             try {
                 //zahashování hesla
@@ -118,14 +119,14 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            String url = Server.getSeverName() + register_url;
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest
-                    (Request.Method.POST, register_url, request, new Response.Listener<JSONObject>() {
+                    (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();
                             try {
                                 Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
-                                Log.d(TAG, "MESSAGE = "+ response.getString(KEY_MESSAGE));
 
                                 int status = Integer.parseInt(secureSending.decrypt(response.getString(KEY_STATUS)));
                                 if (status == 0) {

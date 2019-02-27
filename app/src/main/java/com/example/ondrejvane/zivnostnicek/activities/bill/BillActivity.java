@@ -362,7 +362,7 @@ public class BillActivity extends AppCompatActivity
                 typeBill.setIsDirty(1);
                 typeBill.setIsDeleted(0);
                 TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(BillActivity.this);
-                typeBillDatabaseHelper.addTypeBill(typeBill);
+                typeBillDatabaseHelper.addTypeBill(typeBill, false);
 
                 //vypis uživateli o úspěšném vložení typu do databáze
 

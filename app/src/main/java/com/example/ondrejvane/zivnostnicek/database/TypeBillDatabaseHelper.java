@@ -22,16 +22,26 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     * Přidání záznamu druhu faktury do tabulky druh.
+     * Přidání záznamu druhu faktury do tabulky druh. Pokud se jedná o
+     * data ze serveru, tak negeneruje nové id.
      *
      * @param typeBill přidáváný prvek
+     * @param isFromServer  logická hodnota, která údává, zda jsou data ze serveru
      * @return id přidané položky
      */
-    public synchronized long addTypeBill(TypeBill typeBill) {
+    public synchronized long addTypeBill(TypeBill typeBill, boolean isFromServer) {
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int typeId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_TYPE_ID);
+            typeBill.setId(typeId);
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         long typeBillId;
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_ID, typeBill.getId());
         values.put(COLUMN_TYPE_USER_ID, typeBill.getUserId());
         values.put(COLUMN_TYPE_NAME, typeBill.getName());
         values.put(COLUMN_TYPE_COLOR, typeBill.getColor());

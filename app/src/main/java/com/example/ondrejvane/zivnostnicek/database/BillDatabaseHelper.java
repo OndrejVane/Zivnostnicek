@@ -29,13 +29,24 @@ public class BillDatabaseHelper extends DatabaseHelper {
      * Metoda pro přidání nové faktruy do databáze.
      *
      * @param bill faktura
+     * @param isFromServer logická hodnota, která určuje, že jde o data ze serveru
      * @return id_faktury
      */
-    public synchronized long addBill(Bill bill) {
+    public synchronized long addBill(Bill bill, boolean isFromServer) {
+
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int billId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_BILL_ID);
+            bill.setId(billId);
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         long billId;
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_BILL_ID, bill.getId());
         values.put(COLUMN_BILL_NUMBER, bill.getName());
         values.put(COLUMN_BILL_AMOUNT, bill.getAmount());
         values.put(COLUMN_BILL_VAT, bill.getVAT());

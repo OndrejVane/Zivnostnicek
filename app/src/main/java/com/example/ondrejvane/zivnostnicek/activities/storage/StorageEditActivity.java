@@ -128,12 +128,12 @@ public class StorageEditActivity extends AppCompatActivity
             itemQuantity.setIsDeleted(0);
             if(currentQuantity > Float.parseFloat(quantity)){
                 itemQuantity.setQuantity(-1*(currentQuantity - Float.parseFloat(quantity)));
-                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity);
+                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, false);
             }
 
             if(currentQuantity < Float.parseFloat(quantity)){
                 itemQuantity.setQuantity(Float.parseFloat(quantity) - currentQuantity);
-                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity);
+                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity,false);
             }
         }
 

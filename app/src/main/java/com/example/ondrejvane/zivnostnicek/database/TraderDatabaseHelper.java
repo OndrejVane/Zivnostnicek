@@ -21,16 +21,30 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     * Přidání obchodníka do databázace
+     * Přidání obchodníka do databázace. Unikátní id pro
+     * obchodníka je získáno z tabulky identifiers. Logická hodnota
+     * udává, jestli se bude generovat nové nebo už je id vygenerováno.
+     * Pokud je záznam vkládán při synchronizaci dat, tak už id existuje.
      *
-     * @param trader trader
+     * @param trader obchodník
+     * @param isFromServer  logická hodnota, která udává jestli jde o synchronizaci ze serveru
      */
-    public synchronized void addTrader(Trader trader){
+    public synchronized void addTrader(Trader trader, boolean isFromServer){
+
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int traderId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_TRADER_ID);
+            trader.setId(traderId);
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         UserInformation userInformation = UserInformation.getInstance();
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_TRADER_ID, trader.getId());                       //vygenerovaný primární klíč
         values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());     //cizí klíč
         values.put(COLUMN_TRADER_NAME, trader.getName());
         values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getContactPerson());

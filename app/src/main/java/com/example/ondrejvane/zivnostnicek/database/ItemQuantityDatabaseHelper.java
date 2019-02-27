@@ -22,10 +22,26 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public synchronized void addItemQuantity(ItemQuantity itemQuantity) {
+    /**
+     * Přidání skladového množsví. Pokud jsou data přidávána zeserveru, tak se negeruje
+     * id, protože již existuje.
+     *
+     * @param itemQuantity skladové množství
+     * @param isFromServer logická hodnota, která označuje, zda jde o data ze serveru
+     */
+    public synchronized void addItemQuantity(ItemQuantity itemQuantity, boolean isFromServer) {
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int itemQuantityId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID);
+            itemQuantity.setId(itemQuantityId);
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_QUANTITY_ID, itemQuantity.getId());
         values.put(COLUMN_ITEM_QUANTITY_BILL_ID, itemQuantity.getBillId());
         values.put(COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID, itemQuantity.getStorageItemId());
         values.put(COLUMN_ITEM_QUANTITY_QUANTITY, itemQuantity.getQuantity());

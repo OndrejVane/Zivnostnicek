@@ -23,11 +23,21 @@ public class NoteDatabaseHelper extends DatabaseHelper {
      * Metoda, pro přidání nové poznámky do databáze.
      *
      * @param note poznámka
+     * @param isFromServer  logická hodnota, která údává, zda jde o data ze serveru
      */
-    public synchronized void addNote(Note note) {
+    public synchronized void addNote(Note note, boolean isFromServer) {
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int noteId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_NOTE_ID);
+            note.setId(noteId);
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_NOTE_ID, note.getId());
         values.put(COLUMN_NOTE_TRADER_ID, note.getTrader_id());
         values.put(COLUMN_NOTE_TITLE, note.getTitle());
         values.put(COLUMN_NOTE_NOTE, note.getNote());

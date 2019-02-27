@@ -167,7 +167,7 @@ public class TraderNewActivity extends AppCompatActivity
         trader.setIsDirty(1);
         trader.setIsDeleted(0);
 
-        traderDatabaseHelper.addTrader(trader);
+        traderDatabaseHelper.addTrader(trader, false);
 
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

@@ -22,16 +22,27 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     * Přidání skladové položky do databáze.
+     * Přidání skladové položky do databáze. Pokud se jedná o data ze serveru
+     * tak negeneruju nové id.
      *
      * @param storageItem skladová položka
+     * @param isFromServer pokud jde o data ze serveru
      * @return id sladové položky
      */
-    public synchronized long addStorageItem(StorageItem storageItem){
+    public synchronized long addStorageItem(StorageItem storageItem, boolean isFromServer){
+        //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
+        if(!isFromServer){
+            //získání primárního klíče
+            IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
+            int storageItemId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_STORAGE_ITEM_ID);
+            storageItem.setId(storageItemId);
+        }
+
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue;
 
         ContentValues values = new ContentValues();
+        values.put(COLUMN_STORAGE_ITEM_ID, storageItem.getId());
         values.put(COLUMN_STORAGE_ITEM_USER_ID, storageItem.getUserId());
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());
         values.put(COLUMN_STORAGE_ITEM_UNIT, storageItem.getUnit());

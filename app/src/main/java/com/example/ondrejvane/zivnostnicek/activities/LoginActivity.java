@@ -26,6 +26,7 @@ import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.server_comunication.Server;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    private static final String login_url = "http://zivnostnicek.000webhostapp.com/api2/login.php";
+    private static final String login_url = "/api2/login.php";
     private SessionHandler session;
 
 
@@ -168,9 +169,11 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            String url = Server.getSeverName() + login_url;
             //poslání JSONu na server a čekání na odpověd
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest
-                    (Request.Method.POST, login_url, request, new Response.Listener<JSONObject>() {
+                    (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();

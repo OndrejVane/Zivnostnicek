@@ -132,7 +132,7 @@ public class StorageNewActivity extends AppCompatActivity
         storageItem.setNote(note);
         storageItem.setIsDirty(1);
         storageItem.setIsDeleted(0);
-        storageItemId = storageItemDatabaseHelper.addStorageItem(storageItem);
+        storageItemId = storageItemDatabaseHelper.addStorageItem(storageItem, false);
 
         //přidání záznamu do tabulky množství položky
         ItemQuantity itemQuantity = new ItemQuantity();
@@ -141,7 +141,7 @@ public class StorageNewActivity extends AppCompatActivity
         itemQuantity.setBillId(-1);                                 //tato skladové položka nepatří k žádné faktuře
         itemQuantity.setIsDirty(1);
         itemQuantity.setIsDeleted(0);
-        itemQuantityDatabaseHelper.addItemQuantity(itemQuantity);
+        itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, false);
 
         //výpis o úspěšném uložení skladové položky
         String message = getString(R.string.storage_item_has_been_added);

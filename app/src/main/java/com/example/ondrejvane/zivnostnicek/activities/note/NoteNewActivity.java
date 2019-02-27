@@ -134,7 +134,7 @@ public class NoteNewActivity extends AppCompatActivity
         note.setIsDirty(1);
         note.setIsDeleted(0);
 
-        noteDatabaseHelper.addNote(note);
+        noteDatabaseHelper.addNote(note, false);
 
         Toast.makeText(this, R.string.note_has_been_added, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(NoteNewActivity.this, TraderShowActivity.class);

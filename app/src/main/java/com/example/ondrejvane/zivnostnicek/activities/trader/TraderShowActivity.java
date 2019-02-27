@@ -53,7 +53,7 @@ public class TraderShowActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //stará se o přechod do nové aplikace po stisknutí tlačítk přidat
+        //stará se o přechod do nové aktivit po stisknutí tlačítk přidat
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
