@@ -22,6 +22,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
+import com.example.ondrejvane.zivnostnicek.utilities.WifiCheckerUtility;
 
 public class SynchronizationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,6 +97,8 @@ public class SynchronizationActivity extends AppCompatActivity
         checkBoxSyncTurnOn.setChecked(settings.isSyncOn());
         checkBoxAllowOnWifi.setChecked(settings.isSyncAllowWifi());
 
+
+
         if(checkBoxSyncTurnOn.isChecked()) {
             textViewSyncInfo1.setTextColor(getResources().getColor(R.color.grey));
             textViewSyncInfo2.setTextColor(getResources().getColor(R.color.grey));
@@ -107,6 +110,11 @@ public class SynchronizationActivity extends AppCompatActivity
     }
     public void startSync(View view) {
         Log.d(TAG, "Start synchronization after click");
+        if(WifiCheckerUtility.isConnected(this)){
+            Log.d(TAG, "Connected to wifi");
+        }else {
+            Log.d(TAG, "Not connected to wifi");
+        }
     }
 
     @Override
