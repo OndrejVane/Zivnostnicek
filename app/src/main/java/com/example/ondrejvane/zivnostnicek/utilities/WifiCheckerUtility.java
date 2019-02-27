@@ -17,10 +17,6 @@ public class WifiCheckerUtility {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if (mWifi.isConnected()) {
-            return true;
-        }else {
-            return false;
-        }
+        return mWifi.isConnected();
     }
 }

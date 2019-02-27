@@ -206,6 +206,8 @@ public class BillNewActivity extends AppCompatActivity
 
         typeList.add(getString(R.string.select_bill_type));
 
+        Log.d(TAG, "Number of types " + billTypes[0].length);
+
         for (int i = 0; i < billTypes[0].length; i++) {
             typeList.add(billTypes[1][i]);
         }

@@ -66,7 +66,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_TYPE_USER_ID + " = ?" + " AND " + COLUMN_TYPE_IS_DIRTY + " = ?";
+        String selection = COLUMN_TYPE_USER_ID + " = ?" + " AND " + COLUMN_TYPE_IS_DELETED + " = ?";
 
 
         // selection arguments

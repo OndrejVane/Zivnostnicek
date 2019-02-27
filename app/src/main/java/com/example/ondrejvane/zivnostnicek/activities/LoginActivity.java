@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
+import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
@@ -45,18 +46,22 @@ public class LoginActivity extends AppCompatActivity {
 
     //pomocné globální proměnné
     private UserDatabaseHelper userDatabaseHelper;
+    IdentifiersDatabaseHelper identifiersDatabaseHelper;
     private HashPassword hashPassword;
     private SecureSending secureSending;
-    private static final String KEY_STATUS = "status";
-    private static final String KEY_FULL_NAME = "full_name";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_PASSWORD = "password";
-    private static final String KEY_ID = "id";
     private String email;
     private String password;
     private ProgressDialog pDialog;
     private static final String login_url = "/api/login.php";
     private SessionHandler session;
+
+    private static final String KEY_STATUS = "status";
+    private static final String KEY_FULL_NAME = "full_name";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_ID = "id";
+    private static final String KEY_CURRENT_ID = "current_id";
+    private static final String KEY_MAX_ID = "max_id";
 
 
     @Override
@@ -88,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         rememberMeBox = findViewById(R.id.checkBox);
         imageViewLogo = findViewById(R.id.imageViewLoginLogo);
         userDatabaseHelper = new UserDatabaseHelper(LoginActivity.this);
+        identifiersDatabaseHelper = new IdentifiersDatabaseHelper(this);
         hashPassword = new HashPassword();
         session = new SessionHandler(getApplicationContext());
         secureSending = new SecureSending(null, null);
@@ -216,6 +222,11 @@ public class LoginActivity extends AppCompatActivity {
                                     //nastavení informací o uživateli do singletonu, aby byla přístupná všude v aplikaci
                                     UserInformation userInformation = UserInformation.getInstance();
                                     userInformation.setDataFromUser(user);
+
+                                    //nastavení id do tabulky identifikátorů, která byla přijata od serveru
+                                    long currentId = response.getLong(KEY_CURRENT_ID);
+                                    long maxId = response.getLong(KEY_MAX_ID);
+                                    identifiersDatabaseHelper.addIdentifiersForUser(currentId, maxId);
 
                                     //nastartování hlavní aktivity aplikace
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
