@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String fullName;
     private ProgressDialog pDialog;
-    private static final String register_url = "/api2/register.php";
+    private static final String register_url = "/api/register.php";
 
 
     @Override
