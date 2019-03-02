@@ -183,4 +183,15 @@ public class InputValidation {
         return true;
     }
 
+
+    /**
+     * Meotda, která odstraní speciální znaky ze všech vstupu do
+     * aplikace, aby nemohlo dojít SQLijection.
+     *
+     * @param input vstupní řetězec s potenciálními spec. znaky
+     * @return  výstupní řetězec
+     */
+    public static String removeSpecialChars(String input){
+        return input.replaceAll("[^a-zA-Z0-9 áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ.@-]", "");
+    }
 }

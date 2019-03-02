@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+
 public class Trader {
 
     private int id;
@@ -114,5 +116,14 @@ public class Trader {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void removeSpecialChars(){
+        this.name = InputValidation.removeSpecialChars(this.name);
+        this.contactPerson = InputValidation.removeSpecialChars(this.contactPerson);;
+        this.IN= InputValidation.removeSpecialChars(this.IN);;
+        this.TIN= InputValidation.removeSpecialChars(this.TIN);;
+        this.city= InputValidation.removeSpecialChars(this.city);;
+        this.street= InputValidation.removeSpecialChars(this.street);;
     }
 }

@@ -39,6 +39,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
             trader.setId(traderId);
         }
 
+        //odstranění všech speciálních znaků kvůli SQL ijection
+        trader.removeSpecialChars();
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         UserInformation userInformation = UserInformation.getInstance();
@@ -192,6 +195,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         String[] updateArgs = {Integer.toString(trader.getId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
+
+        //odstranění všech speciálních znaků kvůli SQL ijection
+        trader.removeSpecialChars();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_TRADER_NAME, trader.getName());

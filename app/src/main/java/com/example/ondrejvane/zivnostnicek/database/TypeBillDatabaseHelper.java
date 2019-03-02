@@ -37,6 +37,11 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
             int typeId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_TYPE_ID);
             typeBill.setId(typeId);
         }
+
+        //odstranění speciálních znaků proti SQL injection
+        typeBill.removeSpecialChars();
+
+
         SQLiteDatabase db = this.getWritableDatabase();
         long typeBillId;
 

@@ -41,6 +41,9 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue;
 
+        //odstranění speciálních znaků kvůli SQL injection
+        storageItem.removeSpecialChars();
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORAGE_ITEM_ID, storageItem.getId());
         values.put(COLUMN_STORAGE_ITEM_USER_ID, storageItem.getUserId());
@@ -180,6 +183,9 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         String[] updateArgs = {Integer.toString(storageItem.getId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
+
+        //odstranění speciálních znaků kvůli SQL injection
+        storageItem.removeSpecialChars();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_STORAGE_ITEM_NAME, storageItem.getName());

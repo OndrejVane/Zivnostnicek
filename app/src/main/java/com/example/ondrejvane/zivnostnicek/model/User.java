@@ -1,6 +1,8 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
 
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+
 public class User {
 
     private int id;
@@ -47,5 +49,10 @@ public class User {
 
     public void setSyncNumber(int syncNumber) {
         this.syncNumber = syncNumber;
+    }
+
+    public void removeSpecialChars(){
+        this.fullName = InputValidation.removeSpecialChars(this.fullName);
+        this.email = InputValidation.removeSpecialChars(this.email);
     }
 }

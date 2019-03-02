@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+
 public class TypeBill {
 
     private int id;
@@ -72,5 +74,9 @@ public class TypeBill {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void removeSpecialChars(){
+        this.name = InputValidation.removeSpecialChars(this.name);
     }
 }

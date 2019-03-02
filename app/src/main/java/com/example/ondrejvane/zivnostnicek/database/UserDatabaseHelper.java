@@ -28,6 +28,9 @@ public class UserDatabaseHelper extends DatabaseHelper {
 
             SQLiteDatabase db = this.getWritableDatabase();
 
+            //odstranění speciálních znaků proti SQL injection
+            user.removeSpecialChars();
+
             ContentValues values = new ContentValues();
             values.put(COLUMN_USER_ID, user.getId());
             values.put(COLUMN_USER_FULL_NAME, user.getFullName());

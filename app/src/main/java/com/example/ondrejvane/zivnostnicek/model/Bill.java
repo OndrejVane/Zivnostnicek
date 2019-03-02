@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
-import android.graphics.Bitmap;
+
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 
 public class Bill {
 
@@ -138,5 +139,9 @@ public class Bill {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void removeSpecialCharsBill(){
+        this.name = InputValidation.removeSpecialChars(this.name);
     }
 }

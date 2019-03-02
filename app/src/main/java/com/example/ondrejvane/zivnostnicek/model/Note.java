@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
 
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 
 public class Note {
 
@@ -75,5 +76,10 @@ public class Note {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void removeSpecialChars(){
+        this.title = InputValidation.removeSpecialChars(this.title);
+        this.note = InputValidation.removeSpecialChars(this.note);
     }
 }

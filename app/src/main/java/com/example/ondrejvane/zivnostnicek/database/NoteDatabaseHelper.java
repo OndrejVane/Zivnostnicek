@@ -34,6 +34,9 @@ public class NoteDatabaseHelper extends DatabaseHelper {
             note.setId(noteId);
         }
 
+        //odstranění speciálních znáků z objetu poznámky X SQL injectionX
+        note.removeSpecialChars();
+
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -112,6 +115,9 @@ public class NoteDatabaseHelper extends DatabaseHelper {
         String[] updateArgs = {Integer.toString(note.getId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
+
+        //odstranění speciálních znáků z objetu poznámky X SQL injectionX
+        note.removeSpecialChars();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_NOTE_TITLE, note.getTitle());

@@ -45,6 +45,9 @@ public class BillDatabaseHelper extends DatabaseHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long billId;
 
+        //odstranění speciálních zanku v objektu bill kvůli SQLinjection
+        bill.removeSpecialCharsBill();
+
         ContentValues values = new ContentValues();
         values.put(COLUMN_BILL_ID, bill.getId());
         values.put(COLUMN_BILL_NUMBER, bill.getName());
@@ -400,6 +403,9 @@ public class BillDatabaseHelper extends DatabaseHelper {
         String[] updateArgs = {Integer.toString(bill.getId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
+
+        //odstranění speciálních znaků z objetu bill
+        bill.removeSpecialCharsBill();
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_BILL_NUMBER, bill.getName());

@@ -1,5 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.model;
 
+import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+
 public class StorageItem {
 
     private int id;
@@ -74,5 +76,11 @@ public class StorageItem {
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public void removeSpecialChars(){
+        this.name = InputValidation.removeSpecialChars(this.name);
+        this.note = InputValidation.removeSpecialChars(this.note);
+        this.unit = InputValidation.removeSpecialChars(this.unit);
     }
 }

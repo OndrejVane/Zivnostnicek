@@ -72,4 +72,28 @@ public class InputValidationTest {
         assertEquals(true, InputValidation.validateIsEmpty("123abc"));
     }
 
+    @Test
+    public void removeSpecialChars(){
+        String input;
+
+        //běžné znaky
+        input = "This $word !has \\/allot #of=\"% special% characters";
+        assertEquals("This word has allot of special characters", InputValidation.removeSpecialChars(input));
+
+        input = "Test ='Test !#$%\n";
+        assertEquals("Test Test ", InputValidation.removeSpecialChars(input));
+
+        input = "`#$~^&*{}°^\n\t\0";
+        assertEquals("", InputValidation.removeSpecialChars(input));
+
+        //čeština
+        input = "áčďéěíňóřšťúůýž";
+        assertEquals("áčďéěíňóřšťúůýž", InputValidation.removeSpecialChars(input));
+        input = "ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ";
+        assertEquals("ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ", InputValidation.removeSpecialChars(input));
+
+        //email
+        input = "vane1@seznam.cz";
+    }
+
 }
