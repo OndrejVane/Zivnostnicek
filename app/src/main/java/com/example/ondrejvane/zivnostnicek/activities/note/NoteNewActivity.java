@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.note;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -33,15 +34,19 @@ import java.util.Date;
 public class NoteNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int traderID;
+    //grafické prvky aktivity
     private TextInputLayout inputLayoutNoteTitle, inputLayoutNote;
     private EditText inputNoteTitle, inputNote;
     private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar ratingBar;
 
+    //pomocné globální proměnné
+    private int traderID;
+
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
+     *
      * @param savedInstanceState    savedInstanceState
      */
     @Override
@@ -60,9 +65,11 @@ public class NoteNewActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //nastavení textu do headeru
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //incializace aktivity
         initActivity();
 
         //skryje klávesnici při startu aplikace
@@ -76,7 +83,13 @@ public class NoteNewActivity extends AppCompatActivity
      */
     private void initActivity() {
         noteDatabaseHelper = new NoteDatabaseHelper(NoteNewActivity.this);
-        traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        //načtení id obchodnía z předchozí aktivity
+        if(getIntent().hasExtra("TRADER_ID")){
+            traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        }else {
+            traderID = 1;
+        }
+
         inputLayoutNoteTitle = findViewById(R.id.textInputLayoutNoteTitle);
         inputLayoutNote = findViewById(R.id.textInputLayoutNote);
         inputNoteTitle = findViewById(R.id.textInputEditTextNoteTitle);
@@ -105,7 +118,7 @@ public class NoteNewActivity extends AppCompatActivity
     /**
      * Procedura, která načte vložená data od uživatele. Zkontroluje, zda jsou
      * data validní a následně je vloží do databáze.
-     * @param view
+     * @param view view aktivity
      */
     public void submitNoteForm(View view) {
         if(!InputValidation.validateNote(inputNoteTitle.getText().toString())){
@@ -150,7 +163,7 @@ public class NoteNewActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

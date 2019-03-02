@@ -183,16 +183,16 @@ public class HomeVATActivity extends AppCompatActivity
      * Načtení dat z databáze a nastavení do aktivity
      */
     private void getDataAndSetToActivity() {
-        double inputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 1);
-        double outputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 0);
-        double balanceVAT = inputAmountVAT - outputAmountVAT;
+        float inputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 1);
+        float outputAmountVAT = billDatabaseHelper.getBillVatByDate(pickedYear, pickedMonth, 0);
+        float balanceVAT = inputAmountVAT - outputAmountVAT;
 
         //nastavení dat do grafu
         addDataToChart(inputAmountVAT, outputAmountVAT);
 
         //nastavení dat do text view
-        String formattedIncomes = FormatUtility.formatIncomeAmount(Double.toString(inputAmountVAT)).substring(1);
-        String formattedExpense = FormatUtility.formatExpenseAmount(Double.toString(outputAmountVAT)).substring(1);
+        String formattedIncomes = FormatUtility.formatIncomeAmount(inputAmountVAT).substring(1);
+        String formattedExpense = FormatUtility.formatExpenseAmount(outputAmountVAT).substring(1);
         String formattedBalance;
         textViewInputVAT.setText(formattedIncomes);
         textViewOutputVAT.setText(formattedExpense);

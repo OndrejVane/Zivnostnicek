@@ -200,7 +200,7 @@
     <string name="about_app_2">Tato aplikace byla vytvořena jako studentský projekt v rámci bakalářské práce."</string>
     <string name="author_name">Ondřej Váně</string>
     <string name="version_number">1.0</string>
-    <string name="email">onry.vane@gmail.com</string>
+    <string name="email">info@zivnostnicek.cz</string>
     <string name="paid">Uhrazené</string>
     <string name="received">Obdržené</string>
     <string name="VAT_label">DPH</string>
@@ -218,6 +218,9 @@
     <string name="title_activity_home_expense">Přehled výdajů</string>
     <string name="title_activity_home_vat">Přehled DPH</string>
     <string name="title_activity_home_traders">Přehled obchodníků</string>
+    <string name="permission_info_camera">Aplikace potřebuje přístup k fotoaparátu k pořízení fotografie faktury a uložení fotografie do zařízení.</string>
+    <string name="permission_info_gallery">Aplikace potřebuje přístup k fotografiím k přidání obrázku k faktuře.</string>
+    <string name="permission_info_currency">Aplikcae potřebuje přístup k paměti pro načítání a ukládání potřebných dat.</string>
 
     <string-array name="photo">
         <item>galerie</item>

@@ -236,8 +236,8 @@ public class HomeActivity extends AppCompatActivity
         addDataToChart(incomes, expense);
 
         //nastavení dat do text view
-        String formattedIncomes = FormatUtility.formatIncomeAmount(Float.toString(incomes));
-        String formattedExpense = FormatUtility.formatExpenseAmount(Float.toString(expense));
+        String formattedIncomes = FormatUtility.formatIncomeAmount(incomes);
+        String formattedExpense = FormatUtility.formatExpenseAmount(expense);
         String formattedBalance;
         textViewIncome.setText(formattedIncomes);
         textViewExpense.setText(formattedExpense);
@@ -260,8 +260,9 @@ public class HomeActivity extends AppCompatActivity
 
         //pokud je bilance nulová
         if (balance == 0) {
+            formattedBalance = FormatUtility.formatBalanceAmount(balance);
             textViewBalance.setTextColor(getResources().getColor(R.color.zero));
-            textViewBalance.setText(getString(R.string.zero));
+            textViewBalance.setText(formattedBalance);
         }
     }
 

@@ -88,9 +88,9 @@ public class ListViewHomeAdapter extends BaseAdapter{
 
         holder.txtViewHomeTitle.setText(typeBillName[position]);
         if(isExpense){
-            holder.txtViewHomeAmount.setText(FormatUtility.formatExpenseAmount(Float.toString(typeTotalAmount[position])));
+            holder.txtViewHomeAmount.setText(FormatUtility.formatExpenseAmount(typeTotalAmount[position]));
         }else {
-            holder.txtViewHomeAmount.setText(FormatUtility.formatIncomeAmount(Float.toString(typeTotalAmount[position])));
+            holder.txtViewHomeAmount.setText(FormatUtility.formatIncomeAmount(typeTotalAmount[position]));
         }
 
         //nastavení prvního písmena názvu typu do kruhu

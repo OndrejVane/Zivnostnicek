@@ -82,11 +82,11 @@ public class ListViewBillAdapter extends BaseAdapter {
 
         holder.txtViewBillName.setText(billBox.get(position).getBill().getName());
         holder.txtViewBillDate.setText(billBox.get(position).getBill().getDate());
-        String amountTemp = Float.toString(billBox.get(position).getBill().getAmount());
+        float amount = billBox.get(position).getBill().getAmount();
         if(isExpense){
-            holder.txtViewBillAmount.setText(FormatUtility.formatExpenseAmount(amountTemp));
+            holder.txtViewBillAmount.setText(FormatUtility.formatExpenseAmount(amount));
         }else {
-            holder.txtViewBillAmount.setText(FormatUtility.formatIncomeAmount(amountTemp));
+            holder.txtViewBillAmount.setText(FormatUtility.formatIncomeAmount(amount));
         }
 
         //nastavení prvního písmena názvu typu do kruhu

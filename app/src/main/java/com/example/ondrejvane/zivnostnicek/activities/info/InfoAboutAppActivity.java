@@ -15,6 +15,9 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 
+/**
+ * Kativita, která zobrazuje uživateli informace o aplikaci.
+ */
 public class InfoAboutAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -38,13 +41,14 @@ public class InfoAboutAppActivity extends AppCompatActivity
         Header header = new Header(navigationView);
         header.setTextToHeader();
 
-        //inicializace aktivity
-        initActivity();
     }
 
-    private void initActivity() {
-    }
 
+    /**
+     * Metoda, která je volána po stisknutí
+     * tlačítka zpět. Ukončí tuto aktivitu a zobrazí
+     * aktivitu info.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

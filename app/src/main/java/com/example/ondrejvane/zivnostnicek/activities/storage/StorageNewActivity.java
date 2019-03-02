@@ -32,6 +32,7 @@ import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 public class StorageNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //grafické prvky aktivity
     private EditText storageItemName;
     private EditText storageItemQuantity;
     private Spinner storageItemUnit;
@@ -39,6 +40,12 @@ public class StorageNewActivity extends AppCompatActivity
     private TextInputLayout layoutStorageItemName;
     private TextInputLayout layoutStorageItemQuantity;
 
+    /**
+     * Meotda, která je volána při spuštění aktivity a
+     * inicializuje jí.
+     *
+     * @param savedInstanceState saved InstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +63,11 @@ public class StorageNewActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //nastavení textu do headur
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
     }
 
@@ -76,55 +85,33 @@ public class StorageNewActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-        Intent home = new Intent(StorageNewActivity.this, StorageActivity.class);
-        startActivity(home);
-        finish();
-    }
-
-
     /**
      * Metoda, která načte vstupní data od uživatele.
      * Zkontroluje validitu dat a po té uloží do databáze.
      * Po úspěšném uložení skladové položky do databáze přepne
      * do aktivity skladu.
-     * @param view
+     *
+     * @param view view aktivity
      */
     public void submitStorageItemForm(View view) {
         String name, quantity, units, note;
         long storageItemId;
+
+        //validace, zda jsou potřebné položky vyplněné
+        validateInputs();
+
+        //načtení položek
         name = storageItemName.getText().toString();
         quantity = storageItemQuantity.getText().toString();
         units = storageItemUnit.getSelectedItem().toString();
         note = storageItemNote.getText().toString();
 
-        if(!InputValidation.validateIsEmpty(name)){
-            String message = getString(R.string.item_name_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutStorageItemName.setError(message);
-            return;
-        }
-
-        if (!InputValidation.validateIsEmpty(quantity)){
-            String message = getString(R.string.quantity_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutStorageItemQuantity.setError(message);
-            return;
-        }
 
         //inicializace databáze
         StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(StorageNewActivity.this);
         ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(StorageNewActivity.this);
 
         //přidání nové skladové položky do databáze
-        //StorageItem storageItem = new StorageItem(UserInformation.getInstance().getUserId(), name, Float.parseFloat(quantity), units, note);
         StorageItem storageItem = new StorageItem();
         storageItem.setUserId(UserInformation.getInstance().getUserId());
         storageItem.setName(name);
@@ -152,6 +139,46 @@ public class StorageNewActivity extends AppCompatActivity
         startActivity(intent);
         finish();
     }
+
+    /**
+     * validace vstupníhc polí při ukládání skladové položky.
+     *
+     * @return logická hodnota, která určuje zda je validace Ok
+     */
+    private boolean validateInputs(){
+        if(!InputValidation.validateIsEmpty(storageItemName.getText().toString())){
+            String message = getString(R.string.item_name_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemName.setError(message);
+            return false;
+        }
+
+        if (!InputValidation.validateIsEmpty(storageItemQuantity.getText().toString())){
+            String message = getString(R.string.quantity_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemQuantity.setError(message);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Metoda, která je volána při stisknutí tlačítka zpět.
+     */
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+        Intent home = new Intent(StorageNewActivity.this, StorageActivity.class);
+        startActivity(home);
+        finish();
+    }
+
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.

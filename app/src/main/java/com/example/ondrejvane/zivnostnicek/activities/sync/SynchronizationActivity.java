@@ -83,7 +83,7 @@ public class SynchronizationActivity extends AppCompatActivity
     }
 
     private void initActivity() {
-        buttonSyncNow = findViewById(R.id.buttonSyncNow);
+        buttonSyncNow = findViewById(R.id.buttonPushNow);
         checkBoxSyncTurnOn = findViewById(R.id.checkBoxSyncOn);
         checkBoxAllowOnWifi = findViewById(R.id.checkBoxSyncWiFi);
         textViewSyncInfo1 = findViewById(R.id.textViewSyncInfo1);

@@ -1,8 +1,8 @@
 package com.example.ondrejvane.zivnostnicek.activities.settings;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,9 +21,14 @@ import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 
+/**
+ * KAtivita, která se stará o uživatelské nastavení aplikace a pozdější
+ * uložení nastavení do shared preferences.
+ */
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    //grafické prvky aktivity
     private CheckBox checkBoxIN;
     private CheckBox checkBoxTIN;
     private CheckBox checkBoxYear;
@@ -31,11 +36,16 @@ public class SettingsActivity extends AppCompatActivity
     private CheckBox checkBoxMonth;
     private Spinner spinnerMonth;
 
-
+    //pomocné globální proměnné
     private boolean isSelectedYear;
     private boolean isSelectedMonth;
     private Settings settings;
 
+    /**
+     * Meotda, která je volána pro vytvoření aktivity
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +63,14 @@ public class SettingsActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //nastavení textu do headeru
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
+
+        //nastavení liteneru pro check box roku
         checkBoxYear.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -73,6 +87,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         });
 
+        //nastavení liteneru pro check box měsíce
         checkBoxMonth.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -88,6 +103,9 @@ public class SettingsActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Procedura, která inicializuje aktivitu,
+     */
     private void initActivity() {
         checkBoxIN = findViewById(R.id.checkBoxSettingsIN);
         checkBoxTIN = findViewById(R.id.checkBoxSettingsTIN);
@@ -122,7 +140,8 @@ public class SettingsActivity extends AppCompatActivity
      * Metoda, která načte nastavení a uloží do třídy Settings
      * a pomocí další metody uloží data do shared preferences, aby
      * byla data přístupná i po vypnutí aplikace.
-     * @param view
+     *
+     * @param view view
      */
     public void saveSettings(View view) {
         settings.setIsForeignIdentificationNumberPossible(checkBoxIN.isChecked());
@@ -177,6 +196,9 @@ public class SettingsActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která je volána pro stisknutí tlačítka zpět.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -194,7 +216,7 @@ public class SettingsActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

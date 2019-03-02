@@ -232,6 +232,9 @@
     <string name="title_activity_home_year_summary">Home year summary</string>
     <string name="title_activity_home_vat">Home vat summary</string>
     <string name="title_activity_home_traders">Home traders summary</string>
+    <string name="permission_info_camera">The application needs access to the camera to take a photo of the bill and save the photo to the device.</string>
+    <string name="permission_info_gallery">The application needs access to the gallery to add a photo of the bill.</string>
+    <string name="permission_info_currency">The application needs accees to save and read data from mobile memory.</string>
 
     <string-array name="vat_amount">
         <item>21</item>
@@ -285,9 +288,4 @@
         <item>November</item>
         <item>December</item>
     </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
 </resources>

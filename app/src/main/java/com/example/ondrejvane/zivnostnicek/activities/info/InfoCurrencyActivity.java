@@ -1,10 +1,13 @@
 package com.example.ondrejvane.zivnostnicek.activities.info;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,20 +31,37 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+/**
+ * Aktivita pro zobrazení jednotlivých světový měn. Měny jsou načtené
+ * z API čnb.
+ */
 public class InfoCurrencyActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
+    private static final String TAG = "InfoCurrency";
+
+    //grafické prvky aktivity
     private TextView euroCurrency;
     private TextView gbCurrency;
     private TextView usaCurrency;
     private TextView canadaCurrency;
     private TextView swedenCurrency;
     private TextView date;
-    private String  cnbURL = "http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
+
+    //pomocné gloální proměnné
+    private static final String CNB_URL = "http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
+    private static final String FILE_NAME = "denni_kurz.txt";
     private String stringFromFile;
-    //globální proměnná pro předání hodnoty z vlákna -1=není připojen k internetu -2=web není dostupný 1=OK
-    private int returnValue;
+    private int returnValue;                        //globální proměnná pro předání hodnoty z vlákna -1=není připojen k internetu -2=web není dostupný 1=OK
+
+    //kod požadavku přístupu
+    private static final int PERMISSION_REQUEST_CODE = 345;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +88,22 @@ public class InfoCurrencyActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        //nastavení headeru do aktivity
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
 
-        setTextToActivity();
+        //nastavení dat do aktivity
+        //setTextToActivity();
+        trySetTextToActivity();
     }
 
+    /**
+     * Procedura, která inicializuje příslušné
+     * grafické prvky.
+     */
     private void initActivity() {
         euroCurrency = findViewById(R.id.textEuropeCurrency);
         gbCurrency = findViewById(R.id.textGBCurrency);
@@ -85,112 +113,141 @@ public class InfoCurrencyActivity extends AppCompatActivity
         date = findViewById(R.id.textDateInput);
     }
 
+    /**
+     * Pokud jsou v lokálním uložišti nějaká data, tak jso unačtena
+     * a zobrazena do aktivity.
+     */
     private void setTextToActivity() {
+        //načtení dat z lokálního souboru
         stringFromFile = readFromFile();
-        if(stringFromFile != null){
+        if (stringFromFile != null) {
+            //parsování souboru a získání potřebných dat
             parseFileAndSetToTextField();
-        }else {
+        } else {
             Toast.makeText(this, "Data not found", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Meotda, pro parsování dat a zobrazení do aktivity
+     */
     private void parseFileAndSetToTextField() {
         int index = stringFromFile.indexOf(" ");
         String[] splited = stringFromFile.split("\\|");
-        for (int i = 0; i<splited.length; i++){
+        for (int i = 0; i < splited.length; i++) {
 
-            if(splited[i].equals("EMU")){
-                euroCurrency.setText(splited[i+4]);
+            //měna EU
+            if (splited[i].equals("EMU")) {
+                euroCurrency.setText(splited[i + 4]);
             }
 
-            if(splited[i].equals("Velká Británie")){
-                gbCurrency.setText(splited[i+4]);
+            //mena velké británíe
+            if (splited[i].equals("Velká Británie")) {
+                gbCurrency.setText(splited[i + 4]);
             }
 
-            if(splited[i].equals("USA")){
-                usaCurrency.setText(splited[i+4]);
+            //mena USA
+            if (splited[i].equals("USA")) {
+                usaCurrency.setText(splited[i + 4]);
             }
 
-            if(splited[i].equals("Kanada")){
-                canadaCurrency.setText(splited[i+4]);
+            //mena kanady
+            if (splited[i].equals("Kanada")) {
+                canadaCurrency.setText(splited[i + 4]);
             }
 
-            if(splited[i].equals("Švédsko")){
-                swedenCurrency.setText(splited[i+4]);
+            //mena švédska
+            if (splited[i].equals("Švédsko")) {
+                swedenCurrency.setText(splited[i + 4]);
             }
         }
         date.setText(stringFromFile.substring(0, index));
     }
 
-    public synchronized void downloadDataAsync(){
+    /**
+     * Metoda, která je spuštěna na pozadí(v jiném vlákně
+     * nez GUI). Metoda volá další metodu pro stažení dat
+     * z internetu. Následně infomruje uživatele o výsledku akce.
+     */
+    public synchronized void downloadDataAsync() {
         //nesmí být ve stejném vlákně jako GUI
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
 
+                //stáhnutí souboru z url cnb
                 downloadFile();
             }
         });
-        if(returnValue == -1){
+        //instarnet není dostupný
+        if (returnValue == -1) {
             Toast.makeText(this, "Connect to internet", Toast.LENGTH_SHORT).show();
-        }else if(returnValue == -2){
+            //cnb není dostuoné
+        } else if (returnValue == -2) {
             Toast.makeText(this, "Website is not reachable", Toast.LENGTH_SHORT).show();
-        }else if(returnValue == 1){
+            //úspěch
+        } else if (returnValue == 1) {
             Toast.makeText(this, "Data successfully updated", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Procedura pro stáhnutí textu z url čnb a uložení
+     * do lokálního textového souboru.
+     */
     private void downloadFile() {
         String file = "";
 
         try {
-
-            URL url = new URL(cnbURL);
+            URL url = new URL(CNB_URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
             while ((line = in.readLine()) != null) {
                 file = file + line + "\n";
             }
             in.close();
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(InfoCurrencyActivity.this.openFileOutput("denni_kurz.txt", Context.MODE_PRIVATE));
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(InfoCurrencyActivity.this.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
             outputStreamWriter.write(file);
             outputStreamWriter.close();
             returnValue = 1;
 
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             returnValue = -2;
-            System.out.println("Malformed URL: " + e.getMessage());
-        }
-        catch (IOException e) {
+            Log.d(TAG, "Malformed URL: " + e.getMessage());
+        } catch (IOException e) {
             returnValue = -1;
-            System.out.println("I/O Error: " + e.getMessage());
+            Log.d(TAG, "I/O Error: " + e.getMessage());
         }
     }
 
+    /**
+     * Metoda, která se posí načíst data z lokálního
+     * souboru a vrátí je jak řetězec.
+     *
+     * @return načtený řetězec
+     */
     private String readFromFile() {
 
         Context context = InfoCurrencyActivity.this;
         String ret = "";
 
         try {
-            InputStream inputStream = context.openFileInput("denni_kurz.txt");
+            InputStream inputStream = context.openFileInput(FILE_NAME);
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString;
 
 
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                while ((receiveString = bufferedReader.readLine()) != null) {
                     ret = ret + receiveString + "|";
 
                 }
                 inputStream.close();
 
             }
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("Can not read file");
             return null;
         } catch (IOException e) {
@@ -215,12 +272,13 @@ public class InfoCurrencyActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 
@@ -232,10 +290,10 @@ public class InfoCurrencyActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();
@@ -244,5 +302,39 @@ public class InfoCurrencyActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /*
+    Část kodu, která se stará o přidělení přistupu aplikace k uložišti.
+     */
+
+    @AfterPermissionGranted(PERMISSION_REQUEST_CODE)
+    public void trySetTextToActivity() {
+        String[] perms = { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            setTextToActivity();
+        } else {
+            EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission_info_currency), PERMISSION_REQUEST_CODE, perms);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 }

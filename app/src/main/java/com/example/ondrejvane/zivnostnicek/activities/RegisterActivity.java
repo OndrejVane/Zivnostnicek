@@ -17,7 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
-import com.example.ondrejvane.zivnostnicek.server_comunication.Server;
+import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 
 import org.json.JSONException;

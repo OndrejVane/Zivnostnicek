@@ -1,5 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,11 +54,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * Aktivity pro editaci faktury
  */
 public class BillEditActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
     private final String TAG = "BillEditActivity";
 
@@ -91,6 +96,11 @@ public class BillEditActivity extends AppCompatActivity
     private BillDatabaseHelper billDatabaseHelper;
     private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
+
+    //kod oprávnění přístupu ke kameře a uložišti
+    private final int PERMISSION_REQUEST_CODE_CAMERA = 123;
+    private final int PERMISSION_REQUEST_CODE_GALLERY = 321;
+
 
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
@@ -345,18 +355,26 @@ public class BillEditActivity extends AppCompatActivity
                 .setItems(R.array.photo, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
-                            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(pickPhoto, 1);
+                            callGallery();
                         } else {
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(intent, 0);
+                            callCamera();
                         }
                     }
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
 
+    }
+
+    private void openCamera(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 0);
+    }
+
+    private void openGallery(){
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto, 1);
     }
 
     /**
@@ -760,6 +778,50 @@ public class BillEditActivity extends AppCompatActivity
         intent.putExtra("BILL_ID", billId);
         startActivity(intent);
         finish();
+    }
+
+    /*
+    Část kodu, která se stará o přidělení přistupu aplikace ke kameře a uložišti.
+     */
+
+    @AfterPermissionGranted(PERMISSION_REQUEST_CODE_CAMERA)
+    public void callCamera() {
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            openCamera();
+        } else {
+            EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission_info_camera), PERMISSION_REQUEST_CODE_CAMERA, perms);
+        }
+    }
+
+    @AfterPermissionGranted(PERMISSION_REQUEST_CODE_GALLERY)
+    public void callGallery() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE};
+
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            openGallery();
+        } else {
+            EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission_info_gallery), PERMISSION_REQUEST_CODE_GALLERY, perms);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
 

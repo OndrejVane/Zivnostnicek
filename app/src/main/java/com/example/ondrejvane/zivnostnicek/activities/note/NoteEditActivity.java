@@ -2,7 +2,9 @@ package com.example.ondrejvane.zivnostnicek.activities.note;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,17 +35,24 @@ import java.util.Date;
 public class NoteEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int traderID;
-    private int noteID;
+    private static final String TAG = "NoteEdit";
+
+    //grafické prvky aktivity
     private TextInputLayout inputLayoutNoteTitleEdit, inputLayoutNoteEdit;
     private EditText inputNoteTitleEdit, inputNoteEdit;
-    private NoteDatabaseHelper noteDatabaseHelper;
     private RatingBar noteRatingBarEdit;
+
+    //pomocné globální proměnné
+    private NoteDatabaseHelper noteDatabaseHelper;
+    private int traderID;
+    private int noteID;
+
 
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState    savedInstanceState
+     *
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +70,47 @@ public class NoteEditActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        //nastavení textu do headeru
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
 
+        //nstavení načteného textu z db do aktivity
         setTextToActivity();
 
         //skryje klávesnici při startu aplikace
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+    }
+
+
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity.
+     */
+    private void initActivity() {
+        noteDatabaseHelper = new NoteDatabaseHelper(NoteEditActivity.this);
+        //načtení id obchodníka poslané z předchozí aktivity
+        if (getIntent().hasExtra("TRADER_ID")) {
+            traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        } else {
+            traderID = 1;
+        }
+
+        //načtení id poznnámky poslané z předchozí aktivity
+        if (getIntent().hasExtra("NOTE_ID")) {
+            noteID = Integer.parseInt(getIntent().getExtras().get("NOTE_ID").toString());
+        } else {
+            noteID = 1;
+        }
+
+        inputLayoutNoteTitleEdit = findViewById(R.id.textInputLayoutNoteTitleEdit);
+        inputLayoutNoteEdit = findViewById(R.id.textInputLayoutNoteEdit);
+        inputNoteTitleEdit = findViewById(R.id.textInputEditTextNoteTitleEdit);
+        inputNoteEdit = findViewById(R.id.textInputEditTextNoteEdit);
+        noteRatingBarEdit = findViewById(R.id.traderRatingBarEdit);
     }
 
     /**
@@ -79,25 +119,10 @@ public class NoteEditActivity extends AppCompatActivity
      */
     private void setTextToActivity() {
         Note note = noteDatabaseHelper.getNoteById(noteID);
-        System.out.println("Note rating: "+ note.getRating());
+        Log.d(TAG, "Note rating: " + note.getRating());
         noteRatingBarEdit.setRating(note.getRating());
         inputNoteTitleEdit.setText(note.getTitle());
         inputNoteEdit.setText(note.getNote());
-    }
-
-    /**
-     * Procedura, která inicializuje všechny potřebné prvky
-     * aktivity.
-     */
-    private void initActivity() {
-        noteDatabaseHelper = new NoteDatabaseHelper(NoteEditActivity.this);
-        traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        noteID = Integer.parseInt(getIntent().getExtras().get("NOTE_ID").toString());
-        inputLayoutNoteTitleEdit = findViewById(R.id.textInputLayoutNoteTitleEdit);
-        inputLayoutNoteEdit = findViewById(R.id.textInputLayoutNoteEdit);
-        inputNoteTitleEdit = findViewById(R.id.textInputEditTextNoteTitleEdit);
-        inputNoteEdit = findViewById(R.id.textInputEditTextNoteEdit);
-        noteRatingBarEdit = findViewById(R.id.traderRatingBarEdit);
     }
 
     /**
@@ -122,17 +147,18 @@ public class NoteEditActivity extends AppCompatActivity
     /**
      * Metoda, která načte data od uživatele a zjistí zda jsou validní.
      * Po té edituje poznámku a uloží jí do databáze.
-     * @param view
+     *
+     * @param view view aktivity
      */
     public void updateNoteForm(View view) {
-        if(!InputValidation.validateNote(inputNoteTitleEdit.getText().toString())){
+        if (!InputValidation.validateNote(inputNoteTitleEdit.getText().toString())) {
             String message = getString(R.string.note_title_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteTitleEdit.setError(message);
             return;
         }
 
-        if(!InputValidation.validateNote(inputNoteEdit.getText().toString())){
+        if (!InputValidation.validateNote(inputNoteEdit.getText().toString())) {
             String message = getString(R.string.note_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteEdit.setError(message);
@@ -164,12 +190,13 @@ public class NoteEditActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 
@@ -181,10 +208,10 @@ public class NoteEditActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

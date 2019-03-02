@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 public class PictureUtility {
@@ -68,4 +69,6 @@ public class PictureUtility {
         cursor.close();
         return bitmap;
     }
+
+
 }

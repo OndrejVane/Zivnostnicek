@@ -1,69 +1,49 @@
 package com.example.ondrejvane.zivnostnicek.utilities;
 
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class FormatUtility {
 
     /**
-     * Metoda, která naformátuje částku do formátu +12 345.00,-
+     * Metoda, která naformátuje částku do formátu +12.345,00,-
      *
-     * @param input vstupní řetězec
+     * @param input vstupní hodnota
      * @return výstupní naformátovaný řetězec
      */
-    public static String formatIncomeAmount(String input) {
-        String output;
-        //přidání nul na konec, pokud neobsahuje tečku
-        if (!input.contains(".")) {
-            input = input + ".00";
-        }
-
-        //přidání mezery mezi tisíce
-        int possition = input.indexOf('.');
-
-        if (possition <= 3) {
-            output = "+" + input + ",-";
-            return output;
-        } else if (possition <= 6) {
-            output = input.substring(0, possition - 3) + " " + input.substring(possition - 3);
-            output = "+" + output + ",-";
-            return output;
-        }
-        return input;
+    public static String formatIncomeAmount(float input) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
+        String currency = format.format(input);
+        currency = currency.substring(1);
+        currency = currency.replace(",", " ");  //mezera místo čárek
+        currency = "+" + currency + ",-";
+        return currency;
     }
 
     /**
-     * Metoda, která naformátuje částku do formátu -12 345.00,-
+     * Metoda, která naformátuje částku do formátu -12.345,00,-
      *
-     * @param input vstupní řetězec
+     * @param input vstupní hodnota
      * @return výstupní naformátovaný řetězec
      */
-    public static String formatExpenseAmount(String input) {
-        String output;
-        //přidání nul na konec, pokud neobsahuje tečku
-        if (!input.contains(".")) {
-            input = input + ".00";
-        }
-
-        //přidání mezery mezi tisíce
-        int possition = input.indexOf('.');
-
-        if (possition <= 3) {
-            output = "-" + input + ",-";
-            return output;
-        } else if (possition <= 6) {
-            output = input.substring(0, possition - 3) + " " + input.substring(possition - 3);
-            output = "-" + output + ",-";
-            return output;
-        }
-        return input;
+    public static String formatExpenseAmount(float input) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
+        String currency = format.format(input);
+        currency = currency.substring(1);
+        currency = currency.replace(",", " ");  //mezera místo čárek
+        currency = "-" + currency + ",-";
+        return currency;
     }
 
     public static String formatBalanceAmount(float input){
         String output;
         if(input > 0){
-            output = formatIncomeAmount(Float.toString(input));
+            output = formatIncomeAmount(input);
         }else if(input < 0){
-            output = formatExpenseAmount(Float.toString(input * (-1)));
+            output = formatExpenseAmount(input * (-1));
         }else {
-            output = "0.0,-";
+            output = "0.00,-";
         }
         return  output;
     }

@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 21;
+    public static final int DATABASE_VERSION = 25;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -101,14 +101,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //názvy atributů talky indexů
     public static final String COLUMN_IDENTIFIERS_ID = "identifiers_id";                    //primární klíč tabulky
-    public static final String COLUMN_IDENTIFIERS_USER_ID = "user_id";                      //cizi klíč z tabulky uživatele
     public static final String COLUMN_IDENTIFIERS_TRADER_ID = "trader_id";                  //počítadlo primárního klíče pro tabulku obchodníka
     public static final String COLUMN_IDENTIFIERS_NOTE_ID = "note_id";                      //počítadlo primárního klíče pro tabulku poznámky
     public static final String COLUMN_IDENTIFIERS_BILL_ID = "bill_id";                      //počítadlo primárního klíče pro tabulku faktury
     public static final String COLUMN_IDENTIFIERS_STORAGE_ITEM_ID = "storage_item_id";      //počítadlo primárního klíče pro tabulku skladové položky
     public static final String COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID = "item_quantity_id";    //počítadlo primárního klíče pro tabulku množství skladové položky
     public static final String COLUMN_IDENTIFIERS_TYPE_ID = "type_id";                      //počítadlo primárního klíče pro tabulku množství skladové položky
-    public static final String COLUMN_IDENTIFIERS_MAX_ID = "max_id";
 
     //SQL pro vytvoření tabulky User
     private String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + "("
@@ -191,13 +189,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //SQL pro vytvoření tabulky identifires
     private String CREATE_IDENTIFIERS_TABLE = "CREATE TABLE " + TABLE_IDENTIFIERS + "("
             + COLUMN_IDENTIFIERS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COLUMN_IDENTIFIERS_USER_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_TRADER_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_NOTE_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_BILL_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_STORAGE_ITEM_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID + " INTEGER,"
-            + COLUMN_IDENTIFIERS_MAX_ID + " INTEGER,"
             + COLUMN_IDENTIFIERS_TYPE_ID + " INTEGER" + ")";
 
 
@@ -227,9 +223,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //vložení inicializačních dat do tabulky identifires
     private String INSERT_DATA_TO_IDENTIFIERS = "INSERT INTO " + TABLE_IDENTIFIERS + " ("
-            + COLUMN_IDENTIFIERS_TRADER_ID + ", " + COLUMN_IDENTIFIERS_NOTE_ID + ", "
-            + COLUMN_IDENTIFIERS_BILL_ID + ", " + COLUMN_IDENTIFIERS_STORAGE_ITEM_ID + " , "
-            + COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID + ", " + COLUMN_IDENTIFIERS_TYPE_ID + " )"
+            + COLUMN_IDENTIFIERS_TRADER_ID + ", "
+            + COLUMN_IDENTIFIERS_NOTE_ID + ", "
+            + COLUMN_IDENTIFIERS_BILL_ID + ", "
+            + COLUMN_IDENTIFIERS_STORAGE_ITEM_ID + " , "
+            + COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID + ", "
+            + COLUMN_IDENTIFIERS_TYPE_ID + " )"
             + "VALUES ( 1, 1, 1, 1, 1, 1)";
 
 
@@ -264,7 +263,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_IDENTIFIERS_TABLE);
 
         //vložení inicializačních dat do tablkuy identifikátorů
-        //db.execSQL(INSERT_DATA_TO_IDENTIFIERS);
+        db.execSQL(INSERT_DATA_TO_IDENTIFIERS);
     }
 
 

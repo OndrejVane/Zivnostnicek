@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.ondrejvane.zivnostnicek.activities.home.HomeIncomeExpenseFragment">
+    tools:context="com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -79,7 +79,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutIncomeLabel"
-            android:layout_width="250dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pieGraphHome"
             android:layout_centerHorizontal="true"
@@ -109,7 +109,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutExpenseLabel"
-            android:layout_width="250dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/linearLayoutIncomeLabel"
@@ -146,7 +146,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutResultLabel"
-            android:layout_width="250dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lineline"
             android:layout_centerHorizontal="true"

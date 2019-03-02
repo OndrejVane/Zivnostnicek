@@ -3,6 +3,7 @@ package com.example.ondrejvane.zivnostnicek.activities.note;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +20,12 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment pro zobrazení náhledu poznámek vybraného uživatele a
+ * přůměnrého hodnocení.
  */
 public class NoteFragment extends Fragment {
 
-    //prvky fragmentu
+    //grafické prvky fragmentu
     private ListView listViewNote;
     private ListViewTraderAdapter listViewTraderAdapter;
     private RatingBar ratingBar;
@@ -38,16 +40,30 @@ public class NoteFragment extends Fragment {
     private int globalPosition;
 
 
+    /**
+     * Prazdný konstruktor, který fragment vyžaduje.
+     */
     public NoteFragment() {
         // Required empty public constructor
     }
 
 
+    /**
+     *
+     * Meotda, která je volána při vytvoření fragmentu a provede úkoný
+     * k inicializaci fragmentu.
+     *
+     * @param inflater inflater
+     * @param container container
+     * @param savedInstanceState savedInstanceState
+     * @return view aktivity
+     */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_note, container, false);
 
+        //inicializace fragmentu
         initFragment(view);
 
         //po stisknutí vybraného listview překne do aktivity pro zobrazní poznámky
@@ -66,6 +82,10 @@ public class NoteFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Inializace všech prvků fragmentu.
+     * @param view view aktivtiy
+     */
     private void initFragment(View view) {
         traderID = Integer.parseInt(getActivity().getIntent().getExtras().get("TRADER_ID").toString());
         noteDatabaseHelper = new NoteDatabaseHelper(getContext());

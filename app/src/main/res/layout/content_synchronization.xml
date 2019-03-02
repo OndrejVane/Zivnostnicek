@@ -53,7 +53,7 @@
 
 
                 <Button
-                    android:id="@+id/buttonSyncNow"
+                    android:id="@+id/buttonPushNow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="80dp"
@@ -64,7 +64,21 @@
                     android:textStyle="bold"
                     android:layout_below="@+id/linearLayoutSettings3"
                     android:onClick="startSync"
-                    android:text="@string/sync_now"/>
+                    android:text="Zálohovat data nyní"/>
+
+                <Button
+                    android:id="@+id/buttonPullNow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/linearLayoutSettings3"
+                    android:onClick="startSync"
+                    android:text="Obnovit data ze serveru"/>
 
         </android.support.v7.widget.LinearLayoutCompat>
 </android.support.v4.widget.NestedScrollView>

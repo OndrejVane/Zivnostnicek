@@ -1,5 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -27,7 +28,7 @@ import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
-import com.example.ondrejvane.zivnostnicek.server_comunication.Server;
+import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
@@ -60,8 +61,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_ID = "id";
-    private static final String KEY_CURRENT_ID = "current_id";
-    private static final String KEY_MAX_ID = "max_id";
 
 
     @Override
@@ -81,6 +80,8 @@ public class LoginActivity extends AppCompatActivity {
         initActivity();
 
         Log.d(TAG, "Activity successfully started");
+
+        getApplication();
 
     }
 
@@ -150,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Display Progress bar while registering
+     * Progress dialog pro v průběhu přihlášování.
      */
     private void displayLoader() {
         pDialog = new ProgressDialog(LoginActivity.this);
@@ -178,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
 
             String url = Server.getSeverName() + login_url;
             //poslání JSONu na server a čekání na odpověd
-            JsonObjectRequest jsArrayRequest = new JsonObjectRequest
+            JsonObjectRequest jsObjectRequest = new JsonObjectRequest
                     (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -223,11 +224,6 @@ public class LoginActivity extends AppCompatActivity {
                                     UserInformation userInformation = UserInformation.getInstance();
                                     userInformation.setDataFromUser(user);
 
-                                    //nastavení id do tabulky identifikátorů, která byla přijata od serveru
-                                    long currentId = response.getLong(KEY_CURRENT_ID);
-                                    long maxId = response.getLong(KEY_MAX_ID);
-                                    identifiersDatabaseHelper.addIdentifiersForUser(currentId, maxId);
-
                                     //nastartování hlavní aktivity aplikace
                                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                     startActivity(intent);
@@ -266,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-            MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
+            MySingleton.getInstance(this).addToRequestQueue(jsObjectRequest);
         }
 
     }

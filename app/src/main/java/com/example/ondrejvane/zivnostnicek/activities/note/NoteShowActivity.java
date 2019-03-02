@@ -3,6 +3,7 @@ package com.example.ondrejvane.zivnostnicek.activities.note;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.support.design.widget.NavigationView;
@@ -30,16 +31,21 @@ import com.example.ondrejvane.zivnostnicek.model.Note;
 public class NoteShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int traderID;
-    private int noteID;
+    //grafické prvky aktivity
     private RatingBar noteRatingBar;
     private NoteDatabaseHelper noteDatabaseHelper;
     private EditText editTextNoteName, editTextNoteDate, editTextNote;
 
+    //pomocné globální proměnné
+    private int traderID;
+    private int noteID;
+
+
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState    savedInstanceState
+     *
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +60,48 @@ public class NoteShowActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        //nastavení textu do headeru
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //skryje klávesnici při startu aplikace
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        //inicializace aktivity
         initActivity();
 
+        //nastavení dat do aktivity
         setTextToActivity();
+    }
+
+    /**
+     * Procedura, která inicializuje všechny potřebné prvky
+     * aktivity.
+     */
+    private void initActivity() {
+        //načtení id obchodníka poslané z předchozí aktivity
+        if (getIntent().hasExtra("TRADER_ID")) {
+            traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
+        } else {
+            traderID = 1;
+        }
+
+        //načtení id poznnámky poslané z předchozí aktivity
+        if (getIntent().hasExtra("NOTE_ID")) {
+            noteID = Integer.parseInt(getIntent().getExtras().get("NOTE_ID").toString());
+        } else {
+            noteID = 1;
+        }
+
+        noteDatabaseHelper = new NoteDatabaseHelper(NoteShowActivity.this);
+        editTextNoteName = findViewById(R.id.textInputEditTextShowNoteTitle);
+        editTextNoteDate = findViewById(R.id.textInputEditTextShowNoteDate);
+        editTextNote = findViewById(R.id.textInputEditTextShowNote);
+        noteRatingBar = findViewById(R.id.traderShowNoteRatingBar);
+
     }
 
     /**
@@ -78,21 +114,6 @@ public class NoteShowActivity extends AppCompatActivity
         editTextNoteName.setText(note.getTitle());
         editTextNoteDate.setText(note.getDate());
         editTextNote.setText(note.getNote());
-    }
-
-    /**
-     * Procedura, která inicializuje všechny potřebné prvky
-     * aktivity.
-     */
-    private void initActivity() {
-        traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        noteID = Integer.parseInt(getIntent().getExtras().get("NOTE_ID").toString());
-        noteDatabaseHelper = new NoteDatabaseHelper(NoteShowActivity.this);
-        editTextNoteName = findViewById(R.id.textInputEditTextShowNoteTitle);
-        editTextNoteDate = findViewById(R.id.textInputEditTextShowNoteDate);
-        editTextNote = findViewById(R.id.textInputEditTextShowNote);
-        noteRatingBar = findViewById(R.id.traderShowNoteRatingBar);
-
     }
 
     /**
@@ -116,8 +137,9 @@ public class NoteShowActivity extends AppCompatActivity
     /**
      * Metoda, která vytvoří boční navigační menu po
      * zahájení atcitivity.
-     * @param menu  bočnínavigační menu
-     * @return      boolean
+     *
+     * @param menu bočnínavigační menu
+     * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,8 +150,9 @@ public class NoteShowActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -157,7 +180,7 @@ public class NoteShowActivity extends AppCompatActivity
      * Pokud ano zavolá proceduru deteleNote. Pokud ne, upozornění se zavře
      * a nic se nestane.
      */
-    private void alertDelete(){
+    private void alertDelete() {
         AlertDialog.Builder alert = new AlertDialog.Builder(NoteShowActivity.this);
         alert.setMessage(R.string.note_delete_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -181,11 +204,11 @@ public class NoteShowActivity extends AppCompatActivity
     /**
      * Procedura, která smaže záznam poznámky v databázi.
      */
-    private void deleteNote(){
+    private void deleteNote() {
         boolean result = noteDatabaseHelper.deleteNoteById(noteID);
-        if(result){
+        if (result) {
             Toast.makeText(this, R.string.note_delete_message, Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(this, R.string.note_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
         Intent intent = new Intent(NoteShowActivity.this, TraderShowActivity.class);
@@ -196,12 +219,13 @@ public class NoteShowActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 
@@ -213,10 +237,10 @@ public class NoteShowActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

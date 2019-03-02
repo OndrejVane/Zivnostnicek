@@ -34,7 +34,6 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_IDENTIFIERS_STORAGE_ITEM_ID, currentFreeId);
         values.put(COLUMN_IDENTIFIERS_TYPE_ID, currentFreeId);
         values.put(COLUMN_IDENTIFIERS_NOTE_ID, currentFreeId);
-        values.put(COLUMN_IDENTIFIERS_MAX_ID, maxId);
 
         db.insert(TABLE_IDENTIFIERS, null, values);
         db.close();
@@ -49,16 +48,15 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      */
     public int getFreeId(String columnName) {
         int freeId = 0;
-        int maxId = 0;
 
-        String[] columns = {columnName, COLUMN_IDENTIFIERS_MAX_ID};
+        String[] columns = {columnName};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_USER_ID + " = ? ";
+        String selection = COLUMN_IDENTIFIERS_ID + " = ? ";
 
         // vybírá vždy první záznam tabulky
-        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+        String[] selectionArgs = {"1"};
 
         Cursor cursor = db.query(TABLE_IDENTIFIERS,    //Table to query
                 columns,                                //columns to return
@@ -70,20 +68,11 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
 
         if (cursor.moveToFirst()) {
             freeId = cursor.getInt(0);
-            maxId = cursor.getInt(1);
         }
         db.close();
         cursor.close();
 
-        //kontrola, zda není id mimo rozsah
-        if(freeId > maxId){
-
-            Toast.makeText(getContext().getApplicationContext(), "Záznam není možno vložit do databáze ", Toast.LENGTH_SHORT).show();
-            freeId = -1;
-        }else {
-            //zvyšení id, aby byla unikátnív databázi
-            incrementValueOfId(freeId, columnName);
-        }
+        incrementValueOfId(freeId, columnName);
 
         return freeId;
     }
@@ -95,15 +84,16 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      * @param columnName název sloupce
      */
     private void incrementValueOfId(int currentId, String columnName) {
-        String where = COLUMN_IDENTIFIERS_USER_ID + " = ?";
+        String where = COLUMN_IDENTIFIERS_ID + " = ?";
 
         currentId++;
 
-        String[] updateArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+        String[] updateArgs = {"1"};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         ContentValues values = new ContentValues();
+
         Log.d(TAG, "Free " + columnName + " id: " + currentId);
         values.put(columnName, currentId);
 

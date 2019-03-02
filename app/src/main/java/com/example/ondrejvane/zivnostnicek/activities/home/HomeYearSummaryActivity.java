@@ -155,8 +155,8 @@ public class HomeYearSummaryActivity extends AppCompatActivity
         float balance = incomeYear - expenseYear;
 
         //formátování hodnot
-        String formattedIncome = FormatUtility.formatIncomeAmount(Float.toString(incomeYear));
-        String formattedExpense = FormatUtility.formatExpenseAmount(Float.toString(expenseYear));
+        String formattedIncome = FormatUtility.formatIncomeAmount(incomeYear);
+        String formattedExpense = FormatUtility.formatExpenseAmount(expenseYear);
         String formattedBalance;
 
         //nastavení textu do aktivity

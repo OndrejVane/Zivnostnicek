@@ -1,8 +1,10 @@
 package com.example.ondrejvane.zivnostnicek.activities.storage;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,16 +25,28 @@ import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
+/**
+ * Aktivita, která zobrazuje náhled skladové položky.
+ */
 public class StorageShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int storageItemID;
-    private StorageItemDatabaseHelper storageItemDatabaseHelper;
-    private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
+    //grafické prvky aktivity
     private TextView storageItemName;
     private TextView storageItemQuantity;
     private TextView storageItemNote;
 
+    //pomocné globální proměnné
+    private int storageItemID;
+    private StorageItemDatabaseHelper storageItemDatabaseHelper;
+    private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
+
+    /**
+     * Meotda, která je volána při startu aktivity a
+     * provede inicializaci aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,35 +64,59 @@ public class StorageShowActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        //nastavení textu do headeru
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //skryje klávesnici při startu aktivity
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        //inicializace aktvity
         initActivity();
     }
 
+    /**
+     * Procedura, která inicializuje aktivitu.
+     */
+    @SuppressLint("SetTextI18n")
     private void initActivity() {
-        storageItemID = Integer.parseInt(getIntent().getExtras().get("STORAGE_ITEM_ID").toString());
+
+        //pokus o načtení dat předaných z předchozí aktivity
+        if (getIntent().hasExtra("STORAGE_ITEM_ID")) {
+            storageItemID = Integer.parseInt(getIntent().getExtras().get("STORAGE_ITEM_ID").toString());
+        } else {
+            storageItemID = 1;
+        }
+
+        //inicializace databáze
         storageItemDatabaseHelper = new StorageItemDatabaseHelper(StorageShowActivity.this);
         itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(StorageShowActivity.this);
+
+        //inicializace grafických prvků aktivity
         storageItemName = findViewById(R.id.showStorageItemName);
         storageItemQuantity = findViewById(R.id.showStorageItemQuantity);
         storageItemNote = findViewById(R.id.showInputEditTextNote);
+
+        //načtení dat z databáze
         StorageItem storageItem = storageItemDatabaseHelper.getStorageItemById(storageItemID);
+
         //pokud je záznam v databazi nalezen, tak ho zobrazím
-        if(storageItem != null){
+        if (storageItem != null) {
             storageItemName.setText(storageItem.getName());
-            storageItemQuantity.setText(itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItem.getId()) + " "+ storageItem.getUnit());
+            storageItemQuantity.setText(itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItem.getId()) + " " + storageItem.getUnit());
             storageItemNote.setText(storageItem.getNote());
         }
 
     }
 
+    /**
+     * Procedura, která je volána při stisknutí
+     * zpět. Po stisknutí tlačítka je ukočnena tato aktivity
+     * a nastartována předchozí aktivity.
+     */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -87,6 +125,7 @@ public class StorageShowActivity extends AppCompatActivity
 
         Intent intent = new Intent(StorageShowActivity.this, StorageActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -112,7 +151,7 @@ public class StorageShowActivity extends AppCompatActivity
             return true;
         }
 
-        if(id == R.id.option_menu_storage_show_edit_delete){
+        if (id == R.id.option_menu_storage_show_edit_delete) {
             alertDelete();
             return true;
         }
@@ -126,7 +165,7 @@ public class StorageShowActivity extends AppCompatActivity
      * Pokud ano zavolá proceduru deteleTrader. Pokdu ne, upozorněné se zavře
      * a nic se nestane.
      */
-    public void alertDelete(){
+    public void alertDelete() {
         AlertDialog.Builder alert = new AlertDialog.Builder(StorageShowActivity.this);
         alert.setMessage(R.string.delete_storage_item_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -147,8 +186,12 @@ public class StorageShowActivity extends AppCompatActivity
 
     }
 
-    private void deleteStorageItem(){
-        if(storageItemDatabaseHelper.deleteStorageItemById(storageItemID)){
+    /**
+     * Procedura, která odstraní záznam z databáze. Po té ukončí aktivitu
+     * a nastartuje kativitu pro zobrazení skladových položek.
+     */
+    private void deleteStorageItem() {
+        if (storageItemDatabaseHelper.deleteStorageItemById(storageItemID)) {
             Toast.makeText(StorageShowActivity.this, R.string.storage_item_has_been_deleted, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(StorageShowActivity.this, StorageActivity.class);
             startActivity(intent);
@@ -158,12 +201,13 @@ public class StorageShowActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 
@@ -175,10 +219,10 @@ public class StorageShowActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

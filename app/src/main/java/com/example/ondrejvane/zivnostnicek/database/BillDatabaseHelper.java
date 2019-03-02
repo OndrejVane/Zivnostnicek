@@ -272,13 +272,13 @@ public class BillDatabaseHelper extends DatabaseHelper {
      * @param isExpense příjem/výdaj
      * @return výsledná hodnota
      */
-    public synchronized double getBillVatByDate(int year, int month, int isExpense) {
+    public synchronized float getBillVatByDate(int year, int month, int isExpense) {
         int userId = UserInformation.getInstance().getUserId();
-        double coefficient21 = 0.1736;
-        double coefficient15 = 0.1304;
-        double coefficient10 = 0.0909;
-        double result = 0;
-        double temp = 0;
+        float coefficient21 = 0.1736f;
+        float coefficient15 = 0.1304f;
+        float coefficient10 = 0.0909f;
+        float result = 0;
+        float temp = 0;
 
         String[] columns = {COLUMN_BILL_AMOUNT, COLUMN_BILL_DATE, COLUMN_BILL_VAT};
 
@@ -307,7 +307,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 int vat = cursor.getInt(2);
 
                 if (FormatUtility.isRightDate(year, month, foundYear, foundMonth)) {
-                    temp = cursor.getDouble(0);
+                    temp = cursor.getFloat(0);
                 }
                 switch (vat) {
                     case 21:
@@ -330,7 +330,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
         cursor.close();
 
         //zaokrouhlení na 2 desetinná místa
-        return Math.round(result * 100.0) / 100.0;
+        return (float) (Math.round(result * 100.0) / 100.0);
     }
 
     /**

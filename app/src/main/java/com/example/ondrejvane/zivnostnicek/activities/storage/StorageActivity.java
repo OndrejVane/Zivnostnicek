@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.storage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,11 +30,18 @@ import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
 import java.util.ArrayList;
 
+/**
+ * Aktivity, která zobrazuje skladové položky a jejich dostupné
+ * množství v listu.
+ */
 public class StorageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private ListView listViewStorageItem;
+    //grafické prvky aktivity
     private ListViewStorageAdapter listViewStorageAdapter;
+    private ListView listViewStorageItem;
+
+    //pomocné globální proměnné
     private EditText inputSearch;
     private String[] storageItemName;
     private float[] storageItemQuantity;
@@ -41,6 +49,10 @@ public class StorageActivity extends AppCompatActivity
     private int[] ID;
     private int[] holderId;
 
+    /**
+     * Meotoda, která je volána při vytvoření aktivity
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +60,7 @@ public class StorageActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //nastavení akce pro floating button (spuštění aktivtity new storage item)
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,9 +80,11 @@ public class StorageActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //nastavení textu do headeru
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
 
         //skryje klávesnici při startu aktivity
@@ -90,6 +105,8 @@ public class StorageActivity extends AppCompatActivity
             }
         });
 
+        //listenr, který je volán vždy po změně textu  a vyhledává příslušné položky
+        //které odpovídají tomuto prefixu
         inputSearch.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -102,6 +119,7 @@ public class StorageActivity extends AppCompatActivity
              * Při shodě se zapíše obsah porovnávaného prvku v původním poli do nově vytvořeného pole.
              * Pokud dojde alespoň k jedné shodě, změní se obsah listView.
              * Pokud ke shodě nedojde, listView se vykreslí pouze s jedním zápisem a to nenalezeno nenalezeno
+             *
              * @param cs    CharSequence
              * @param arg1  int
              * @param arg2  int
@@ -185,6 +203,9 @@ public class StorageActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Inicializace prvků v aktivitě
+     */
     private void initActivity() {
         ArrayList<StorageItem> listStorageItem;
         listViewStorageItem = findViewById(R.id.listViewStorage);
@@ -218,6 +239,9 @@ public class StorageActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která je volána po stisknutí tlačítka zpět.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -236,7 +260,7 @@ public class StorageActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

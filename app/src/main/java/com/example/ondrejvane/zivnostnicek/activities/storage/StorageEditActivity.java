@@ -1,5 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities.storage;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -25,12 +26,14 @@ import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
+/**
+ * Aktivita, která se stará o editaci vybrané
+ * skladové položky.
+ */
 public class StorageEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private int storageItemID;
-    private StorageItemDatabaseHelper storageItemDatabaseHelper;
-    private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
+    //grarafické prvky aktivity
     private EditText inputStorageItemNameEdit;
     private EditText inputStorageItemQuantityEdit;
     private TextInputLayout layoutStorageItemNameEdit;
@@ -38,7 +41,18 @@ public class StorageEditActivity extends AppCompatActivity
     private Spinner spinnerUnit;
     private EditText inputStorageItemNote;
 
+    //pomocné globální proměnné
+    private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
+    private StorageItemDatabaseHelper storageItemDatabaseHelper;
+    private int storageItemID;
 
+
+    /**
+     * Metoda, která je volána při startu aktivity a
+     * incializuje aktivitu.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,16 +70,32 @@ public class StorageEditActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //nastavení textu do headeru
         Header header = new Header( navigationView);
         header.setTextToHeader();
 
+        //inicializace aktivity
         initActivity();
     }
 
+    /**
+     * Procedura, která inicializuje aktivitu a nastaví data
+     * načtené z databáze do aktivity.
+     */
+    @SuppressLint("SetTextI18n")
     private void initActivity() {
-        storageItemID = Integer.parseInt(getIntent().getExtras().get("STORAGE_ITEM_ID").toString());
+        //pokus o načtení dat předaných z předchozí aktivity
+        if(getIntent().hasExtra("STORAGE_ITEM_ID")){
+            storageItemID = Integer.parseInt(getIntent().getExtras().get("STORAGE_ITEM_ID").toString());
+        }else {
+            storageItemID = 1;
+        }
+
+        //incializace databáze
         storageItemDatabaseHelper = new StorageItemDatabaseHelper(StorageEditActivity.this);
         itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(StorageEditActivity.this);
+
+        //inicializace grafických prvků aktivity
         inputStorageItemNameEdit = findViewById(R.id.inputTextStorageItemNameEdit);
         layoutStorageItemNameEdit = findViewById(R.id.layoutStorageItemNameEdit);
         inputStorageItemQuantityEdit = findViewById(R.id.inputTextStorageItemQuantityEdit);
@@ -75,7 +105,8 @@ public class StorageEditActivity extends AppCompatActivity
 
         //načtení příslušného záznamu z databáze
         StorageItem storageItem = storageItemDatabaseHelper.getStorageItemById(storageItemID);
-        //načtení dat do kativity
+
+        //načtení dat do aktivity
         inputStorageItemNameEdit.setText(storageItem.getName());
         inputStorageItemQuantityEdit.setText(Float.toString(itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItem.getId())));
         inputStorageItemNote.setText(storageItem.getNote());
@@ -85,16 +116,20 @@ public class StorageEditActivity extends AppCompatActivity
     /**
      * Metoda, která po stisknutí tlačítku uloží změny skladové
      * položky do databáze.
-     * @param view
+     * @param view view aktivity
      */
     public void editStorageItem(View view) {
 
+        //načtení dat z aktivity
         String name = inputStorageItemNameEdit.getText().toString();
         String quantity = inputStorageItemQuantityEdit.getText().toString();
         String units = spinnerUnit.getSelectedItem().toString();
         String note = inputStorageItemNote.getText().toString();
+
+        //načtení aktuálního množství
         float currentQuantity = itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItemID);
 
+        //validace vstupů
         if(!InputValidation.validateIsEmpty(name)){
             String message = getString(R.string.item_name_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -102,6 +137,7 @@ public class StorageEditActivity extends AppCompatActivity
             return;
         }
 
+        //validace vstupů
         if(!InputValidation.validateIsEmpty(quantity)){
             String message = getString(R.string.quantity_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -152,6 +188,10 @@ public class StorageEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která je volána při stisknutí tlačítka zpět.
+     * Ukončí tuto aktivitu a nastartuje předchozí aktivitu.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -209,16 +209,6 @@
             android:gravity="center"
             android:text="@string/mandatory_information"
             android:textSize="12sp" />
-        <!--
-
-        <CheckBox
-            android:id="@+id/checkBoxGeneratePDF"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/generate_pdf"
-            android:textColor="@color/grey"
-            />
-            -->
 
         <Button
             android:id="@+id/buttonAddBill"
@@ -232,4 +222,4 @@
             android:text="@string/add_income"/>
 
     </android.support.v7.widget.LinearLayoutCompat>
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>
