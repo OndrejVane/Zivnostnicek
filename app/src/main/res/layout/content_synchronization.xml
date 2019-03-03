@@ -27,44 +27,45 @@
                     android:layout_marginTop="40dp"
                     android:text="@string/sync_data_with_server"/>
 
+                <TextView
+                    android:id="@+id/textViewSyncInfo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/sync_info_1"
+                    android:textColor="@color/white"/>
+
 
                 <CheckBox
                     android:id="@+id/checkBoxSyncWiFi"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="10dp"
+                    android:enabled="false"
                     android:text="@string/sync_allow_only_on_wifi"/>
 
 
-                <TextView
-                    android:id="@+id/textViewSyncInfo1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="40dp"
-                    android:text="@string/sync_info_1"
-                    android:textColor="@color/white"/>
 
                 <TextView
                     android:id="@+id/textViewSyncInfo2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="120dp"
                     android:text="@string/sync_info_2"
-                    android:textColor="@color/white"/>
-
+                    />
 
                 <Button
                     android:id="@+id/buttonPushNow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="80dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
                     android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:layout_below="@+id/linearLayoutSettings3"
-                    android:onClick="startSync"
-                    android:text="Zálohovat data nyní"/>
+                    android:onClick="syncPush"
+                    android:text="@string/back_up_your_data_now"/>
 
                 <Button
                     android:id="@+id/buttonPullNow"
@@ -77,8 +78,9 @@
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     android:layout_below="@+id/linearLayoutSettings3"
-                    android:onClick="startSync"
-                    android:text="Obnovit data ze serveru"/>
+                    android:onClick="syncAlertDialog"
+                    android:text="@string/restore_your_data_now"/>
+
 
         </android.support.v7.widget.LinearLayoutCompat>
 </android.support.v4.widget.NestedScrollView>

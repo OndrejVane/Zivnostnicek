@@ -104,7 +104,8 @@
                 android:id="@+id/checkBoxSettingsMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/display_data_for_selected_month" />
+                android:text="@string/display_data_for_selected_month"
+                android:enabled="false"/>
 
 
         </LinearLayout>

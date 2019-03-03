@@ -94,6 +94,9 @@ public class InputValidationTest {
 
         //email
         input = "vane1@seznam.cz";
+        assertEquals("vane1@seznam.cz", InputValidation.removeSpecialChars(input));
+
+
     }
 
 }

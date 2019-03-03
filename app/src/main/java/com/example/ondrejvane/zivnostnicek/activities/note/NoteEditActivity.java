@@ -172,7 +172,7 @@ public class NoteEditActivity extends AppCompatActivity
         note.setTitle(inputNoteTitleEdit.getText().toString());
         note.setId(noteID);
         note.setNote(inputNoteEdit.getText().toString());
-        note.setTrader_id(traderID);
+        note.setTraderId(traderID);
         note.setRating(Math.round(noteRatingBarEdit.getRating()));
         note.setDate(dateFormat1.format(date));
         note.setIsDirty(1);

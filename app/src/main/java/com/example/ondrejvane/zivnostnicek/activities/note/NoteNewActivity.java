@@ -141,7 +141,7 @@ public class NoteNewActivity extends AppCompatActivity
 
         note.setTitle(inputNoteTitle.getText().toString());
         note.setNote(inputNote.getText().toString());
-        note.setTrader_id(traderID);
+        note.setTraderId(traderID);
         note.setRating(Math.round(ratingBar.getRating()));
         note.setDate(dateFormat1.format(date));
         note.setIsDirty(1);

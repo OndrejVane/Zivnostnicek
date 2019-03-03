@@ -23,11 +23,11 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addIdentifiersForUser(long currentFreeId, long maxId){
+    public void addIdentifiersForUser(long currentFreeId){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_ID, UserInformation.getInstance().getUserId());
+        values.put(COLUMN_IDENTIFIERS_USER_ID, UserInformation.getInstance().getUserId());
         values.put(COLUMN_IDENTIFIERS_BILL_ID, currentFreeId);
         values.put(COLUMN_IDENTIFIERS_TRADER_ID, currentFreeId);
         values.put(COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID, currentFreeId);
@@ -53,10 +53,10 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_IDENTIFIERS_ID + " = ? ";
+        String selection = COLUMN_IDENTIFIERS_USER_ID + " = ? ";
 
         // vybírá vždy první záznam tabulky
-        String[] selectionArgs = {"1"};
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
 
         Cursor cursor = db.query(TABLE_IDENTIFIERS,    //Table to query
                 columns,                                //columns to return
@@ -84,11 +84,11 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      * @param columnName název sloupce
      */
     private void incrementValueOfId(int currentId, String columnName) {
-        String where = COLUMN_IDENTIFIERS_ID + " = ?";
+        String where = COLUMN_IDENTIFIERS_USER_ID + " = ?";
 
         currentId++;
 
-        String[] updateArgs = {"1"};
+        String[] updateArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
 

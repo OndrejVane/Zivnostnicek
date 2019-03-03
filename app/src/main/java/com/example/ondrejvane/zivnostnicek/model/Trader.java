@@ -119,11 +119,28 @@ public class Trader {
     }
 
     public void removeSpecialChars(){
-        this.name = InputValidation.removeSpecialChars(this.name);
-        this.contactPerson = InputValidation.removeSpecialChars(this.contactPerson);;
-        this.IN= InputValidation.removeSpecialChars(this.IN);;
-        this.TIN= InputValidation.removeSpecialChars(this.TIN);;
-        this.city= InputValidation.removeSpecialChars(this.city);;
-        this.street= InputValidation.removeSpecialChars(this.street);;
+        if(this.name != null){
+            this.name = InputValidation.removeSpecialChars(this.name);
+        }
+
+        if(this.contactPerson != null){
+            this.contactPerson = InputValidation.removeSpecialChars(this.contactPerson);;
+        }
+
+        if(this.IN != null){
+            this.IN= InputValidation.removeSpecialChars(this.IN);;
+        }
+
+        if(this.TIN != null){
+            this.TIN= InputValidation.removeSpecialChars(this.TIN);;
+        }
+
+        if(this.city != null){
+            this.city= InputValidation.removeSpecialChars(this.city);;
+        }
+
+        if(this.street != null){
+            this.street= InputValidation.removeSpecialChars(this.street);;
+        }
     }
 }

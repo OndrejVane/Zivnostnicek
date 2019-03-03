@@ -113,4 +113,16 @@ public class UserDatabaseHelper extends DatabaseHelper {
 
         return syncNumber;
     }
+
+    /**
+     * Metoda, která smaže všechna data uživatele před nahráním dat ze serveru.
+     *
+     * @param userId id uživatele
+     */
+    public void deleteAllUserData(int userId){
+        TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
+        NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
+        traderDatabaseHelper.deleteAllTradersByUserId(userId);
+        noteDatabaseHelper.deleteAllNotesByUserId(userId);
+    }
 }

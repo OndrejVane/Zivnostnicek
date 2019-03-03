@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //pomocné globální proměnné
     private UserDatabaseHelper userDatabaseHelper;
-    IdentifiersDatabaseHelper identifiersDatabaseHelper;
+    private IdentifiersDatabaseHelper identifiersDatabaseHelper;
     private HashPassword hashPassword;
     private SecureSending secureSending;
     private String email;
@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private static final String login_url = "/api/login.php";
     private SessionHandler session;
+    private String hashedPassword;
 
     private static final String KEY_STATUS = "status";
     private static final String KEY_FULL_NAME = "full_name";
@@ -168,10 +169,12 @@ public class LoginActivity extends AppCompatActivity {
             displayLoader();
             JSONObject request = new JSONObject();
             try {
-                String hashedPassword = hashPassword.hashPassword(password);
+                hashedPassword = hashPassword.hashPassword(password);
                 //vložení uživatelských dat do JSONu
                 request.put(KEY_EMAIL, secureSending.encrypt(email));
                 request.put(KEY_PASSWORD, secureSending.encrypt(hashedPassword));
+
+                Log.d(TAG, "Passw " + hashedPassword);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -199,15 +202,20 @@ public class LoginActivity extends AppCompatActivity {
                                     user.setEmail(email);
                                     user.setFullName(response.getString(KEY_FULL_NAME));
                                     //uložení hesla v šifrované podobě
-                                    user.setPassword(SecurePassword.encrypt(hashPassword.hashPassword(password)));
-
+                                    user.setPassword(hashedPassword);
+                                    Log.d(TAG, "Passw " + user.getPassword());
                                     //je lokálně uložen v databázi??
                                     if (userDatabaseHelper.getUserById(user.getId()) == null) {
+                                        //nastavení informací o uživateli do singletonu, aby byla přístupná všude v aplikaci
+                                        UserInformation userInformation = UserInformation.getInstance();
+                                        userInformation.setUserId(user.getId());
                                         //není uložen, musím ho vložit do lokální databáze
                                         //jeho synchronizační číslo bude 0, protože nemá zatím žádná data synchronizována
                                         user.setSyncNumber(0);
                                         //vložení uživatele do databáze
                                         userDatabaseHelper.addUser(user);
+                                        //uložení nového záznamu idetifikátorů pro nového uživatele
+                                        identifiersDatabaseHelper.addIdentifiersForUser(1);
                                     } else {
                                         //už je uložen v lokální databázi a jen si načtu aktuální synchronizační číslo z db
                                         int syncNumber = userDatabaseHelper.getSyncNumberByUserId(user.getId());

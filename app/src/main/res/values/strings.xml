@@ -221,8 +221,8 @@
     <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
     <string name="generate_pdf">Generate PDF</string>
     <string name="not_assigned">Not assigned</string>
-    <string name="sync_data_with_server">Synchronize data with server</string>
-    <string name="sync_allow_only_on_wifi">Synchronization allow only on Wi-Fi</string>
+    <string name="sync_data_with_server">Turn on automatic backup of data</string>
+    <string name="sync_allow_only_on_wifi">Allow backup only on Wi-Fi</string>
     <string name="sync_info_1">Data will be automatically synchronize with server every hour, if you will be connect to the internet.</string>
     <string name="sync_info_2">You can synchronize data now by clicking on button below.</string>
     <string name="sync_now">Synchronize now</string>
@@ -234,7 +234,12 @@
     <string name="title_activity_home_traders">Home traders summary</string>
     <string name="permission_info_camera">The application needs access to the camera to take a photo of the bill and save the photo to the device.</string>
     <string name="permission_info_gallery">The application needs access to the gallery to add a photo of the bill.</string>
-    <string name="permission_info_currency">The application needs accees to save and read data from mobile memory.</string>
+    <string name="permission_info_currency">The application needs access to save and read data from mobile memory.</string>
+    <string name="pull_question">Are you really want to restore data from the server? All local data will be DELETED!</string>
+    <string name="permission_denied">Permission denied</string>
+    <string name="data_successfully_restored">Data successfully restored from server</string>
+    <string name="back_up_your_data_now">Back up your data now</string>
+    <string name="restore_your_data_now">Restore your data now</string>
 
     <string-array name="vat_amount">
         <item>21</item>

@@ -36,9 +36,6 @@ public class SynchronizationActivityTest {
     public void testLaunch(){
         View view;
 
-        view = synchronizationActivity.findViewById(R.id.buttonSyncNow);
-        assertNotNull(view);
-
         view = synchronizationActivity.findViewById(R.id.checkBoxSyncOn);
         assertNotNull(view);
 
@@ -48,8 +45,6 @@ public class SynchronizationActivityTest {
         view = synchronizationActivity.findViewById(R.id.textViewSyncInfo1);
         assertNotNull(view);
 
-        view = synchronizationActivity.findViewById(R.id.textViewSyncInfo2);
-        assertNotNull(view);
     }
 
     @After

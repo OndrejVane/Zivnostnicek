@@ -76,7 +76,7 @@ public class InputValidation {
         int trueValue;
 
         //pokud je prázdné je to ok
-        if(identificationNumber.isEmpty()){
+        if (identificationNumber.isEmpty()) {
             return true;
         }
 
@@ -111,9 +111,10 @@ public class InputValidation {
      * Metoda, která validuje české DIČ. Kontroluje, zda obsahuje první dvě písmena CZ,
      * která označují kod země. Po té musí následovat 8-10 číslic.
      * https://cs.wikipedia.org/wiki/Da%C5%88ov%C3%A9_identifika%C4%8Dn%C3%AD_%C4%8D%C3%ADslo
-     *
+     * <p>
      * Validní tvar DIč je : CZ12345678
-     *@param taxIdentificationNumber české DIČ
+     *
+     * @param taxIdentificationNumber české DIČ
      * @return boolean, zda je dič správné
      */
     public static boolean validateCzechTaxIdentificationNumber(String taxIdentificationNumber) {
@@ -150,8 +151,8 @@ public class InputValidation {
         if (taxIdentificationNumber.isEmpty()) {
             return true;
         } else {
-            if (inputLength >= 10 ) {
-                if (Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))){
+            if (inputLength >= 10) {
+                if (Character.isLetter(taxIdentificationNumber.charAt(0)) && Character.isLetter(taxIdentificationNumber.charAt(1))) {
                     return true;
                 }
             }
@@ -189,9 +190,10 @@ public class InputValidation {
      * aplikace, aby nemohlo dojít SQLijection.
      *
      * @param input vstupní řetězec s potenciálními spec. znaky
-     * @return  výstupní řetězec
+     * @return výstupní řetězec
      */
-    public static String removeSpecialChars(String input){
+    public static String removeSpecialChars(String input) {
         return input.replaceAll("[^a-zA-Z0-9 áčďéěíňóřšťúůýžÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ.@-]", "");
+
     }
 }

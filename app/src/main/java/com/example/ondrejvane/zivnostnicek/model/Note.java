@@ -6,7 +6,7 @@ import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 public class Note {
 
     private int id;
-    private int trader_id;
+    private int traderId;
     private String title;
     private String note;
     private String date;
@@ -22,12 +22,12 @@ public class Note {
         this.id = id;
     }
 
-    public int getTrader_id() {
-        return trader_id;
+    public int getTraderId() {
+        return traderId;
     }
 
-    public void setTrader_id(int trader_id) {
-        this.trader_id = trader_id;
+    public void setTraderId(int traderId) {
+        this.traderId = traderId;
     }
 
     public String getTitle() {
@@ -78,8 +78,13 @@ public class Note {
         this.isDeleted = isDeleted;
     }
 
-    public void removeSpecialChars(){
-        this.title = InputValidation.removeSpecialChars(this.title);
-        this.note = InputValidation.removeSpecialChars(this.note);
+    public void removeSpecialChars() {
+        if (this.title != null) {
+            this.title = InputValidation.removeSpecialChars(this.title);
+        }
+
+        if (this.note != null) {
+            this.note = InputValidation.removeSpecialChars(this.note);
+        }
     }
 }

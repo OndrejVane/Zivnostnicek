@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
+import java.util.ArrayList;
+
 public class TraderDatabaseHelper extends DatabaseHelper {
 
 
@@ -48,7 +50,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_TRADER_ID, trader.getId());                       //vygenerovaný primární klíč
-        values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());     //cizí klíč
+        values.put(COLUMN_TRADER_USER_ID, userInformation.getUserId());
         values.put(COLUMN_TRADER_NAME, trader.getName());
         values.put(COLUMN_TRADER_CONTACT_PERSON, trader.getContactPerson());
         values.put(COLUMN_TRADER_PHONE_NUMBER, trader.getPhoneNumber());
@@ -124,9 +126,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = COLUMN_TRADER_ID + " = ?";
+        String selection = COLUMN_TRADER_ID + " = ? AND " + COLUMN_TRADER_USER_ID + " = ?";
 
-        String[] selectionArgs = {Integer.toString(traderId)};
+        String[] selectionArgs = {Integer.toString(traderId), Integer.toString(UserInformation.getInstance().getUserId())};
 
         Cursor cursor = db.query(TABLE_TRADER, //Table to query
                 columns,                    //columns to return
@@ -164,9 +166,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      * @return  zda došo ke smazání obchodníka
      */
     public synchronized boolean deleteTraderById(int traderId){
-        String where = COLUMN_TRADER_ID + " = ?";
+        String where = COLUMN_TRADER_ID + " = ? AND " + COLUMN_TRADER_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(traderId)};
+        String[] updateArgs = {Integer.toString(traderId), Integer.toString(UserInformation.getInstance().getUserId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -183,6 +185,18 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return true;
     }
 
+    public synchronized void deleteAllTradersByUserId(int userId){
+        String where = COLUMN_TRADER_USER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_TRADER, where, deleteArgs);
+
+        db.close();
+    }
+
     /**
      * Aktualizace obchodníka.
      *
@@ -190,9 +204,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      */
     public synchronized void updateTraderById(Trader trader){
 
-        String where = COLUMN_TRADER_ID + " = ?";
+        String where = COLUMN_TRADER_ID + " = ? AND " + COLUMN_TRADER_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(trader.getId())};
+        String[] updateArgs = {Integer.toString(trader.getId()), Integer.toString(UserInformation.getInstance().getUserId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -213,6 +227,55 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         db.update(TABLE_TRADER, values, where, updateArgs);
         db.close();
+    }
+
+
+    public synchronized ArrayList<Trader> getAllTradersForSync(){
+
+        ArrayList<Trader> arrayList = new ArrayList<>();
+
+        String[] columns = {COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON,
+                COLUMN_TRADER_PHONE_NUMBER, COLUMN_TRADER_IN, COLUMN_TRADER_TIN,
+                COLUMN_TRADER_CITY, COLUMN_TRADER_STREET, COLUMN_TRADER_HOUSE_NUMBER,
+                COLUMN_TRADER_IS_DELETED, COLUMN_TRADER_ID};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_TRADER_USER_ID + " = ? AND " + COLUMN_TRADER_IS_DIRTY + " = 1";
+
+        String[] selectionArgs = { Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_TRADER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if(cursor.moveToFirst()){
+            do{
+                Trader trader = new Trader();
+                trader.setUserId(UserInformation.getInstance().getUserId());
+                trader.setName(cursor.getString(0));
+                trader.setContactPerson(cursor.getString(1));
+                trader.setPhoneNumber(cursor.getString(2));
+                trader.setIN(cursor.getString(3));
+                trader.setTIN(cursor.getString(4));
+                trader.setCity(cursor.getString(5));
+                trader.setStreet(cursor.getString(6));
+                trader.setHouseNumber(cursor.getString(7));
+                trader.setIsDeleted(cursor.getInt(8));
+                trader.setId(cursor.getInt(9));
+                arrayList.add(trader);
+            }while (cursor.moveToNext());
+
+        }
+
+        db.close();
+        cursor.close();
+
+        return arrayList;
 
     }
 }

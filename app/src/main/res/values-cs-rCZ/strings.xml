@@ -208,10 +208,10 @@
     <string name="obligation">Závazek</string>
     <string name="generate_pdf">Generovat PDF</string>
     <string name="not_assigned">Nepřiřazeno</string>
-    <string name="sync_data_with_server">Synchronizovat data se serverem</string>
-    <string name="sync_allow_only_on_wifi">Synchronizovat data pouze na Wi-Fi</string>
-    <string name="sync_info_1">Data budou automaticky synchronizovány se serverem každou hodinu, pokud budete připojení k internetu.</string>
-    <string name="sync_info_2">Data můžete synchronizovat i okamžitě kliknutím na tlačítko níže.</string>
+    <string name="sync_data_with_server">Zapnout automatické zálohování dat</string>
+    <string name="sync_allow_only_on_wifi">Zálohovat data pouze na Wi-Fi</string>
+    <string name="sync_info_1">Při automatickém zálohování dat na server se ujistěte, že přidáváte a edituje záznamy pouze na jedno zařízení. Mohlo by dojít ke ztrátě dat.</string>
+    <string name="sync_info_2">Data můžete ručně zálohovat na server tlačítem \"ZÁLOHOVAT DATA NYNÍ\" a obnovit data ze serveru můžete tlačítkem \"OBNOVIT DATA NYNÍ\".</string>
     <string name="sync_now">Synchronizovat nyní</string>
     <string name="fill_all_columns">Vyplňte všechny údaje</string>
     <string name="title_activity_home_income">Přehled příjmů</string>
@@ -221,6 +221,11 @@
     <string name="permission_info_camera">Aplikace potřebuje přístup k fotoaparátu k pořízení fotografie faktury a uložení fotografie do zařízení.</string>
     <string name="permission_info_gallery">Aplikace potřebuje přístup k fotografiím k přidání obrázku k faktuře.</string>
     <string name="permission_info_currency">Aplikcae potřebuje přístup k paměti pro načítání a ukládání potřebných dat.</string>
+    <string name="pull_question">Opravdu si přejete obnovit data ze serveru? Všechna lokální data budou SMAZÁNA!</string>
+    <string name="permission_denied">Přístup byl serverem odepřen</string>
+    <string name="data_successfully_restored">Data byla úspěšně obnovena ze serveru</string>
+    <string name="back_up_your_data_now">Zálohovat data nyní</string>
+    <string name="restore_your_data_now">Obnovit data nyní</string>
 
     <string-array name="photo">
         <item>galerie</item>
