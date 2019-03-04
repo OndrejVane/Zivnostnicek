@@ -135,4 +135,21 @@ public class UserDatabaseHelper extends DatabaseHelper {
         storageItemDatabaseHelper.deleteAllStorageItemsByUserId(userId);
         itemQuantityDatabaseHelper.deleteAllItemQuantitiesByUserId(userId);
     }
+
+    public void setAllRecordsClear(int userId) {
+        //inicializace pomocníku databáze
+        TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
+        NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
+        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(getContext());
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(getContext());
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
+
+        traderDatabaseHelper.setAllTradersClear(userId);
+        noteDatabaseHelper.setAllNotesClear(userId);
+        typeBillDatabaseHelper.setAllTypeBillsClear(userId);
+        billDatabaseHelper.setAllBillsClear(userId);
+        storageItemDatabaseHelper.setAllStorageItemsClear(userId);
+        itemQuantityDatabaseHelper.setAllItemQuantitiesClear(userId);
+    }
 }

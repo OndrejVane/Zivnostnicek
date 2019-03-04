@@ -236,4 +236,49 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         db.close();
     }
+
+    public void setAllTypeBillsClear(int userId) {
+        String where = COLUMN_TYPE_USER_ID + " = ? AND "
+                + COLUMN_TYPE_IS_DIRTY + " = 1";
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TYPE_IS_DIRTY, 0);
+
+        db.update(TABLE_TYPE, values, where, updateArgs);
+        db.close();
+    }
+
+    public int getMaxId() {
+
+        int maxId = 1;
+
+        String[] columns = {"MAX (" + COLUMN_TYPE_ID + ")"};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_TYPE_USER_ID + " = ? ";
+
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_TYPE, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            maxId = cursor.getInt(0);
+        }
+
+        db.close();
+        cursor.close();
+
+        return maxId;
+    }
 }

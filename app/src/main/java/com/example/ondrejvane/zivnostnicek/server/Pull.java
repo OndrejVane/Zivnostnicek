@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
@@ -38,6 +39,11 @@ public class Pull {
     public void deleteAllUserData() {
         UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(this.context);
         userDatabaseHelper.deleteAllUserData(UserInformation.getInstance().getUserId());
+    }
+
+    public void refreshAllIdentifiers(){
+        IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(this.context);
+        identifiersDatabaseHelper.refreshIdentifiers();
     }
 
     public void saveDataFromServer(JSONArray jsonArray) {

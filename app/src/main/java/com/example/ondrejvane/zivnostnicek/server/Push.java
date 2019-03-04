@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
@@ -71,6 +72,7 @@ public class Push {
                             if (status == 0) {
 
                                 Log.d(TAG, "Data successfully pushed");
+                                setAllRecordsClear();
                                 //přístup serverem byl odepřepřen
                             } else{
 
@@ -95,6 +97,7 @@ public class Push {
         MySingleton.getInstance(this.context).addToRequestQueue(jsonArrayRequest);
     }
 
+
     /**
      * Metoda, která kontroluje uživatelské nastavení.
      * Zda chce uživatel zálohovat data pouze na WiFi.
@@ -111,7 +114,12 @@ public class Push {
         }
     }
 
-    private JSONArray makeMessage() {
+    public void setAllRecordsClear(){
+        UserDatabaseHelper userDatabaseHelper = new UserDatabaseHelper(this.context);
+        userDatabaseHelper.setAllRecordsClear(UserInformation.getInstance().getUserId());
+    }
+
+    public JSONArray makeMessage() {
 
         JSONObject userInfo = getUserInformation();
         JSONObject traders = getTradersData();

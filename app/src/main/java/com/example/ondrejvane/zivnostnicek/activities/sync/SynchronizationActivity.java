@@ -31,6 +31,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.LoginActivity;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
@@ -67,9 +68,6 @@ public class SynchronizationActivity extends AppCompatActivity
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_STATUS = "status";
-
-    //url serveru
-    private static final String PULL_URL = "/api/pull.php";
 
 
     @Override
@@ -111,6 +109,7 @@ public class SynchronizationActivity extends AppCompatActivity
 
             }
         });
+
     }
 
     private void initActivity() {
@@ -148,7 +147,7 @@ public class SynchronizationActivity extends AppCompatActivity
             return;
         }
 
-        String url = Server.getSeverName() + PULL_URL;
+        String url = Server.getPullUrl();
         //poslání JSONu na server a čekání na odpověd
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.POST, url, request, new Response.Listener<JSONArray>() {
@@ -169,6 +168,7 @@ public class SynchronizationActivity extends AppCompatActivity
                                 Pull pull = new Pull(SynchronizationActivity.this);
                                 pull.deleteAllUserData();
                                 pull.saveDataFromServer(response);
+                                pull.refreshAllIdentifiers();
                                 progressDialog.dismiss();
 
                                 //informování uživatele o správném výsledku
@@ -179,6 +179,7 @@ public class SynchronizationActivity extends AppCompatActivity
 
                             //uživatel nebyl dobře ověřen => přístup zamítnut
                             } else{
+                                progressDialog.dismiss();
                                 //pokud ověření uživatele neproběhlo správně
                                 Toast.makeText(getApplicationContext(),
                                         getResources().getString(R.string.permission_denied),
@@ -207,6 +208,67 @@ public class SynchronizationActivity extends AppCompatActivity
 
     }
 
+
+    public void syncPush(View view){
+        displayLoader();
+        final Push push = new Push(SynchronizationActivity.this);
+        JSONArray request = push.makeMessage();
+
+        String url = Server.getPushUrl();
+        //poslání JSONu na server a čekání na odpověd
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.POST, url, request, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            progressDialog.dismiss();
+                            Log.d(TAG, "JSON: "+ response.toString());
+
+                            JSONObject jsonObject1 = response.getJSONObject(0);
+                            int status = jsonObject1.getInt(KEY_STATUS);
+
+                            Log.d(TAG, "KEY_STATUS = " + status);
+
+                            //uživatel byl správně ověřen a byla poslána data
+                            if (status == 0) {
+
+                                push.setAllRecordsClear();
+                                //informování uživatele o správném výsledku
+                                //vypsání uživateli
+                                Toast.makeText(getApplicationContext(),
+                                        getResources().getString(R.string.data_successfully_restored),
+                                        Toast.LENGTH_SHORT).show();
+
+                                //uživatel nebyl dobře ověřen => přístup zamítnut
+                            } else{
+                                //pokud ověření uživatele neproběhlo správně
+                                Toast.makeText(getApplicationContext(),
+                                        getResources().getString(R.string.permission_denied),
+                                        Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+
+                        //zobrazení informace uživateli, pokud došlo k chybě
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Error message: " + error.getMessage());
+
+                    }
+                });
+
+        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+    }
+
+    /*
     public void syncPush(View view) {
         Log.d(TAG, "Start synchronization after click");
         if (WifiCheckerUtility.isConnected(this)) {
@@ -221,6 +283,7 @@ public class SynchronizationActivity extends AppCompatActivity
         push.push(false);
     }
 
+*/
     /**
      * Progress dialog pro v průběhu synchronizace.
      */

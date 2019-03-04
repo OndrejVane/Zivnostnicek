@@ -270,4 +270,49 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
         db.close();
     }
+
+    public void setAllItemQuantitiesClear(int userId) {
+        String where = COLUMN_ITEM_QUANTITY_USER_ID + " = ? AND "
+                + COLUMN_ITEM_QUANTITY_IS_DIRTY + " = 1";
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_ITEM_QUANTITY_IS_DIRTY, 0);
+
+        db.update(TABLE_ITEM_QUANTITY, values, where, updateArgs);
+        db.close();
+    }
+
+    public int getMaxId() {
+
+        int maxId = 1;
+
+        String[] columns = {"MAX (" + COLUMN_ITEM_QUANTITY_ID + ")"};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_ITEM_QUANTITY_USER_ID + " = ? ";
+
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_ITEM_QUANTITY, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            maxId = cursor.getInt(0);
+        }
+
+        db.close();
+        cursor.close();
+
+        return maxId;
+    }
 }

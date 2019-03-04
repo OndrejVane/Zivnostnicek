@@ -485,4 +485,49 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
         db.close();
     }
+
+    public void setAllBillsClear(int userId) {
+        String where = COLUMN_BILL_USER_ID + " = ? AND "
+                + COLUMN_BILL_IS_DIRTY + " = 1";
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_BILL_IS_DIRTY, 0);
+
+        db.update(TABLE_BILL, values, where, updateArgs);
+        db.close();
+    }
+
+    public int getMaxId() {
+
+        int maxId = 1;
+
+        String[] columns = {"MAX (" + COLUMN_BILL_ID + ")"};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ? ";
+
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            maxId = cursor.getInt(0);
+        }
+
+        db.close();
+        cursor.close();
+
+        return maxId;
+    }
 }

@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.Tag;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Note;
 
 public class IdentifiersDatabaseHelper extends DatabaseHelper {
 
@@ -23,7 +25,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addIdentifiersForUser(long currentFreeId){
+    public void addIdentifiersForUser(long currentFreeId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -44,7 +46,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      * Metoda, která vrací aktuální volne id podle zadaného sloupce.
      *
      * @param columnName název sloupce
-     * @return          volné id
+     * @return volné id
      */
     public int getFreeId(String columnName) {
         int freeId = 0;
@@ -80,7 +82,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
     /**
      * Metoda, která navyšuje volné id podel zadaného sloupce.
      *
-     * @param currentId právě použite id
+     * @param currentId  právě použite id
      * @param columnName název sloupce
      */
     private void incrementValueOfId(int currentId, String columnName) {
@@ -99,5 +101,44 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
 
         db.update(TABLE_IDENTIFIERS, values, where, updateArgs);
         db.close();
+    }
+
+    public void refreshIdentifiers() {
+        TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
+        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(getContext());
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
+        NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(getContext());
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
+
+
+        int maxTraderId = traderDatabaseHelper.getMaxId() + 1;
+        int maxBillId = billDatabaseHelper.getMaxId() + 1;
+        int maxItemQuantityId = itemQuantityDatabaseHelper.getMaxId() + 1;
+        int maxNoteId = noteDatabaseHelper.getMaxId() + 1;
+        int maxStorageItemId = storageItemDatabaseHelper.getMaxId() + 1;
+        int maxTypeBillId = typeBillDatabaseHelper.getMaxId() + 1;
+
+
+        String where = COLUMN_IDENTIFIERS_USER_ID + " = ? ";
+
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_IDENTIFIERS_TRADER_ID, maxTraderId);
+        values.put(COLUMN_IDENTIFIERS_BILL_ID, maxBillId);
+        values.put(COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID, maxItemQuantityId);
+        values.put(COLUMN_IDENTIFIERS_NOTE_ID, maxNoteId);
+        values.put(COLUMN_IDENTIFIERS_STORAGE_ITEM_ID, maxStorageItemId);
+        values.put(COLUMN_IDENTIFIERS_TYPE_ID, maxTypeBillId);
+
+        int result = db.update(TABLE_IDENTIFIERS, values, where, updateArgs);
+        db.close();
+
+
     }
 }

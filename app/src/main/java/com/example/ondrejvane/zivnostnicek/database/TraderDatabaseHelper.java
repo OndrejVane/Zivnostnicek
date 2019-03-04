@@ -28,13 +28,13 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      * udává, jestli se bude generovat nové nebo už je id vygenerováno.
      * Pokud je záznam vkládán při synchronizaci dat, tak už id existuje.
      *
-     * @param trader obchodník
-     * @param isFromServer  logická hodnota, která udává jestli jde o synchronizaci ze serveru
+     * @param trader       obchodník
+     * @param isFromServer logická hodnota, která udává jestli jde o synchronizaci ze serveru
      */
-    public synchronized void addTrader(Trader trader, boolean isFromServer){
+    public synchronized void addTrader(Trader trader, boolean isFromServer) {
 
         //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
-        if(!isFromServer){
+        if (!isFromServer) {
             //získání primárního klíče
             IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
             int traderId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_TRADER_ID);
@@ -68,13 +68,13 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     /**
      * Získání dat pro zobrazení do listu.
      *
-     * @param userID    id uživatele
-     * @return          pole všech potřebných údajů do listu
+     * @param userID id uživatele
+     * @return pole všech potřebných údajů do listu
      */
-    public synchronized String[][] getTradersData(int userID){
+    public synchronized String[][] getTradersData(int userID) {
         String data[][];
 
-        String[] columns = { COLUMN_TRADER_ID, COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON};
+        String[] columns = {COLUMN_TRADER_ID, COLUMN_TRADER_NAME, COLUMN_TRADER_CONTACT_PERSON};
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
@@ -96,13 +96,13 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         data = new String[3][count];
         int i = 0;
 
-        if (cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 data[0][i] = cursor.getString(0);
                 data[1][i] = cursor.getString(1);
                 data[2][i] = cursor.getString(2);
                 i++;
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         db.close();
         cursor.close();
@@ -114,9 +114,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      * Metoda, která nalezne obchodníka se příslušnám id.
      *
      * @param traderId id obchodníka
-     * @return  obchodník
+     * @return obchodník
      */
-    public synchronized Trader getTraderById(int traderId){
+    public synchronized Trader getTraderById(int traderId) {
 
         Trader trader = new Trader();
 
@@ -138,7 +138,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
                 null,                       //filter by row groups
                 null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             trader.setName(cursor.getString(0));
             trader.setContactPerson(cursor.getString(1));
             trader.setPhoneNumber(cursor.getString(2));
@@ -163,9 +163,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      * ke "smazání" všech poznámek, které patří obhodníkovi.
      *
      * @param traderId id obchodníka
-     * @return  zda došo ke smazání obchodníka
+     * @return zda došo ke smazání obchodníka
      */
-    public synchronized boolean deleteTraderById(int traderId){
+    public synchronized boolean deleteTraderById(int traderId) {
         String where = COLUMN_TRADER_ID + " = ? AND " + COLUMN_TRADER_USER_ID + " = ?";
 
         String[] updateArgs = {Integer.toString(traderId), Integer.toString(UserInformation.getInstance().getUserId())};
@@ -185,7 +185,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return true;
     }
 
-    public synchronized void deleteAllTradersByUserId(int userId){
+    public synchronized void deleteAllTradersByUserId(int userId) {
         String where = COLUMN_TRADER_USER_ID + " = ?";
 
         String[] deleteArgs = {Integer.toString(userId)};
@@ -202,7 +202,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
      *
      * @param trader aktualizovaný obchodník
      */
-    public synchronized void updateTraderById(Trader trader){
+    public synchronized void updateTraderById(Trader trader) {
 
         String where = COLUMN_TRADER_ID + " = ? AND " + COLUMN_TRADER_USER_ID + " = ?";
 
@@ -230,7 +230,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public synchronized ArrayList<Trader> getAllTradersForSync(){
+    public synchronized ArrayList<Trader> getAllTradersForSync() {
 
         ArrayList<Trader> arrayList = new ArrayList<>();
 
@@ -243,7 +243,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         String selection = COLUMN_TRADER_USER_ID + " = ? AND " + COLUMN_TRADER_IS_DIRTY + " = 1";
 
-        String[] selectionArgs = { Integer.toString(UserInformation.getInstance().getUserId())};
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
 
         Cursor cursor = db.query(TABLE_TRADER, //Table to query
                 columns,                    //columns to return
@@ -253,8 +253,8 @@ public class TraderDatabaseHelper extends DatabaseHelper {
                 null,                       //filter by row groups
                 null);
 
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 Trader trader = new Trader();
                 trader.setUserId(UserInformation.getInstance().getUserId());
                 trader.setName(cursor.getString(0));
@@ -268,7 +268,7 @@ public class TraderDatabaseHelper extends DatabaseHelper {
                 trader.setIsDeleted(cursor.getInt(8));
                 trader.setId(cursor.getInt(9));
                 arrayList.add(trader);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
 
         }
 
@@ -277,5 +277,50 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
         return arrayList;
 
+    }
+
+    public void setAllTradersClear(int userId) {
+        String where = COLUMN_TRADER_USER_ID + " = ? AND "
+                + COLUMN_TRADER_IS_DIRTY + " = 1";
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_TRADER_IS_DIRTY, 0);
+
+        db.update(TABLE_TRADER, values, where, updateArgs);
+        db.close();
+    }
+
+    public int getMaxId() {
+
+        int maxId = 1;
+
+        String[] columns = {"MAX (" + COLUMN_TRADER_ID + ")"};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_TRADER_USER_ID + " = ? ";
+
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_TRADER, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            maxId = cursor.getInt(0);
+        }
+
+        db.close();
+        cursor.close();
+
+        return maxId;
     }
 }

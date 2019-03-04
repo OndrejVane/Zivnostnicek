@@ -280,4 +280,49 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
 
         db.close();
     }
+
+    public void setAllStorageItemsClear(int userId) {
+        String where = COLUMN_STORAGE_ITEM_USER_ID + " = ? AND "
+                + COLUMN_STORAGE_ITEM_IS_DIRTY + " = 1";
+
+        String[] updateArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_STORAGE_ITEM_IS_DIRTY, 0);
+
+        db.update(TABLE_STORAGE_ITEM, values, where, updateArgs);
+        db.close();
+    }
+
+    public int getMaxId() {
+
+        int maxId = 1;
+
+        String[] columns = {"MAX (" + COLUMN_STORAGE_ITEM_ID + ")"};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_STORAGE_ITEM_USER_ID + " = ? ";
+
+        String[] selectionArgs = {Integer.toString(UserInformation.getInstance().getUserId())};
+
+        Cursor cursor = db.query(TABLE_STORAGE_ITEM, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if (cursor.moveToFirst()) {
+            maxId = cursor.getInt(0);
+        }
+
+        db.close();
+        cursor.close();
+
+        return maxId;
+    }
 }
