@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class TypeBillDatabaseHelper extends DatabaseHelper {
@@ -115,10 +117,10 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         // selection criteria
-        String selection = COLUMN_TYPE_ID + " = ?";
+        String selection = COLUMN_TYPE_ID + " = ? AND " + COLUMN_TYPE_USER_ID + " = ?";
 
         // selection arguments
-        String[] selectionArgs = {Integer.toString(typeId)};
+        String[] selectionArgs = {Integer.toString(typeId), Integer.toString(UserInformation.getInstance().getUserId())};
 
         Cursor cursor = db.query(TABLE_TYPE, //Table to query
                 columns,                    //columns to return
@@ -181,5 +183,57 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         cursor.close();
 
         return billTypes;
+    }
+
+
+    public synchronized ArrayList<TypeBill> getAllTypesForSync(){
+        ArrayList<TypeBill> arrayList = new ArrayList<>();
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_COLOR, COLUMN_TYPE_NAME, COLUMN_TYPE_IS_DELETED};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_TYPE_USER_ID + " = ? AND " + COLUMN_TYPE_IS_DIRTY + " = 1";
+
+        String[] selectionArgs = { Integer.toString(userId)};
+
+        Cursor cursor = db.query(TABLE_TYPE, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if(cursor.moveToFirst()){
+            do{
+                TypeBill typeBill = new TypeBill();
+                typeBill.setId(cursor.getInt(0));
+                typeBill.setColor(cursor.getInt(1));
+                typeBill.setName(cursor.getString(2));
+                typeBill.setIsDeleted(cursor.getInt(3));
+                typeBill.setUserId(userId);
+                arrayList.add(typeBill);
+            }while (cursor.moveToNext());
+
+        }
+
+        db.close();
+        cursor.close();
+
+        return arrayList;
+    }
+
+    public void deleteAllTypesByUserId(int userId) {
+        String where = COLUMN_TYPE_USER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_TYPE, where, deleteArgs);
+
+        db.close();
     }
 }

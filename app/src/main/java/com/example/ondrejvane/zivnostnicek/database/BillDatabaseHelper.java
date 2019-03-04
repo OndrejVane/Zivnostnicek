@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
+import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
@@ -28,14 +29,14 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Metoda pro přidání nové faktruy do databáze.
      *
-     * @param bill faktura
+     * @param bill         faktura
      * @param isFromServer logická hodnota, která určuje, že jde o data ze serveru
      * @return id_faktury
      */
     public synchronized long addBill(Bill bill, boolean isFromServer) {
 
         //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
-        if(!isFromServer){
+        if (!isFromServer) {
             //získání primárního klíče
             IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
             int billId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_BILL_ID);
@@ -70,8 +71,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Metoda pro získání dat pro zobrazení do grafu.
      *
-     * @param year  hledaný rok
-     * @param month heldaný měsic
+     * @param year      hledaný rok
+     * @param month     heldaný měsic
      * @param isExpense příjem/výdaj
      * @return list všech typů a součet částek k nim
      */
@@ -84,7 +85,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?" + " AND " + COLUMN_BILL_IS_DELETED + " = 0";;
+        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?" + " AND " + COLUMN_BILL_IS_DELETED + " = 0";
 
         String orderBy = COLUMN_BILL_NUMBER + " ASC";
 
@@ -99,7 +100,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 orderBy);
 
         if (cursor.moveToFirst()) {
-            do{
+            do {
                 //zjištení data faktury
                 String date = cursor.getString(4);
                 int foundYear = Integer.parseInt(FormatUtility.getYearFromDate(date));
@@ -138,7 +139,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                     //přidání do listu
                     arrayList.add(billBox);
                 }
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         db.close();
@@ -150,8 +151,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Získání faktury podle id.
      *
-     * @param billId    id faktury
-     * @return          faktury
+     * @param billId id faktury
+     * @return faktury
      */
     public synchronized Bill getBillById(int billId) {
 
@@ -161,9 +162,9 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = COLUMN_BILL_ID + " = ?";
+        String selection = COLUMN_BILL_ID + " = ? AND " + COLUMN_BILL_USER_ID + " = ?";
 
-        String[] selectionArgs = {Integer.toString(billId)};
+        String[] selectionArgs = {Integer.toString(billId), Integer.toString(UserInformation.getInstance().getUserId())};
 
         Cursor cursor = db.query(TABLE_BILL, //Table to query
                 columns,                    //columns to return
@@ -196,13 +197,13 @@ public class BillDatabaseHelper extends DatabaseHelper {
      * Metoda, která "smaže" záznam faktury z databáze.
      *
      * @param billId id faktury
-     * @return  smazáno
+     * @return smazáno
      */
     public synchronized boolean deleteBillWithId(int billId) {
 
-        String where = COLUMN_BILL_ID + " = ?";
+        String where = COLUMN_BILL_ID + " = ? AND " + COLUMN_BILL_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(billId)};
+        String[] updateArgs = {Integer.toString(billId), Integer.toString(UserInformation.getInstance().getUserId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -220,10 +221,10 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Získání dat o příjmech/výdajích za zadaný časovýc úseků
      *
-     * @param year vybraný rok
-     * @param month vybraný měsíc
+     * @param year      vybraný rok
+     * @param month     vybraný měsíc
      * @param isExpense příjem / výdaje
-     * @return  hodnota příjmu/výdajů
+     * @return hodnota příjmu/výdajů
      */
     public synchronized float getBillDataByDate(int year, int month, int isExpense) {
         int userId = UserInformation.getInstance().getUserId();
@@ -270,8 +271,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Získání DPH z faktur za danné období.
      *
-     * @param year vybranný rok
-     * @param month vybranný měsíc
+     * @param year      vybranný rok
+     * @param month     vybranný měsíc
      * @param isExpense příjem/výdaj
      * @return výsledná hodnota
      */
@@ -339,8 +340,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Získání celkové částky pro zadaný typ a zadané období.
      *
-     * @param year vybraný rok
-     * @param month vybraný měsíc
+     * @param year      vybraný rok
+     * @param month     vybraný měsíc
      * @param typeId    id typu
      * @param isExpense příjem/ výdaj
      * @return hodnota součtu všech příjmu/výdajů za období
@@ -358,8 +359,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = COLUMN_BILL_USER_ID + " = ?" + " AND "
-                + COLUMN_BILL_IS_EXPENSE + " = ?"
+        String selection = COLUMN_BILL_USER_ID + " = ?"
+                + " AND " + COLUMN_BILL_IS_EXPENSE + " = ?"
                 + " AND " + COLUMN_BILL_TYPE_ID + " = ?"
                 + " AND " + COLUMN_BILL_IS_DELETED + " = ?";
 
@@ -398,9 +399,9 @@ public class BillDatabaseHelper extends DatabaseHelper {
      * @param bill aktualizovaná faktury
      */
     public synchronized void updateBill(Bill bill) {
-        String where = COLUMN_BILL_ID + " = ?";
+        String where = COLUMN_BILL_ID + " = ? AND " + COLUMN_BILL_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(bill.getId())};
+        String[] updateArgs = {Integer.toString(bill.getId()), Integer.toString(UserInformation.getInstance().getUserId())};
 
         SQLiteDatabase db = this.getReadableDatabase();
 

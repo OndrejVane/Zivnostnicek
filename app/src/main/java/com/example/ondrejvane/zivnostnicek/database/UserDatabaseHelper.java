@@ -120,9 +120,13 @@ public class UserDatabaseHelper extends DatabaseHelper {
      * @param userId id uživatele
      */
     public void deleteAllUserData(int userId){
+        //inicializace pomocníku databáze
         TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
         NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
+
         traderDatabaseHelper.deleteAllTradersByUserId(userId);
         noteDatabaseHelper.deleteAllNotesByUserId(userId);
+        typeBillDatabaseHelper.deleteAllTypesByUserId(userId);
     }
 }

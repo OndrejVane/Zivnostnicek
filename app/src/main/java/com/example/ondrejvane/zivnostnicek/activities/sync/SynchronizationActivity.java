@@ -217,8 +217,8 @@ public class SynchronizationActivity extends AppCompatActivity
 
         //vytvoření třídy pro nahrání dat na server
         Push push = new Push(this);
-        //nahrání dat na server
-        push.push();
+        //nahrání dat na server není prováděno na pozadí
+        push.push(false);
     }
 
     /**

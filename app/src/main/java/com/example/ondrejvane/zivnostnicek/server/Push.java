@@ -9,11 +9,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 import com.example.ondrejvane.zivnostnicek.utilities.WifiCheckerUtility;
@@ -34,10 +36,11 @@ public class Push {
         this.context = context;
     }
 
-    public void push(){
+    public void push(boolean onBackground){
+
 
         //pokud je uživatel na mobilních datech a má nastavenou zálohu pouze přes wifi => tak se nic neprovede
-        if(!checkUserSettings()) {
+        if(!checkUserSettings() && onBackground) {
             Log.d(TAG, "Cannot make backup => WIFI settings");
             return;
         }
@@ -77,7 +80,8 @@ public class Push {
                     public void onErrorResponse(VolleyError error) {
 
                         Log.d(TAG, "Cannot connect to the server");
-                        Log.d(TAG, "ERROR: "+ error);
+                        Log.d(TAG, "ERROR: "+ error.getMessage());
+
 
                     }
                 });
@@ -109,6 +113,7 @@ public class Push {
         JSONObject userInfo = getUserInformation();
         JSONObject traders = getTradersData();
         JSONObject notes = getNotesData();
+        JSONObject types = getTypesData();
 
         JSONArray allData = new JSONArray();
 
@@ -116,6 +121,7 @@ public class Push {
             allData.put(0, userInfo);
             allData.put(1, traders);
             allData.put(2, notes);
+            allData.put(3, types);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, e.getMessage());
@@ -124,6 +130,38 @@ public class Push {
         Log.d("JSON DATA: ", " " + allData.toString());
         return allData;
 
+    }
+
+    private JSONObject getBillsData() {
+        return new JSONObject();
+    }
+
+    private JSONObject getTypesData(){
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(this.context);
+        ArrayList<TypeBill> typeBills = typeBillDatabaseHelper.getAllTypesForSync();
+        JSONArray jsonTypes = new JSONArray();
+        JSONObject jsonResult = new JSONObject();
+
+        try {
+
+            for (int i = 0; i < typeBills.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                TypeBill typeBill = typeBills.get(i);
+
+                jsonObject.put("id", typeBill.getId());
+                jsonObject.put("user_id", UserInformation.getInstance().getUserId());
+                jsonObject.put("name", typeBill.getName());
+                jsonObject.put("color", typeBill.getColor());
+                jsonObject.put("is_deleted", typeBill.getIsDeleted());
+                jsonTypes.put(i, jsonObject);
+            }
+
+            jsonResult.put("types", jsonTypes);
+        }catch (JSONException e){
+            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
+        }
+        return jsonResult;
     }
 
     private JSONObject getUserInformation() {

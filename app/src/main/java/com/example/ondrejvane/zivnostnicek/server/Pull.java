@@ -5,10 +5,12 @@ import android.util.Log;
 
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,13 +46,44 @@ public class Pull {
             temp = jsonArray.getJSONObject(2);
             JSONArray notes = temp.getJSONArray("notes");
 
+            temp = jsonArray.getJSONObject(3);
+            JSONArray types = temp.getJSONArray("types");
+
             saveTradersDataFromServer(traders);
             saveNotesDataFromServer(notes);
+            saveTypesDataFromServer(types);
 
             Log.d("Pull", "Traders: " + traders.toString());
             Log.d("Pull", "Notes: " + notes.toString());
+            Log.d("Pull", "Types: " + types.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveTypesDataFromServer(JSONArray types){
+        TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(this.context);
+
+        for (int i = 0; i < types.length(); i++) {
+            JSONObject temp;
+            try {
+                temp = types.getJSONObject(i);
+
+                //vytvoření nového typu
+                TypeBill typeBill = new TypeBill();
+                typeBill.setId(temp.getInt("id"));
+                typeBill.setUserId(temp.getInt("user_id"));
+                typeBill.setColor(temp.getInt("color"));
+                typeBill.setName(temp.getString("name"));
+                typeBill.setIsDeleted(temp.getInt("is_deleted"));
+
+                //vložení záznamu do databáze
+                typeBillDatabaseHelper.addTypeBill(typeBill, true);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("Pull", "SaveNotesDataEx");
+            }
         }
     }
 
@@ -58,7 +91,7 @@ public class Pull {
         NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(this.context);
 
         for (int i = 0; i < notes.length(); i++) {
-            JSONObject temp = null;
+            JSONObject temp;
             try {
                 temp = notes.getJSONObject(i);
 

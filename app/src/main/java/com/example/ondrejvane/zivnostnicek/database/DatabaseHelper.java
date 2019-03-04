@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 34;
+    public static final int DATABASE_VERSION = 36;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_TYPE = "type";
     public static final String TABLE_STORAGE_ITEM = "storage_item";
     public static final String TABLE_ITEM_QUANTITY = "item_quantity";
-    public static final String TABLE_IDENTIFIERS ="identifiers";
+    public static final String TABLE_IDENTIFIERS = "identifiers";
 
     // Názvy atributů v tabulce user
     public static final String COLUMN_USER_ID = "user_id";                                 //Primární klíč
@@ -86,6 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //názvy atributů v tabulce množštví skladové položky
     public static final String COLUMN_ITEM_QUANTITY_ID = "item_quantity_id";               //primární klíč
+    public static final String COLUMN_ITEM_QUANTITY_USER_ID = "item_quantity_user_id";
     public static final String COLUMN_ITEM_QUANTITY_BILL_ID = "item_quantity_bill_id";     //cizí klíč do tabulky faktur
     public static final String COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID = "item_quantity_storage_item_id";  //cizí klíč do tabulky skladových položek
     public static final String COLUMN_ITEM_QUANTITY_QUANTITY = "item_quantity_quantity";   //atribut množství
@@ -132,7 +133,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_TRADER_HOUSE_NUMBER + " INTEGER,"
             + COLUMN_TRADER_IS_DIRTY + " INTEGER,"
             + COLUMN_TRADER_IS_DELETED + " INTEGER,"
-            + "PRIMARY KEY("+ COLUMN_TRADER_ID + ", "+COLUMN_TRADER_USER_ID +"))";
+            + "PRIMARY KEY(" + COLUMN_TRADER_ID + ", " + COLUMN_TRADER_USER_ID + "))";
 
     //SQL pro vytvoření tabulky Note
     private String CREATE_NOTE_TABLE = "CREATE TABLE " + TABLE_NOTE + "("
@@ -141,55 +142,60 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_NOTE_TRADER_ID + " INTEGER,"
             + COLUMN_NOTE_TITLE + " TEXT,"
             + COLUMN_NOTE_NOTE + " TEXT,"
-            + COLUMN_NOTE_DATE +  " TEXT,"
+            + COLUMN_NOTE_DATE + " TEXT,"
             + COLUMN_NOTE_RATING + " INTEGER,"
             + COLUMN_NOTE_IS_DIRTY + " INTEGER,"
             + COLUMN_NOTE_IS_DELETED + " INTEGER,"
-            + "PRIMARY KEY("+ COLUMN_NOTE_ID + ", "+COLUMN_NOTE_USER_ID+ "))";
+            + "PRIMARY KEY(" + COLUMN_NOTE_ID + ", " + COLUMN_NOTE_USER_ID + "))";
 
     //SQL pro vytvoření tabulky Bill
     private String CREATE_BILL_TABLE = "CREATE TABLE " + TABLE_BILL + "("
-            + COLUMN_BILL_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_BILL_ID + " INTEGER,"
             + COLUMN_BILL_NUMBER + " TEXT,"
             + COLUMN_BILL_AMOUNT + " REAL,"
             + COLUMN_BILL_VAT + " INTEGER,"
-            + COLUMN_BILL_TRADER_ID +  " INTEGER,"
+            + COLUMN_BILL_TRADER_ID + " INTEGER,"
             + COLUMN_BILL_DATE + " TEXT,"
-            + COLUMN_BILL_PHOTO +  " TEXT,"
+            + COLUMN_BILL_PHOTO + " TEXT,"
             + COLUMN_BILL_PLACE + " TEXT,"
-            + COLUMN_BILL_TYPE_ID +  " INTEGER,"
+            + COLUMN_BILL_TYPE_ID + " INTEGER,"
             + COLUMN_BILL_USER_ID + " INTEGER,"
-            + COLUMN_BILL_IS_EXPENSE +  " INTEGER,"
+            + COLUMN_BILL_IS_EXPENSE + " INTEGER,"
             + COLUMN_BILL_IS_DIRTY + " INTEGER,"
-            + COLUMN_BILL_IS_DELETED + " INTEGER" + ")";
+            + COLUMN_BILL_IS_DELETED + " INTEGER,"
+            + "PRIMARY KEY(" + COLUMN_BILL_ID + ", " + COLUMN_BILL_USER_ID + "))";
 
     //SQL pro vytvoření tabulky Storage Item
     private String CREATE_STORAGE_ITEM_TABLE = "CREATE TABLE " + TABLE_STORAGE_ITEM + "("
-            + COLUMN_STORAGE_ITEM_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_STORAGE_ITEM_ID + " INTEGER,"
             + COLUMN_STORAGE_ITEM_USER_ID + " INTEGER,"
             + COLUMN_STORAGE_ITEM_NAME + " TEXT,"
             + COLUMN_STORAGE_ITEM_UNIT + " TEXT,"
             + COLUMN_STORAGE_ITEM_NOTE + " TEXT,"
             + COLUMN_STORAGE_ITEM_IS_DIRTY + " INTEGER,"
-            + COLUMN_STORAGE_ITEM_IS_DELETED + " INTEGER" + ")";
+            + COLUMN_STORAGE_ITEM_IS_DELETED + " INTEGER,"
+            + "PRIMARY KEY(" + COLUMN_STORAGE_ITEM_ID + ", " + COLUMN_STORAGE_ITEM_USER_ID + "))";
 
     //SQL pro vytvoření tabulky item quantity
-    private String CREATE_QUANTITY_ITEM_TABLE = "CREATE TABLE " + TABLE_ITEM_QUANTITY+ "("
-            + COLUMN_ITEM_QUANTITY_ID + " INTEGER PRIMARY KEY,"
+    private String CREATE_QUANTITY_ITEM_TABLE = "CREATE TABLE " + TABLE_ITEM_QUANTITY + "("
+            + COLUMN_ITEM_QUANTITY_ID + " INTEGER,"
+            + COLUMN_ITEM_QUANTITY_USER_ID + " INTEGER,"
             + COLUMN_ITEM_QUANTITY_BILL_ID + " INTEGER,"
             + COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID + " INTEGER,"
             + COLUMN_ITEM_QUANTITY_QUANTITY + " REAL,"
             + COLUMN_ITEM_QUANTITY_IS_DIRTY + " INTEGER,"
-            + COLUMN_ITEM_QUANTITY_IS_DELETED + " INTEGER" + ")";
+            + COLUMN_ITEM_QUANTITY_IS_DELETED + " INTEGER,"
+            + "PRIMARY KEY(" + COLUMN_ITEM_QUANTITY_ID + ", " + COLUMN_ITEM_QUANTITY_USER_ID + "))";
 
     //SQL pro vytvoření tabulky type
     private String CREATE_TYPE_TABLE = "CREATE TABLE " + TABLE_TYPE + "("
-            + COLUMN_TYPE_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_TYPE_ID + " INTEGER,"
             + COLUMN_TYPE_COLOR + " INTEGER,"
             + COLUMN_TYPE_USER_ID + " INTEGER,"
             + COLUMN_TYPE_NAME + " TEXT,"
             + COLUMN_TYPE_IS_DIRTY + " INTEGER,"
-            + COLUMN_TYPE_IS_DELETED + " INTEGER" + ")";
+            + COLUMN_TYPE_IS_DELETED + " INTEGER,"
+            + "PRIMARY KEY(" + COLUMN_TYPE_ID + "," + COLUMN_USER_ID + "))";
 
     //SQL pro vytvoření tabulky identifires
     private String CREATE_IDENTIFIERS_TABLE = "CREATE TABLE " + TABLE_IDENTIFIERS + "("
@@ -248,16 +254,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.context = context;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this.context;
     }
 
 
-
     /**
-     *  Tato metoda vytvoří všechny tabulky v databázi.
+     * Tato metoda vytvoří všechny tabulky v databázi.
      *
-     * @param db    instance databáze
+     * @param db instance databáze
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -269,9 +274,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_STORAGE_ITEM_TABLE);
         db.execSQL(CREATE_QUANTITY_ITEM_TABLE);
         db.execSQL(CREATE_IDENTIFIERS_TABLE);
-
-        //vložení inicializačních dat do tablkuy identifikátorů
-        //db.execSQL(INSERT_DATA_TO_IDENTIFIERS);
     }
 
 
@@ -279,9 +281,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Pokud je oldVersion menší než newVersion, tak dojde ke
      * smazání všech tabulek (pouze pokud existují).
      *
-     * @param db            instance databáze
-     * @param oldVersion    stará verze databáze
-     * @param newVersion    nová verze databáze
+     * @param db         instance databáze
+     * @param oldVersion stará verze databáze
+     * @param newVersion nová verze databáze
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
