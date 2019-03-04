@@ -184,7 +184,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
      */
     public synchronized void updateStorageItemById(StorageItem storageItem){
 
-        String where = COLUMN_STORAGE_ITEM_ID + " = ?" + COLUMN_STORAGE_ITEM_USER_ID + " = ?";
+        String where = COLUMN_STORAGE_ITEM_ID + " = ? AND " + COLUMN_STORAGE_ITEM_USER_ID + " = ?";
 
         int userId = UserInformation.getInstance().getUserId();
 

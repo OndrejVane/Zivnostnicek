@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
@@ -11,6 +12,7 @@ import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
+import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -59,20 +61,53 @@ public class Pull {
             temp = jsonArray.getJSONObject(5);
             JSONArray storageItems = temp.getJSONArray("storage_items");
 
+            temp = jsonArray.getJSONObject(6);
+            JSONArray itemQuantities = temp.getJSONArray("item_quantities");
+
 
             saveTradersDataFromServer(traders);
             saveNotesDataFromServer(notes);
             saveTypesDataFromServer(types);
             saveBillsDataFromServer(bills);
             saveStorageItemsDataFromServer(storageItems);
+            saveItemQuantityDataFromServer(itemQuantities);
 
             Log.d("Pull", "Traders: " + traders.toString());
             Log.d("Pull", "Notes: " + notes.toString());
             Log.d("Pull", "Types: " + types.toString());
             Log.d("Pull", "Bills: " + bills.toString());
             Log.d("Pull", "Storage items: " + storageItems.toString());
+            Log.d("Pull", "Item quantities: " + itemQuantities.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveItemQuantityDataFromServer(JSONArray itemQuantities) {
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(this.context);
+
+        for (int i = 0; i < itemQuantities.length(); i++) {
+            JSONObject temp;
+
+            try {
+                temp = itemQuantities.getJSONObject(i);
+
+                ItemQuantity itemQuantity = new ItemQuantity();
+                itemQuantity.setId(temp.getInt("id"));
+                itemQuantity.setUserId(temp.getInt("user_id"));
+                itemQuantity.setStorageItemId(temp.getInt("storage_item_id"));
+                itemQuantity.setQuantity((float) temp.getDouble("quantity"));
+                itemQuantity.setBillId(temp.getLong("bill_id"));
+                itemQuantity.setIsDeleted(temp.getInt("is_deleted"));
+                itemQuantity.setIsDirty(0);
+
+
+                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, true);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("Pull", "SaveItemQuantityDataEx");
+            }
         }
     }
 
@@ -204,7 +239,6 @@ public class Pull {
             }
         }
     }
-
 
     private void saveTradersDataFromServer(JSONArray traders) {
         TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(this.context);

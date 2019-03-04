@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 37;
+    public static final int DATABASE_VERSION = 39;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";

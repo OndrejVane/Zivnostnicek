@@ -8,6 +8,7 @@ public class ItemQuantity {
     private float quantity;
     private int isDirty;
     private int isDeleted;
+    private int userId;
 
     public ItemQuantity(int id, long billId, long storageItemId, float quantity){
         this.id = id;
@@ -18,6 +19,14 @@ public class ItemQuantity {
 
     public ItemQuantity(){
 
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getId() {

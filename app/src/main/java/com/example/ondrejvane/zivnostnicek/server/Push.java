@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
@@ -16,6 +17,7 @@ import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
+import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
@@ -117,6 +119,7 @@ public class Push {
         JSONObject types = getTypesData();
         JSONObject bills = getBillsData();
         JSONObject storageItems = getStorageItemsData();
+        JSONObject itemQuantities =  getItemQuantitiesData();
 
 
         JSONArray allData = new JSONArray();
@@ -128,6 +131,7 @@ public class Push {
             allData.put(3, types);
             allData.put(4, bills);
             allData.put(5, storageItems);
+            allData.put(6, itemQuantities);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -137,6 +141,35 @@ public class Push {
         Log.d("JSON DATA: ", " " + allData.toString());
         return allData;
 
+    }
+
+    private JSONObject getItemQuantitiesData() {
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(this.context);
+        ArrayList<ItemQuantity> itemQuantities = itemQuantityDatabaseHelper.getAllItemQuantitiesForSync();
+        JSONArray jsonItemQuantities = new JSONArray();
+        JSONObject jsonResult = new JSONObject();
+
+        try{
+            for (int i = 0; i < itemQuantities.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                ItemQuantity itemQuantity = itemQuantities.get(i);
+
+                jsonObject.put("id", itemQuantity.getId());
+                jsonObject.put("user_id", itemQuantity.getUserId());
+                jsonObject.put("storage_item_id", itemQuantity.getStorageItemId());
+                jsonObject.put("is_deleted", itemQuantity.getIsDeleted());
+                jsonObject.put("quantity", itemQuantity.getQuantity());
+                jsonObject.put("bill_id", itemQuantity.getBillId());
+
+                jsonItemQuantities.put(i, jsonObject);
+            }
+            jsonResult.put("item_quantities", jsonItemQuantities);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
+        }
+        return jsonResult;
     }
 
     private JSONObject getStorageItemsData() {

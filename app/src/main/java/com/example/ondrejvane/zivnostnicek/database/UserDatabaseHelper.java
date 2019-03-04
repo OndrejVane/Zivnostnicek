@@ -126,11 +126,13 @@ public class UserDatabaseHelper extends DatabaseHelper {
         TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(getContext());
         BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(getContext());
         StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(getContext());
+        ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
 
         traderDatabaseHelper.deleteAllTradersByUserId(userId);
         noteDatabaseHelper.deleteAllNotesByUserId(userId);
         typeBillDatabaseHelper.deleteAllTypesByUserId(userId);
         billDatabaseHelper.deleteAllBillsByUserId(userId);
         storageItemDatabaseHelper.deleteAllStorageItemsByUserId(userId);
+        itemQuantityDatabaseHelper.deleteAllItemQuantitiesByUserId(userId);
     }
 }
