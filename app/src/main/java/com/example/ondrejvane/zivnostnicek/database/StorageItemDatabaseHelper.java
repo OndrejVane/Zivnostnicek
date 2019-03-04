@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
 import java.util.ArrayList;
@@ -113,11 +114,13 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
     public synchronized StorageItem getStorageItemById(int storageItemId){
         String[] columns = { COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT, COLUMN_STORAGE_ITEM_NOTE};
 
+        int userId = UserInformation.getInstance().getUserId();
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = COLUMN_STORAGE_ITEM_ID + " = ?";
+        String selection = COLUMN_STORAGE_ITEM_ID + " = ? AND " + COLUMN_STORAGE_ITEM_USER_ID + " = ?";
 
-        String[] selectionArgs = {Integer.toString(storageItemId)};
+        String[] selectionArgs = {Integer.toString(storageItemId), Integer.toString(userId)};
 
         Cursor cursor = db.query(TABLE_STORAGE_ITEM,    //Table to query
                 columns,                                //columns to return

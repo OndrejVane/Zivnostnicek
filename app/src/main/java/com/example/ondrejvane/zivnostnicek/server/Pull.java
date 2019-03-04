@@ -3,11 +3,13 @@ package com.example.ondrejvane.zivnostnicek.server;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
@@ -49,15 +51,57 @@ public class Pull {
             temp = jsonArray.getJSONObject(3);
             JSONArray types = temp.getJSONArray("types");
 
+            temp = jsonArray.getJSONObject(4);
+            JSONArray bills = temp.getJSONArray("bills");
+
+
             saveTradersDataFromServer(traders);
             saveNotesDataFromServer(notes);
             saveTypesDataFromServer(types);
+            saveBillsDataFromServer(bills);
 
             Log.d("Pull", "Traders: " + traders.toString());
             Log.d("Pull", "Notes: " + notes.toString());
             Log.d("Pull", "Types: " + types.toString());
+            Log.d("Pull", "Bills: " + bills.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveBillsDataFromServer(JSONArray bills) {
+        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(this.context);
+
+        for (int i = 0; i < bills.length(); i++) {
+            JSONObject temp;
+
+            try {
+                temp = bills.getJSONObject(i);
+
+                Bill bill = new Bill();
+                bill.setId(temp.getInt("id"));
+                bill.setUserId(temp.getInt("user_id"));
+                bill.setName(temp.getString("number"));
+                bill.setAmount((float) temp.getDouble("amount"));
+                bill.setVAT(temp.getInt("vat"));
+                bill.setDate(temp.getString("date"));
+                bill.setIsExpense(temp.getInt("is_expense"));
+                bill.setIsDeleted(temp.getInt("is_deleted"));
+                bill.setTraderId(temp.getInt("trader_id"));
+                bill.setTypeId(temp.getInt("type_id"));
+                bill.setIsDirty(0);
+
+                //kontrola, zda je položka nulová nebo ne
+                if (!temp.getString("photo").equals(NULL)) {
+                    bill.setPhoto(temp.getString("photo"));
+                }
+
+                billDatabaseHelper.addBill(bill, true);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("Pull", "SaveBillsDataEx");
+            }
         }
     }
 
@@ -76,13 +120,17 @@ public class Pull {
                 typeBill.setColor(temp.getInt("color"));
                 typeBill.setName(temp.getString("name"));
                 typeBill.setIsDeleted(temp.getInt("is_deleted"));
+                typeBill.setIsDirty(0);
+
+
+
 
                 //vložení záznamu do databáze
                 typeBillDatabaseHelper.addTypeBill(typeBill, true);
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Log.d("Pull", "SaveNotesDataEx");
+                Log.d("Pull", "SaveTypesDataEx");
             }
         }
     }

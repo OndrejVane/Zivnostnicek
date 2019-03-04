@@ -423,4 +423,66 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.update(TABLE_BILL, values, where, updateArgs);
         db.close();
     }
+
+    public ArrayList<Bill> getAllBillsForSync() {
+        ArrayList<Bill> arrayList = new ArrayList<>();
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] columns = {COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_AMOUNT,
+                            COLUMN_BILL_DATE, COLUMN_BILL_VAT, COLUMN_BILL_PHOTO,
+                            COLUMN_BILL_TYPE_ID, COLUMN_BILL_TRADER_ID, COLUMN_BILL_IS_DELETED,
+                            COLUMN_BILL_IS_EXPENSE};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_BILL_USER_ID + " = ? AND " + COLUMN_BILL_IS_DIRTY + " = 1";
+
+        String[] selectionArgs = { Integer.toString(userId)};
+
+        Cursor cursor = db.query(TABLE_BILL, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if(cursor.moveToFirst()){
+            do{
+                Bill bill = new Bill();
+                bill.setId(cursor.getInt(0));
+                bill.setName(cursor.getString(1));
+                bill.setAmount(cursor.getFloat(2));
+                bill.setDate(cursor.getString(3));
+                bill.setVAT(cursor.getInt(4));
+                bill.setPhoto(cursor.getString(5));
+                bill.setTypeId(cursor.getInt(6));
+                bill.setTraderId(cursor.getInt(7));
+                bill.setIsDeleted(cursor.getInt(8));
+                bill.setIsExpense(cursor.getInt(9));
+                bill.setUserId(userId);
+
+                //přidání záznamu do listu
+                arrayList.add(bill);
+
+            }while (cursor.moveToNext());
+        }
+
+        db.close();
+        cursor.close();
+
+        return arrayList;
+    }
+
+    public void deleteAllBillsByUserId(int userId) {
+        String where = COLUMN_BILL_USER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_BILL, where, deleteArgs);
+
+        db.close();
+    }
 }

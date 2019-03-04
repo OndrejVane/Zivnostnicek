@@ -7,12 +7,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
@@ -114,6 +116,7 @@ public class Push {
         JSONObject traders = getTradersData();
         JSONObject notes = getNotesData();
         JSONObject types = getTypesData();
+        JSONObject bills = getBillsData();
 
         JSONArray allData = new JSONArray();
 
@@ -122,6 +125,8 @@ public class Push {
             allData.put(1, traders);
             allData.put(2, notes);
             allData.put(3, types);
+            allData.put(4, bills);
+
         } catch (JSONException e) {
             e.printStackTrace();
             Log.d(TAG, e.getMessage());
@@ -133,7 +138,39 @@ public class Push {
     }
 
     private JSONObject getBillsData() {
-        return new JSONObject();
+        BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(this.context);
+        ArrayList<Bill> bills = billDatabaseHelper.getAllBillsForSync();
+        JSONArray jsonBills = new JSONArray();
+        JSONObject jsonResult = new JSONObject();
+
+        try {
+            for (int i = 0; i < bills.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                Bill bill = bills.get(i);
+
+                jsonObject.put("id", bill.getId());
+                jsonObject.put("user_id", bill.getUserId());
+                jsonObject.put("number", bill.getName());
+                jsonObject.put("amount", bill.getAmount());
+                jsonObject.put("vat", bill.getVAT());
+                jsonObject.put("date", bill.getDate());
+                jsonObject.put("photo", bill.getPhoto());
+                jsonObject.put("is_expense", bill.getIsExpense());
+                jsonObject.put("type_id", bill.getTypeId());
+                jsonObject.put("trader_id", bill.getTraderId());
+                jsonObject.put("is_deleted", bill.getIsDeleted());
+
+                jsonBills.put(i, jsonObject);
+
+            }
+            jsonResult.put("bills", jsonBills);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
+        }
+
+        return jsonResult;
     }
 
     private JSONObject getTypesData(){

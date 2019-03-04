@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 36;
+    public static final int DATABASE_VERSION = 37;
 
     // Název databáze
     public static final String DATABASE_NAME = "Zivnostnicek.db";
@@ -195,7 +195,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_TYPE_NAME + " TEXT,"
             + COLUMN_TYPE_IS_DIRTY + " INTEGER,"
             + COLUMN_TYPE_IS_DELETED + " INTEGER,"
-            + "PRIMARY KEY(" + COLUMN_TYPE_ID + "," + COLUMN_USER_ID + "))";
+            + "PRIMARY KEY(" + COLUMN_TYPE_ID + "," + COLUMN_TYPE_USER_ID + "))";
 
     //SQL pro vytvoření tabulky identifires
     private String CREATE_IDENTIFIERS_TABLE = "CREATE TABLE " + TABLE_IDENTIFIERS + "("
