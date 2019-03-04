@@ -79,8 +79,18 @@ public class StorageItem {
     }
 
     public void removeSpecialChars(){
-        this.name = InputValidation.removeSpecialChars(this.name);
-        this.note = InputValidation.removeSpecialChars(this.note);
-        this.unit = InputValidation.removeSpecialChars(this.unit);
+
+        if (this.name != null) {
+            this.name = InputValidation.removeSpecialChars(this.name);
+        }
+
+        if (this.note != null) {
+            this.note = InputValidation.removeSpecialChars(this.note);
+        }
+
+        if (this.unit != null) {
+            this.unit = InputValidation.removeSpecialChars(this.unit);
+        }
+
     }
 }

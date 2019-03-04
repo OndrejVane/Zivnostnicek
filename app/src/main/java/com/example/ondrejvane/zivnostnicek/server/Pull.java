@@ -5,12 +5,14 @@ import android.util.Log;
 
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
@@ -54,18 +56,55 @@ public class Pull {
             temp = jsonArray.getJSONObject(4);
             JSONArray bills = temp.getJSONArray("bills");
 
+            temp = jsonArray.getJSONObject(5);
+            JSONArray storageItems = temp.getJSONArray("storage_items");
+
 
             saveTradersDataFromServer(traders);
             saveNotesDataFromServer(notes);
             saveTypesDataFromServer(types);
             saveBillsDataFromServer(bills);
+            saveStorageItemsDataFromServer(storageItems);
 
             Log.d("Pull", "Traders: " + traders.toString());
             Log.d("Pull", "Notes: " + notes.toString());
             Log.d("Pull", "Types: " + types.toString());
             Log.d("Pull", "Bills: " + bills.toString());
+            Log.d("Pull", "Storage items: " + storageItems.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveStorageItemsDataFromServer(JSONArray storageItems) {
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(this.context);
+
+        for (int i = 0; i < storageItems.length(); i++) {
+            JSONObject temp;
+
+            try {
+                temp = storageItems.getJSONObject(i);
+
+                StorageItem storageItem = new StorageItem();
+                storageItem.setId(temp.getInt("id"));
+                storageItem.setUserId(temp.getInt("user_id"));
+                storageItem.setName(temp.getString("name"));
+                storageItem.setUnit(temp.getString("unit"));
+                storageItem.setIsDeleted(temp.getInt("is_deleted"));
+                storageItem.setIsDirty(0);
+
+
+                //kontrola, zda je položka nulová nebo ne
+                if (!temp.getString("note").equals(NULL)) {
+                    storageItem.setNote(temp.getString("note"));
+                }
+
+                storageItemDatabaseHelper.addStorageItem(storageItem, true);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.d("Pull", "SaveStorageItemDataEx");
+            }
         }
     }
 
@@ -121,8 +160,6 @@ public class Pull {
                 typeBill.setName(temp.getString("name"));
                 typeBill.setIsDeleted(temp.getInt("is_deleted"));
                 typeBill.setIsDirty(0);
-
-
 
 
                 //vložení záznamu do databáze

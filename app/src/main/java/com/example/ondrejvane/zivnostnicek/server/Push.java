@@ -9,6 +9,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
@@ -16,6 +17,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.example.ondrejvane.zivnostnicek.model.User;
@@ -101,22 +103,21 @@ public class Push {
 
         Settings settings = Settings.getInstance();
         if(settings.isSyncAllowWifi()){
-            if(WifiCheckerUtility.isConnected(this.context)){
-                return true;
-            }else {
-                return false;
-            }
+            return WifiCheckerUtility.isConnected(this.context);
         }else {
             return false;
         }
     }
 
     private JSONArray makeMessage() {
+
         JSONObject userInfo = getUserInformation();
         JSONObject traders = getTradersData();
         JSONObject notes = getNotesData();
         JSONObject types = getTypesData();
         JSONObject bills = getBillsData();
+        JSONObject storageItems = getStorageItemsData();
+
 
         JSONArray allData = new JSONArray();
 
@@ -126,6 +127,7 @@ public class Push {
             allData.put(2, notes);
             allData.put(3, types);
             allData.put(4, bills);
+            allData.put(5, storageItems);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -135,6 +137,35 @@ public class Push {
         Log.d("JSON DATA: ", " " + allData.toString());
         return allData;
 
+    }
+
+    private JSONObject getStorageItemsData() {
+        StorageItemDatabaseHelper storageItemDatabaseHelper = new StorageItemDatabaseHelper(this.context);
+        ArrayList<StorageItem> storageItems = storageItemDatabaseHelper.getAllStorageItemsForSync();
+        JSONArray jsonStorageItems = new JSONArray();
+        JSONObject jsonResult = new JSONObject();
+
+        try{
+            for (int i = 0; i < storageItems.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                StorageItem storageItem = storageItems.get(i);
+
+                jsonObject.put("id", storageItem.getId());
+                jsonObject.put("user_id", storageItem.getUserId());
+                jsonObject.put("name", storageItem.getName());
+                jsonObject.put("unit", storageItem.getUnit());
+                jsonObject.put("note", storageItem.getNote());
+                jsonObject.put("is_deleted", storageItem.getIsDeleted());
+
+                jsonStorageItems.put(i, jsonObject);
+            }
+            jsonResult.put("storage_items", jsonStorageItems);
+
+        }catch (JSONException e){
+            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
+        }
+        return jsonResult;
     }
 
     private JSONObject getBillsData() {

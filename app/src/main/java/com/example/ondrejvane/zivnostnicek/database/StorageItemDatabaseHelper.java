@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 
 import java.util.ArrayList;
@@ -154,9 +155,11 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
      * @return
      */
     public synchronized boolean deleteStorageItemById(int storageItemId){
-        String where = COLUMN_STORAGE_ITEM_ID + " = ?";
+        String where = COLUMN_STORAGE_ITEM_ID + " = ? AND " + COLUMN_STORAGE_ITEM_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(storageItemId)};
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] updateArgs = {Integer.toString(storageItemId), Integer.toString(userId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -181,9 +184,11 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
      */
     public synchronized void updateStorageItemById(StorageItem storageItem){
 
-        String where = COLUMN_STORAGE_ITEM_ID + " = ?";
+        String where = COLUMN_STORAGE_ITEM_ID + " = ?" + COLUMN_STORAGE_ITEM_USER_ID + " = ?";
 
-        String[] updateArgs = {Integer.toString(storageItem.getId())};
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] updateArgs = {Integer.toString(storageItem.getId()), Integer.toString(userId)};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -220,4 +225,59 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         return storageData;
     }
 
+    public ArrayList<StorageItem> getAllStorageItemsForSync() {
+
+        ArrayList<StorageItem> arrayList = new ArrayList<>();
+        int userId = UserInformation.getInstance().getUserId();
+
+        String[] columns = {COLUMN_STORAGE_ITEM_ID, COLUMN_STORAGE_ITEM_NAME, COLUMN_STORAGE_ITEM_UNIT,
+                            COLUMN_STORAGE_ITEM_NOTE, COLUMN_STORAGE_ITEM_IS_DELETED};
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selection = COLUMN_STORAGE_ITEM_USER_ID + " = ? AND " + COLUMN_STORAGE_ITEM_IS_DIRTY + " = 1";
+
+        String[] selectionArgs = { Integer.toString(userId)};
+
+        Cursor cursor = db.query(TABLE_STORAGE_ITEM, //Table to query
+                columns,                    //columns to return
+                selection,                  //columns for the WHERE clause
+                selectionArgs,              //The values for the WHERE clause
+                null,                       //group the rows
+                null,                       //filter by row groups
+                null);
+
+        if(cursor.moveToFirst()){
+            do{
+                StorageItem storageItem = new StorageItem();
+                storageItem.setId(cursor.getInt(0));
+                storageItem.setName(cursor.getString(1));
+                storageItem.setUnit(cursor.getString(2));
+                storageItem.setNote(cursor.getString(3));
+                storageItem.setIsDeleted(cursor.getInt(4));
+                storageItem.setUserId(userId);
+
+                //přidání záznamu do listu
+                arrayList.add(storageItem);
+
+            }while (cursor.moveToNext());
+        }
+
+        db.close();
+        cursor.close();
+
+        return arrayList;
+    }
+
+    public void deleteAllStorageItemsByUserId(int userId) {
+        String where = COLUMN_STORAGE_ITEM_USER_ID + " = ?";
+
+        String[] deleteArgs = {Integer.toString(userId)};
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_STORAGE_ITEM, where, deleteArgs);
+
+        db.close();
+    }
 }
