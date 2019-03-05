@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            String url = Server.getSeverName() + login_url;
+            String url = Server.getInstance().getLoginUrl();
             //poslání JSONu na server a čekání na odpověd
             JsonObjectRequest jsObjectRequest = new JsonObjectRequest
                     (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {

@@ -37,7 +37,6 @@ public class Push {
 
     private Context context;
     private static final String TAG = "Push";
-    private static final String PUSH_URL = "/api/push.php";
 
     public Push(Context context) {
         this.context = context;
@@ -54,7 +53,7 @@ public class Push {
 
         JSONArray request = makeMessage();
 
-        String url = Server.getSeverName() + PUSH_URL;
+        String url = Server.getInstance().getPushUrl();
         //poslání JSONu na server a čekání na odpověd
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.POST, url, request, new Response.Listener<JSONArray>() {

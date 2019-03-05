@@ -15,6 +15,7 @@ import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         sessionHandler = new SessionHandler(getApplicationContext());
         ImageView logo = findViewById(R.id.imageViewLogoMain);
         settings = Settings.getInstance();
+
+        //inicializace singletonu objetu serverserveru
+        Server server = Server.getInstance();
 
         //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
         Glide.with(this).load(R.drawable.logo1).into(logo);

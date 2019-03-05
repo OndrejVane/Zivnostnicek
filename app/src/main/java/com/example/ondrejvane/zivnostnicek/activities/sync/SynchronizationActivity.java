@@ -147,7 +147,7 @@ public class SynchronizationActivity extends AppCompatActivity
             return;
         }
 
-        String url = Server.getPullUrl();
+        String url = Server.getInstance().getPullUrl();
         //poslání JSONu na server a čekání na odpověd
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.POST, url, request, new Response.Listener<JSONArray>() {
@@ -214,7 +214,7 @@ public class SynchronizationActivity extends AppCompatActivity
         final Push push = new Push(SynchronizationActivity.this);
         JSONArray request = push.makeMessage();
 
-        String url = Server.getPushUrl();
+        String url = Server.getInstance().getPushUrl();
         //poslání JSONu na server a čekání na odpověd
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (Request.Method.POST, url, request, new Response.Listener<JSONArray>() {

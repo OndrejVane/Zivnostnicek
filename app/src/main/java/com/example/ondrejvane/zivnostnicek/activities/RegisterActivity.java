@@ -43,7 +43,6 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String fullName;
     private ProgressDialog pDialog;
-    private static final String register_url = "/api/register.php";
 
 
     @Override
@@ -119,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            String url = Server.getSeverName() + register_url;
+            String url = Server.getInstance().getRegisterUrl();
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest
                     (Request.Method.POST, url, request, new Response.Listener<JSONObject>() {
                         @Override
