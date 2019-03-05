@@ -54,9 +54,9 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_STORAGE_ITEM_NOTE, storageItem.getNote());
         values.put(COLUMN_STORAGE_ITEM_IS_DIRTY, storageItem.getIsDirty());
         values.put(COLUMN_STORAGE_ITEM_IS_DELETED, storageItem.getIsDeleted());
-        returnValue = db.insert(TABLE_STORAGE_ITEM, null, values);
+        db.insert(TABLE_STORAGE_ITEM, null, values);
         db.close();
-        return returnValue;
+        return storageItem.getId();
     }
 
 

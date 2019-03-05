@@ -54,10 +54,10 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_TYPE_COLOR, typeBill.getColor());
         values.put(COLUMN_TYPE_IS_DIRTY, typeBill.getIsDirty());
         values.put(COLUMN_TYPE_IS_DELETED, typeBill.getIsDeleted());
-        typeBillId = db.insert(TABLE_TYPE, null, values);
+        db.insert(TABLE_TYPE, null, values);
         db.close();
 
-        return typeBillId;
+        return typeBill.getId();
     }
 
     /**

@@ -62,10 +62,10 @@ public class BillDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_BILL_IS_EXPENSE, bill.getIsExpense());
         values.put(COLUMN_BILL_IS_DIRTY, bill.getIsDirty());
         values.put(COLUMN_BILL_IS_DELETED, bill.getIsDeleted());
-        billId = db.insert(TABLE_BILL, null, values);
+        db.insert(TABLE_BILL, null, values);
         db.close();
 
-        return billId;
+        return bill.getId();
     }
 
     /**
