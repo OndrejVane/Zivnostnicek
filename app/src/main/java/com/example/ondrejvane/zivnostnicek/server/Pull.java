@@ -285,11 +285,11 @@ public class Pull {
                 }
 
                 if (!temp.getString("i_n").equals(NULL)) {
-                    trader.setTIN(temp.getString("i_n"));
+                    trader.setIN(temp.getString("i_n"));
                 }
 
                 if (!temp.getString("city").equals(NULL)) {
-                    trader.setTIN(temp.getString("city"));
+                    trader.setCity(temp.getString("city"));
                 }
 
 
