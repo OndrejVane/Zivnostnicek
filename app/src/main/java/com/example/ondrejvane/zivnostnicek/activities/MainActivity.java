@@ -41,8 +41,13 @@ public class MainActivity extends AppCompatActivity {
         ImageView logo = findViewById(R.id.imageViewLogoMain);
         settings = Settings.getInstance();
 
-        //inicializace singletonu objetu serverserveru
+        //inicializace singletonu objektu server
         Server server = Server.getInstance();
+
+        //načtení nastavení serveru z SP
+        server.readDataFromSharedPref(MainActivity.this);
+        Log.d(TAG, "Server: " + server.getServerNameAndProtocol());
+
 
         //zobrazit logo do aktivity => musí se nastavit takto pomocí knihovny, jinak vytvoří memory leak
         Glide.with(this).load(R.drawable.logo1).into(logo);
@@ -56,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "User is logged in");
                     intent = new Intent(MainActivity.this, HomeActivity.class);
 
-                    //načtení potřebných údajů z session handleru(shared preferences)
+                    //načtení potřebných údajů ze session handleru(shared preferences)
                     UserInformation userInformation = UserInformation.getInstance();
                     User user = sessionHandler.getUserDetails();
                     userInformation.setUserId(user.getId());
                     userInformation.setMail(user.getEmail());
                     userInformation.setFullName(user.getFullName());
 
-                    //načtení dat o nstavení aplikace ze shared preferences
+                    //načtení dat o nastavení aplikace ze shared preferences
                     settings.readSettingsFromSharedPreferences(MainActivity.this);
                     startActivity(intent);
                     finish();

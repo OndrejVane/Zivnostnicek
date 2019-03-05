@@ -1,13 +1,18 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -233,6 +238,56 @@ public class RegisterActivity extends AppCompatActivity {
         password = password1ET.getText().toString().trim();
 
         return true;
+
+    }
+
+    /**
+     * Zobrazení dialogového okna pro nastavení
+     * atributů serveru. Následné infomrace jsou uloženy do
+     * třídy server a také do
+     * @param view view aktivity
+     */
+    public void showServerDialog(View view) {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(RegisterActivity.this);
+        @SuppressLint("InflateParams")
+        View mView = getLayoutInflater().inflate(R.layout.server_settings_dialog, null);
+
+        //inicializace všech prvků v dialogovém okně
+        final Spinner spinnerProtocol = mView.findViewById(R.id.spinnerServerProtocol);
+        final EditText editTextServerName = mView.findViewById(R.id.editTextServerName);
+        final TextInputLayout inputLayoutServerName = mView.findViewById(R.id.layoutServerName);
+        final Button buttonSave = mView.findViewById(R.id.buttonSaveServerSettings);
+
+        //inicializace singletonu server pro načtení předchozího nastavení
+        final Server server = Server.getInstance();
+
+        //zobrazení předchozího nastavení
+        spinnerProtocol.setSelection(server.getServerProtocolId());
+        editTextServerName.setText(server.getServerName());
+
+        //zobrazení dialogovéhookna
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.show();
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int protocol = spinnerProtocol.getSelectedItemPosition();
+                String serverName = editTextServerName.getText().toString();
+
+                if(serverName.isEmpty()){
+                    inputLayoutServerName.setError(getString(R.string.empty_name));
+                    return;
+                }
+                Log.d(TAG, "id: "+ protocol);
+
+                server.setServerNameAndProtocol(serverName, protocol);
+                server.saveDataToSharedPref(RegisterActivity.this);
+
+                dialog.dismiss();
+            }
+        });
 
     }
 

@@ -486,6 +486,7 @@ public class BillNewActivity extends AppCompatActivity
                 String quantity = itemQuantity.getText().toString();
                 String unit = spinnerUnit.getSelectedItem().toString();
 
+                //validace vstupů
                 if (!InputValidation.validateIsEmpty(name)) {
                     itemNameLayout.setError(getString(R.string.item_name_is_empty));
                     return;

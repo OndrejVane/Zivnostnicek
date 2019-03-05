@@ -226,6 +226,10 @@
     <string name="data_successfully_restored">Data byla úspěšně obnovena ze serveru</string>
     <string name="back_up_your_data_now">Zálohovat data nyní</string>
     <string name="restore_your_data_now">Obnovit data nyní</string>
+    <string name="protocol">Protokol</string>
+    <string name="server_settings">Nastavení serveru</string>
+    <string name="server_address">Adresa serveru</string>
+    <string name="www.zivnostnicek.cz">www.zivnostnicek.cz</string>
 
     <string-array name="photo">
         <item>galerie</item>

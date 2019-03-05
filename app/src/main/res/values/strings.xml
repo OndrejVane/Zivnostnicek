@@ -218,7 +218,6 @@
     <string name="VAT_label">VAT</string>
     <string name="claim">Claim</string>
     <string name="obligation">Obligation</string>
-    <string name="web_server">http://zivnostnicek.000webhostapp.com</string>
     <string name="generate_pdf">Generate PDF</string>
     <string name="not_assigned">Not assigned</string>
     <string name="sync_data_with_server">Turn on automatic backup of data</string>
@@ -240,6 +239,11 @@
     <string name="data_successfully_restored">Data successfully restored from server</string>
     <string name="back_up_your_data_now">Back up your data now</string>
     <string name="restore_your_data_now">Restore your data now</string>
+    <string name="protocol">Protocol</string>
+    <string name="server_settings">Server settings</string>
+    <string name="server_address">Server address</string>
+    <string name="www.zivnostnicek.cz">www.zivnostnicek.cz</string>
+
 
     <string-array name="vat_amount">
         <item>21</item>
@@ -292,5 +296,10 @@
         <item>October</item>
         <item>November</item>
         <item>December</item>
+    </string-array>
+
+    <string-array name="protocols">
+        <item>http://</item>
+        <item>https://</item>
     </string-array>
 </resources>

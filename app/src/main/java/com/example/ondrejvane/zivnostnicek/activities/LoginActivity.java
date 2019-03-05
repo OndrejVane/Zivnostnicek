@@ -1,17 +1,21 @@
 package com.example.ondrejvane.zivnostnicek.activities;
 
-import android.app.Application;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -24,7 +28,6 @@ import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
-import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
@@ -53,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ProgressDialog pDialog;
-    private static final String login_url = "/api/login.php";
     private SessionHandler session;
     private String hashedPassword;
 
@@ -272,6 +274,57 @@ public class LoginActivity extends AppCompatActivity {
 
             MySingleton.getInstance(this).addToRequestQueue(jsObjectRequest);
         }
+
+    }
+
+    /**
+     * Zobrazení dialogového okna pro nastavení
+     * atributů serveru. Následné informace jsou uloženy do
+     * třídy server a také do shared pref.
+     *
+     * @param view view aktivity
+     */
+    public void showServerDialog(View view) {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
+        @SuppressLint("InflateParams")
+        View mView = getLayoutInflater().inflate(R.layout.server_settings_dialog, null);
+
+        //inicializace všech prvků v dialogovém okně
+        final Spinner spinnerProtocol = mView.findViewById(R.id.spinnerServerProtocol);
+        final EditText editTextServerName = mView.findViewById(R.id.editTextServerName);
+        final TextInputLayout inputLayoutServerName = mView.findViewById(R.id.layoutServerName);
+        final Button buttonSave = mView.findViewById(R.id.buttonSaveServerSettings);
+
+        //inicializace singletonu server pro načtení předchozího nastavení
+        final Server server = Server.getInstance();
+
+        //zobrazení předchozího nastavení
+        spinnerProtocol.setSelection(server.getServerProtocolId());
+        editTextServerName.setText(server.getServerName());
+
+        //zobrazení dialogovéhookna
+        mBuilder.setView(mView);
+        final AlertDialog dialog = mBuilder.create();
+        dialog.show();
+
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int protocol = spinnerProtocol.getSelectedItemPosition();
+                String serverName = editTextServerName.getText().toString();
+
+                if (serverName.isEmpty()) {
+                    inputLayoutServerName.setError(getString(R.string.empty_name));
+                    return;
+                }
+                Log.d(TAG, "id: " + protocol);
+
+                server.setServerNameAndProtocol(serverName, protocol);
+                server.saveDataToSharedPref(LoginActivity.this);
+
+                dialog.dismiss();
+            }
+        });
 
     }
 }
