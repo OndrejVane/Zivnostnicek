@@ -185,7 +185,7 @@
     <string name="income_and_expense">Income and expense</string>
     <string name="income_and_expense_space">Income \n and \n expense</string>
     <string name="balance">Balance</string>
-    <string name="zero">0.0,-</string>
+    <string name="zero">0.00,-</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_income_show">Show income</string>
     <string name="title_activity_bill_edit">Edit income</string>

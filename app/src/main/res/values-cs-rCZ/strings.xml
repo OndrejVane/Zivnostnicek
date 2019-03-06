@@ -174,7 +174,7 @@
     <string name="income_and_expense">Příjmy a výdaje</string>
     <string name="income_and_expense_space">Příjmy \n a \n výdaje</string>
     <string name="balance">Bilance</string>
-    <string name="zero">0.0,-</string>
+    <string name="zero">0.00,-</string>
     <string name="title_activity_bill_edit">Editace příjmu</string>
     <string name="save_income">Uložit příjem</string>
     <string name="save_expense">Uložit výdaj</string>
