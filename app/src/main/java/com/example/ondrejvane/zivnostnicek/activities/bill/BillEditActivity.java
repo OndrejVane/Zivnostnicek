@@ -42,6 +42,7 @@ import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.model.StorageItemBox;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
@@ -768,6 +769,10 @@ public class BillEditActivity extends AppCompatActivity
 
             }
         }
+
+        //pokus o automatickou synchronizaci
+        Push push = new Push(BillEditActivity.this);
+        push.push();
 
         //vypis uživateli o úspěšné editaci faktury a uložení do databáze
 

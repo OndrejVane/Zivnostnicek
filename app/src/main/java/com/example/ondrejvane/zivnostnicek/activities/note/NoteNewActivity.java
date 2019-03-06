@@ -18,12 +18,14 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.bill.BillNewActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -147,7 +149,12 @@ public class NoteNewActivity extends AppCompatActivity
         note.setIsDirty(1);
         note.setIsDeleted(0);
 
+        //uložení záznamu do databáze
         noteDatabaseHelper.addNote(note, false);
+
+        //pokus o automatickou synchronizaci
+        Push push = new Push(NoteNewActivity.this);
+        push.push();
 
         Toast.makeText(this, R.string.note_has_been_added, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(NoteNewActivity.this, TraderShowActivity.class);

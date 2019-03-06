@@ -35,6 +35,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 import java.util.ArrayList;
 
@@ -363,6 +364,10 @@ public class BillActivity extends AppCompatActivity
                 typeBill.setIsDeleted(0);
                 TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(BillActivity.this);
                 typeBillDatabaseHelper.addTypeBill(typeBill, false);
+
+                //záloha dat
+                Push push = new Push(BillActivity.this);
+                push.push();
 
                 //vypis uživateli o úspěšném vložení typu do databáze
 

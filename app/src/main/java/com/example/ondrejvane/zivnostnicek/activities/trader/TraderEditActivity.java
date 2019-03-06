@@ -22,6 +22,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která se stará o editaci existujícího obchodníka.
@@ -184,8 +185,14 @@ public class TraderEditActivity extends AppCompatActivity
         trader.setIsDirty(1);
         trader.setIsDeleted(0);
 
+        //update záznamu v databázi
         traderDatabaseHelper.updateTraderById(trader);
-        String message = getString(R.string.trader_is_created);
+
+        //pokus o zálohu
+        Push push = new Push(TraderEditActivity.this);
+        push.push();
+
+        String message = getString(R.string.trader_has_been_edited);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(TraderEditActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);

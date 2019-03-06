@@ -26,6 +26,7 @@ import com.example.ondrejvane.zivnostnicek.adapters.TabPagerTraderAdapter;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která se stará o zobrazení vybraného obchodníka.
@@ -199,6 +200,10 @@ public class TraderShowActivity extends AppCompatActivity
         }else {
             Toast.makeText(this, R.string.trader_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
+        //záloha dat
+        Push push = new Push(TraderShowActivity.this);
+        push.push();
+
         Intent intent = new Intent(TraderShowActivity.this, TraderActivity.class);
         startActivity(intent);
         finish();

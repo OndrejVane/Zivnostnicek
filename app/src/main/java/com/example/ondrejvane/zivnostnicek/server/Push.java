@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.server;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -42,12 +43,22 @@ public class Push {
         this.context = context;
     }
 
-    public void push(boolean onBackground){
+    public void push(){
+        //push probíhá v jiném vlákně, aby nespomalovala odezvu aplikace
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                pushAsync();
+            }
+        });
+    }
+
+    private void pushAsync(){
 
 
-        //pokud je uživatel na mobilních datech a má nastavenou zálohu pouze přes wifi => tak se nic neprovede
-        if(!checkUserSettings() && onBackground) {
-            Log.d(TAG, "Cannot make backup => WIFI settings");
+        //kontrola uživatelského nastavení, zda může zálohovat
+        if(!checkUserSettings()) {
+            Log.d(TAG, "Cannot make backup or auto sync is not allowed");
             return;
         }
 
@@ -99,18 +110,27 @@ public class Push {
 
     /**
      * Metoda, která kontroluje uživatelské nastavení.
+     * Zda má uživatel zapnuté automatické zálohování.
      * Zda chce uživatel zálohovat data pouze na WiFi.
      *
-     * @return logická hodnota, která říká, jestli můžu zálohovat
+     * @return logická hodnota, která říká, jestli mám zálohovat
      */
     private boolean checkUserSettings(){
 
         Settings settings = Settings.getInstance();
-        if(settings.isSyncAllowWifi()){
-            return WifiCheckerUtility.isConnected(this.context);
+
+        //kontrola, zda má nastavenou automatickou zálohu dat
+        if(settings.isSyncOn()){
+
+            if(settings.isSyncAllowWifi()){
+                return WifiCheckerUtility.isConnected(this.context);
+            }else {
+                return false;
+            }
         }else {
             return false;
         }
+
     }
 
     public void setAllRecordsClear(){
@@ -353,6 +373,53 @@ public class Push {
         }
 
         return jsonResult;
+    }
+
+    public boolean isAllSynced(){
+        JSONArray temp;
+        JSONObject traders = getTradersData();
+        JSONObject notes = getNotesData();
+        JSONObject types = getTypesData();
+        JSONObject bills = getBillsData();
+        JSONObject storageItems = getStorageItemsData();
+        JSONObject itemQuantities =  getItemQuantitiesData();;
+
+        try {
+            temp = traders.getJSONArray("traders");
+            if(temp.length() != 0){
+                return false;
+            }
+
+            temp = notes.getJSONArray("notes");
+            if(temp.length() != 0){
+                return false;
+            }
+
+            temp = types.getJSONArray("types");
+            if(temp.length() != 0){
+                return false;
+            }
+
+            temp = bills.getJSONArray("bills");
+            if(temp.length() != 0){
+                return false;
+            }
+
+            temp = storageItems.getJSONArray("storage_items");
+            if(temp.length() != 0){
+                return false;
+            }
+
+            temp = itemQuantities.getJSONArray("item_quantities");
+            if(temp.length() != 0){
+                return false;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 
 }

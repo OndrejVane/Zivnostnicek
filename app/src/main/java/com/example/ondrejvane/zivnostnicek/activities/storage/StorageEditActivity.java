@@ -25,6 +25,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která se stará o editaci vybrané
@@ -175,6 +176,10 @@ public class StorageEditActivity extends AppCompatActivity
 
 
         storageItemDatabaseHelper.updateStorageItemById(storageItem);
+
+        //záloha dat
+        Push push = new Push(this);
+        push.push();
 
         //výpis o úspěšném uložení skladové položky
         String message = getString(R.string.storage_item_has_been_edited);

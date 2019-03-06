@@ -3,7 +3,6 @@ package com.example.ondrejvane.zivnostnicek.activities.sync;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -26,16 +24,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.activities.LoginActivity;
-import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
-import com.example.ondrejvane.zivnostnicek.helper.SecurePassword;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
@@ -43,7 +35,6 @@ import com.example.ondrejvane.zivnostnicek.server.Pull;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.MySingleton;
-import com.example.ondrejvane.zivnostnicek.utilities.WifiCheckerUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +49,7 @@ public class SynchronizationActivity extends AppCompatActivity
     private CheckBox checkBoxSyncTurnOn;
     private CheckBox checkBoxAllowOnWifi;
     private TextView textViewSyncInfo1;
+    private TextView textViewIsAllSynced;
     private ProgressDialog progressDialog;
 
     //pomocné globální proměnné
@@ -96,6 +88,10 @@ public class SynchronizationActivity extends AppCompatActivity
         //zobrazení předchozího nastavení
         setSettings();
 
+        //kontrola, zda je vše zálohované nebo ne
+        checkIfIsAllSynced();
+
+        //listener pro zobrazení informačního textu o zálohování
         checkBoxSyncTurnOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -112,27 +108,57 @@ public class SynchronizationActivity extends AppCompatActivity
 
     }
 
+    private void checkIfIsAllSynced() {
+        Push push = new Push(SynchronizationActivity.this);
+        if (push.isAllSynced()) {
+            textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_cloud_on, 0, 0, 0);
+            textViewIsAllSynced.setText(R.string.all_data_is_backed_up);
+        }
+    }
+
+    /**
+     * Procedura pro inicializaci
+     * potřebných prvků v aktivitě
+     */
     private void initActivity() {
         checkBoxSyncTurnOn = findViewById(R.id.checkBoxSyncOn);
         checkBoxAllowOnWifi = findViewById(R.id.checkBoxSyncWiFi);
         textViewSyncInfo1 = findViewById(R.id.textViewSyncInfo1);
+        textViewIsAllSynced = findViewById(R.id.textViewIsAllSynced);
+
 
         settings = Settings.getInstance();
         userDatabaseHelper = new UserDatabaseHelper(this);
     }
 
+    /**
+     * Načtení uživatelského nastavení.
+     */
     private void setSettings() {
 
         checkBoxSyncTurnOn.setChecked(settings.isSyncOn());
         checkBoxAllowOnWifi.setChecked(settings.isSyncAllowWifi());
 
+        //pokud je vybrána automatická záloha => zobrazit informační text
         if (checkBoxSyncTurnOn.isChecked()) {
             textViewSyncInfo1.setTextColor(getResources().getColor(R.color.grey));
         }
+
+        if (checkBoxAllowOnWifi.isChecked()) {
+            checkBoxAllowOnWifi.setEnabled(true);
+        }
     }
 
+    /**
+     * Metoda, která obnoví všechny data, která
+     * jsou uložena v serverové databázi. Data jsou
+     * přijata ve formátu JSON a následně jsou uloženy
+     * do lokální databáze. Před uložení dojde ke smazání
+     * všech lokálních záznamů uživatele, aby nedošlo ke konfliktům
+     * primárních klíčů.
+     */
     public void syncPull() {
-        displayLoader();
+        displayLoader(getString(R.string.recovering_data_from_the_server));
         User user = userDatabaseHelper.getUserById(UserInformation.getInstance().getUserId());
         JSONObject jsonObject = new JSONObject();
         JSONArray request = new JSONArray();
@@ -154,7 +180,7 @@ public class SynchronizationActivity extends AppCompatActivity
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            Log.d(TAG, "JSON: "+ response.toString());
+                            Log.d(TAG, "JSON: " + response.toString());
 
                             JSONObject jsonObject1 = response.getJSONObject(0);
                             int status = jsonObject1.getInt(KEY_STATUS);
@@ -166,9 +192,9 @@ public class SynchronizationActivity extends AppCompatActivity
 
                                 //zpracování přijatých dat a uložení dat do databáze
                                 Pull pull = new Pull(SynchronizationActivity.this);
-                                pull.deleteAllUserData();
-                                pull.saveDataFromServer(response);
-                                pull.refreshAllIdentifiers();
+                                pull.pull(response);
+
+                                //skyrytí progress dialogu
                                 progressDialog.dismiss();
 
                                 //informování uživatele o správném výsledku
@@ -177,8 +203,8 @@ public class SynchronizationActivity extends AppCompatActivity
                                         getResources().getString(R.string.data_successfully_restored),
                                         Toast.LENGTH_SHORT).show();
 
-                            //uživatel nebyl dobře ověřen => přístup zamítnut
-                            } else{
+                                //uživatel nebyl dobře ověřen => přístup zamítnut
+                            } else {
                                 progressDialog.dismiss();
                                 //pokud ověření uživatele neproběhlo správně
                                 Toast.makeText(getApplicationContext(),
@@ -209,8 +235,17 @@ public class SynchronizationActivity extends AppCompatActivity
     }
 
 
-    public void syncPush(View view){
-        displayLoader();
+    /**
+     * Metoda, která zazálohuje všechna
+     * data, která nejsou uloženy na serveru. Z lokální databáze
+     * jsou načteny všechny záznamy, které byly přidány nebo upravovány.
+     * Následně je vytvořen JSON se všemy daty a tento JSON je poslán
+     * na server. Od serveru dostaneme odpověď, zda byla data uložena.
+     *
+     * @param view view aktivity
+     */
+    public void syncPush(View view) {
+        displayLoader(getString(R.string.saving_data_to_the_server));
         final Push push = new Push(SynchronizationActivity.this);
         JSONArray request = push.makeMessage();
 
@@ -221,8 +256,8 @@ public class SynchronizationActivity extends AppCompatActivity
                     @Override
                     public void onResponse(JSONArray response) {
                         try {
-                            progressDialog.dismiss();
-                            Log.d(TAG, "JSON: "+ response.toString());
+
+                            Log.d(TAG, "JSON: " + response.toString());
 
                             JSONObject jsonObject1 = response.getJSONObject(0);
                             int status = jsonObject1.getInt(KEY_STATUS);
@@ -232,19 +267,29 @@ public class SynchronizationActivity extends AppCompatActivity
                             //uživatel byl správně ověřen a byla poslána data
                             if (status == 0) {
 
+                                //označení všech zálohovaných dat jako čisté
                                 push.setAllRecordsClear();
+
+                                //nastavení, že všechna data jsou zálohovaná
+                                textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_cloud_on, 0, 0, 0);
+                                textViewIsAllSynced.setText(R.string.all_data_is_backed_up);
+
+                                //skyrytí progres dialogu
+                                progressDialog.dismiss();
+
                                 //informování uživatele o správném výsledku
                                 //vypsání uživateli
                                 Toast.makeText(getApplicationContext(),
-                                        getResources().getString(R.string.data_successfully_restored),
+                                        getResources().getString(R.string.data_successfully_saved_to_the_server),
                                         Toast.LENGTH_SHORT).show();
 
                                 //uživatel nebyl dobře ověřen => přístup zamítnut
-                            } else{
+                            } else {
                                 //pokud ověření uživatele neproběhlo správně
                                 Toast.makeText(getApplicationContext(),
                                         getResources().getString(R.string.permission_denied),
                                         Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
 
                             }
                         } catch (JSONException e) {
@@ -268,28 +313,12 @@ public class SynchronizationActivity extends AppCompatActivity
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
     }
 
-    /*
-    public void syncPush(View view) {
-        Log.d(TAG, "Start synchronization after click");
-        if (WifiCheckerUtility.isConnected(this)) {
-            Log.d(TAG, "Connected to wifi");
-        } else {
-            Log.d(TAG, "Not connected to wifi");
-        }
-
-        //vytvoření třídy pro nahrání dat na server
-        Push push = new Push(this);
-        //nahrání dat na server není prováděno na pozadí
-        push.push(false);
-    }
-
-*/
     /**
      * Progress dialog pro v průběhu synchronizace.
      */
-    private void displayLoader() {
+    private void displayLoader(String message) {
         progressDialog = new ProgressDialog(SynchronizationActivity.this);
-        progressDialog.setMessage(getString(R.string.login_in_progress));
+        progressDialog.setMessage(message);
         progressDialog.setIndeterminate(false);
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -321,6 +350,9 @@ public class SynchronizationActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Metoda, která je volána po stisknutí tlačítka zpět.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -331,6 +363,10 @@ public class SynchronizationActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Při ukončení aktivity dojde k u uložení aktuálního
+     * nastavení do SP.
+     */
     @Override
     public void onStop() {
         Log.d(TAG, "Saving to the share pref");

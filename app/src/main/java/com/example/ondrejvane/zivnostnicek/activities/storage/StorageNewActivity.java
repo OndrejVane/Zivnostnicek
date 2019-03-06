@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
@@ -24,6 +25,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivity, která vytvoří novou skladovou položku
@@ -129,6 +131,10 @@ public class StorageNewActivity extends AppCompatActivity
         itemQuantity.setIsDirty(1);
         itemQuantity.setIsDeleted(0);
         itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, false);
+
+        //záloha dat
+        Push push = new Push(this);
+        push.push();
 
         //výpis o úspěšném uložení skladové položky
         String message = getString(R.string.storage_item_has_been_added);

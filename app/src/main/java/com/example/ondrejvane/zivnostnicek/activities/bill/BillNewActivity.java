@@ -34,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.R;
@@ -699,6 +700,10 @@ public class BillNewActivity extends AppCompatActivity
                 }
             }
         }
+
+        //pokus o automatickou synchronizaci
+        Push push = new Push(BillNewActivity.this);
+        push.push();
 
         //vypis uživateli o úspěšném vložení faktruy do databáze
         String message = getString(R.string.income_has_been_added);

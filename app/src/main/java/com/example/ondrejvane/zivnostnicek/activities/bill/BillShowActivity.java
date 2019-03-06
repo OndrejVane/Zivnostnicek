@@ -31,6 +31,7 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
@@ -336,6 +337,11 @@ public class BillShowActivity extends AppCompatActivity
             String message = getString(R.string.bill_has_been_deleted);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(BillShowActivity.this, BillActivity.class);
+
+            //pokus o automatickou synchronizaci
+            Push push = new Push(BillShowActivity.this);
+            push.push();
+
             intent.putExtra("IS_EXPENSE", isExpense);
             startActivity(intent);
             finish();

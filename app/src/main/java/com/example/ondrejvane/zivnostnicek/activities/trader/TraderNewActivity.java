@@ -22,6 +22,7 @@ import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která se stará o vytvoření nového obchodníka.
@@ -167,7 +168,12 @@ public class TraderNewActivity extends AppCompatActivity
         trader.setIsDirty(1);
         trader.setIsDeleted(0);
 
+        //uložení obchodníka do databáze
         traderDatabaseHelper.addTrader(trader, false);
+
+        //pokus o automatickou záluhu dat na server
+        Push push = new Push(this);
+        push.push();
 
         String message = getString(R.string.trader_is_created);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

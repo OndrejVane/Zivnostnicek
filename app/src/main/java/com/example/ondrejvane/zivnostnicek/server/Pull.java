@@ -33,6 +33,12 @@ public class Pull {
     }
 
 
+    public void pull(JSONArray response){
+        deleteAllUserData();
+        saveDataFromServer(response);
+        refreshAllIdentifiers();
+    }
+
     /**
      * Smazání všech lokálních dat přihlášeného uživatelel.
      */
@@ -41,6 +47,10 @@ public class Pull {
         userDatabaseHelper.deleteAllUserData(UserInformation.getInstance().getUserId());
     }
 
+    /**
+     * Metoda, která po načtení dat
+     * ze serveru aktualizuje lokální identifikátory.
+     */
     public void refreshAllIdentifiers(){
         IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(this.context);
         identifiersDatabaseHelper.refreshIdentifiers();

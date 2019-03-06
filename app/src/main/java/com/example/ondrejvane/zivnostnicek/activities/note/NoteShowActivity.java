@@ -19,11 +19,13 @@ import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.bill.BillNewActivity;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která zobrazí vybranou poznámku.
@@ -211,6 +213,11 @@ public class NoteShowActivity extends AppCompatActivity
         } else {
             Toast.makeText(this, R.string.note_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
+
+        //pokus o automatickou synchronizaci
+        Push push = new Push(this);
+        push.push();
+
         Intent intent = new Intent(NoteShowActivity.this, TraderShowActivity.class);
         intent.putExtra("TRADER_ID", traderID);
         startActivity(intent);

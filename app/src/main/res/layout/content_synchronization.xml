@@ -43,13 +43,21 @@
                     android:enabled="false"
                     android:text="@string/sync_allow_only_on_wifi"/>
 
+                <TextView
+                    android:id="@+id/textViewIsAllSynced"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/data_is_not_backed_up"
+                    android:drawableStart="@drawable/ic_cloud_off"/>
+
 
 
                 <TextView
                     android:id="@+id/textViewSyncInfo2"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="120dp"
+                    android:layout_marginTop="40dp"
                     android:text="@string/sync_info_2"
                     />
 

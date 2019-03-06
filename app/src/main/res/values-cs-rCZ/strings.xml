@@ -230,6 +230,12 @@
     <string name="server_settings">Nastavení serveru</string>
     <string name="server_address">Adresa serveru</string>
     <string name="www.zivnostnicek.cz">www.zivnostnicek.cz</string>
+    <string name="saving_data_to_the_server">Ukládání dat na server</string>
+    <string name="recovering_data_from_the_server">Obnova dat ze serveru</string>
+    <string name="data_successfully_saved_to_the_server">Data byla úspěšně uložena na server</string>
+    <string name="trader_has_been_edited">Obchodník by uložen</string>
+    <string name="data_is_not_backed_up">Data nejsou zálohována</string>
+    <string name="all_data_is_backed_up">Všechna data jsou zálohována</string>
 
     <string-array name="photo">
         <item>galerie</item>

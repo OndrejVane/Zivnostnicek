@@ -24,6 +24,7 @@ import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.Logout;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**
  * Aktivita, která zobrazuje náhled skladové položky.
@@ -192,6 +193,11 @@ public class StorageShowActivity extends AppCompatActivity
      */
     private void deleteStorageItem() {
         if (storageItemDatabaseHelper.deleteStorageItemById(storageItemID)) {
+
+            //záloha dat
+            Push push = new Push(this);
+            push.push();
+
             Toast.makeText(StorageShowActivity.this, R.string.storage_item_has_been_deleted, Toast.LENGTH_LONG).show();
             Intent intent = new Intent(StorageShowActivity.this, StorageActivity.class);
             startActivity(intent);
