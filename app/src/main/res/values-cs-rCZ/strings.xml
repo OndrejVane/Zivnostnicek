@@ -200,7 +200,7 @@
     <string name="about_app_2">Tato aplikace byla vytvořena jako studentský projekt v rámci bakalářské práce."</string>
     <string name="author_name">Ondřej Váně</string>
     <string name="version_number">1.0</string>
-    <string name="email">info@zivnostnicek.cz</string>
+    <string name="email">onry.vane@gmail.com</string>
     <string name="paid">Uhrazené</string>
     <string name="received">Obdržené</string>
     <string name="VAT_label">DPH</string>
@@ -236,6 +236,23 @@
     <string name="trader_has_been_edited">Obchodník by uložen</string>
     <string name="data_is_not_backed_up">Data nejsou zálohována</string>
     <string name="all_data_is_backed_up">Všechna data jsou zálohována</string>
+    <string name="links">Odkazy</string>
+    <string name="useful_links">Užitečné odkazy</string>
+    <string name="title_activity_info_links">Užitečné odkazy</string>
+
+    <!-- ODKAZY -->
+    <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>
+    <string name="www.podnikatel.cz_hint">Největší server pro podnikatele.</string>
+    <string name="www.justice.cz">&#8226; www.justice.cz</string>
+    <string name="www.justice.cz_hint">Obchodní rejstřík a informace z českého soudnictví.</string>
+    <string name="www.penize.cz">&#8226; www.penize.cz</string>
+    <string name="www.penize.cz_hint">Informace z oblasti osobních a rodinných financí.</string>
+    <string name="www.ipodnikatel.cz">&#8226; www.ipodnikatel.cz</string>
+    <string name="www.ipodnikatel.cz_hint">Portál pro začínající podnikatele.</string>
+    <string name="www.business.center.cz">&#8226; www.business.center.cz</string>
+    <string name="www.business.center.cz_hint">Šablony, formuláře, zákony a novinky pro podnikatele.</string>
+    <string name="www.zivnostnik.cz">&#8226; www.zivnostnik.cz</string>
+    <string name="www.zivnostnik.cz_hint">Portál pro živnostníky a drobné podnikatele.</string>
 
     <string-array name="photo">
         <item>galerie</item>

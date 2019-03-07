@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.example.ondrejvane.zivnostnicek.ToDo;
 import com.squareup.leakcanary.LeakCanary;
 
 public class ApplicationClass extends Application {

@@ -165,6 +165,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Metoda, která provádí komunikaci se serverem pomocí požadavku
+     * POST. Běží v jiném vlákně, než UI. Po přijetí zprávy
+     * od serveru je zpráva zpracována a vyhodnocena.
+     *
+     * @param view view aktivity
+     */
     public void logIn(View view) {
 
         if (checkIfIsAllFilled()) {

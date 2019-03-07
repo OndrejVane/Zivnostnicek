@@ -249,7 +249,24 @@
     <string name="trader_has_been_edited">Trader has been edited</string>
     <string name="data_is_not_backed_up">Data is not backed up</string>
     <string name="all_data_is_backed_up">All data is backed up</string>
+    <string name="links">Links</string>
+    <string name="useful_links">Useful links</string>
+    <string name="title_activity_info_links">Useful Links</string>
 
+
+    <!-- ODKAZY -->
+    <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>
+    <string name="www.podnikatel.cz_hint">The biggest server for businessman.</string>
+    <string name="www.justice.cz">&#8226; www.justice.cz</string>
+    <string name="www.justice.cz_hint">Commercial Register and Information from the Czech judiciary.</string>
+    <string name="www.penize.cz">&#8226; www.penize.cz</string>
+    <string name="www.penize.cz_hint">Information on personal and family finances. </string>
+    <string name="www.ipodnikatel.cz">&#8226; www.ipodnikatel.cz</string>
+    <string name="www.ipodnikatel.cz_hint">Portal for starting businessman.</string>
+    <string name="www.business.center.cz">&#8226; www.business.center.cz</string>
+    <string name="www.business.center.cz_hint">Templates, forms, laws and news for business people.</string>
+    <string name="www.zivnostnik.cz">&#8226; www.zivnostnik.cz</string>
+    <string name="www.zivnostnik.cz_hint">Portal for Tradesmen and Small Entrepreneurs.</string>
 
     <string-array name="vat_amount">
         <item>21</item>
