@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- NÁZEV APLIKACE -->
     <string name="app_name">Živnostníček</string>
+
+    <!-- TITULKY AKTIVIT -->
+    <string name="title_activity_home">Přehled</string>
+    <string name="title_activity_income">Příjmy</string>
+    <string name="title_activity_expense">Výdaje</string>
+    <string name="title_activity_trader">Obchodníci</string>
+    <string name="title_activity_storage">Sklad</string>
+    <string name="title_activity_trader_show"> Náhled obchodníka</string>
+    <string name="title_activity_info">Informace</string>
+    <string name="title_activity_synchronization">Synchronizace dat</string>
+    <string name="title_activity_trader_new">Přidej obchodníka</string>
+    <string name="title_activity_trader_edit">Editace obchodníka</string>
+    <string name="title_activity_trader_show_note">Zobrazení poznámky</string>
+    <string name="title_activity_trader_edit_note">Editace hodnocení</string>
+    <string name="title_activity_expense_new">Přidejte výdaj</string>
+    <string name="title_activity_trader_new_note">Přidat hodnocení</string>
+    <string name="title_activity_info_currency">Kurzovní lístek</string>
+    <string name="title_activity_storage_new">Přidat skladovou položku</string>
+    <string name="title_activity_storage_show">Náhled skladové položky</string>
+    <string name="title_activity_storage_edit">Editce skladové položky</string>
+    <string name="title_activity_income_show">Náhled příjmu</string>
+    <string name="title_activity_expense_show">Náhled výdaje</string>
+    <string name="title_activity_bill_edit">Editace příjmu</string>
+    <string name="title_activity_expense_edit">Editace výdaje</string>
+    <string name="title_activity_home_year_summary">Roční přehled</string>
+    <string name="title_activity_info_about_app">O aplikaci</string>
+    <string name="title_activity_home_income">Přehled příjmů</string>
+    <string name="title_activity_home_expense">Přehled výdajů</string>
+    <string name="title_activity_home_vat">Přehled DPH</string>
+    <string name="title_activity_home_traders">Přehled obchodníků</string>
+    <string name="title_activity_info_links">Užitečné odkazy</string>
+    <string name="title_activity_income_new">Přidejte příjem</string>
+
+    <!-- OSTATNí-->
+    <string name="data_synchronization">Synchronizace dat</string>
     <string name="user_name">E-mail</string>
     <string name="password">Heslo</string>
     <string name="remember_me">Zůstat přihlášen</string>
@@ -28,18 +64,9 @@
     <string name="traders">Obchodníci</string>
     <string name="storage">Sklad</string>
     <string name="info">Informace</string>
-    <string name="data_synchronization">Synchronizace dat</string>
-    <string name="title_activity_home">Přehled</string>
-    <string name="title_activity_income">Příjmy</string>
-    <string name="title_activity_expense">Výdaje</string>
-    <string name="title_activity_trader">Obchodníci</string>
-    <string name="title_activity_storage">Sklad</string>
-    <string name="title_activity_info">Informace</string>
-    <string name="title_activity_synchronization">Synchronizace dat</string>
     <string name="log_out_question">Opravdu se chcete odhlásit?</string>
     <string name="yes">Ano</string>
     <string name="no">Ne</string>
-    <string name="title_activity_trader_new">Přidej obchodníka</string>
     <string name="add_trader">Přidejte obchodníka</string>
     <string name="fill_information_about_trader">Vyplňte údaje o obchodníkovi</string>
     <string name="trader_name">*Název obchodníka</string>
@@ -58,7 +85,6 @@
     <string name="wrong_format_of_tid">Špatný formát DIČ př. CZ25596641</string>
     <string name="search">Hledat</string>
     <string name="no_result">Žádné výsledky</string>
-    <string name="title_activity_trader_show"> Náhled obchodníka</string>
     <string name="trader_name_show">Název obchodníka</string>
     <string name="trader_is_created">Obchodník přidán</string>
     <string name="edit">Editovat</string>
@@ -67,24 +93,19 @@
     <string name="delete_trader_question">Opravdu chcete smazat tohoto obchodníka?</string>
     <string name="trader_deleted_message">Obchodník byl smazán</string>
     <string name="trader_not_deleted_message">Obchodníl nebyl smazán</string>
-    <string name="title_activity_trader_edit">Editace obchodníka</string>
     <string name="save">Uložit změny</string>
     <string name="edit_information_about_trader">Editujte údaje o obchodníkovi</string>
-    <string name="title_activity_trader_new_note">Přidat hodnocení</string>
     <string name="title">Název</string>
     <string name="note">Poznámka</string>
     <string name="rating">Hodnocení</string>
     <string name="note_title_is_empty">Nadpis je prázdný</string>
     <string name="note_is_empty">Poznámka je prázdná</string>
     <string name="note_has_been_added">Hodnocení bylo přidáno</string>
-    <string name="title_activity_trader_show_note">Zobrazení poznámky</string>
     <string name="date">Datum</string>
     <string name="note_delete_message">Hodnocení bylo smazáno</string>
     <string name="note_not_deleted_message">Hodnocení nebylo smazáno</string>
     <string name="note_delete_question">Opravdu chcete smazat toto hodnocení?</string>
-    <string name="title_activity_trader_edit_note">Editace hodnocení</string>
     <string name="note_update_message">Hodnocení bylo aktualizováno</string>
-    <string name="title_activity_expense_new">Přidejte výdaj</string>
     <string name="fill_information_about_expense">Vyplňte údaje o výdaji</string>
     <string name="number_of_bill_name">*Číslo faktury (název)</string>
     <string name="bill_name">Číslo faktury (název)</string>
@@ -93,7 +114,6 @@
     <string name="VAT">DPH[%]</string>
     <string name="valuty_list">Kurzovní lístek</string>
     <string name="basic_currency">Základní měny</string>
-    <string name="title_activity_info_currency">Kurzovní lístek</string>
     <string name="europe">Evropská unie</string>
     <string name="eur">EUR</string>
     <string name="dot">…</string>
@@ -115,7 +135,6 @@
     <string name="select_trader">Vyberte obchodníka</string>
     <string name="add_type">Přidejte druh</string>
     <string name="expense_is_created">Výdaj přidán</string>
-    <string name="title_activity_income_new">Přidejte příjem</string>
     <string name="expense_items">Položky faktury</string>
     <string name="add_expense">Přidat výdaj</string>
     <string name="add_income">Přidat příjem</string>
@@ -125,15 +144,12 @@
     <string name="unit">*Jednotky</string>
     <string name="item_name_is_empty">Název položky je prázdný</string>
     <string name="quantity_is_empty">Množství je prázdné</string>
-    <string name="title_activity_storage_new">Přidat skladovou položku</string>
     <string name="fill_information_about_storage_item">Vyplňte údaje o skladové položce</string>
     <string name="storage_item_has_been_added">Skladová položka byla přidána</string>
     <string name="delete_storage_item_question">Opravdu chcete smazat tuto skladovou položku?</string>
     <string name="storage_item_has_been_deleted">Skladová položka byla smazána</string>
     <string name="item_name_show">Název položky</string>
     <string name="quantity_show">Množství</string>
-    <string name="title_activity_storage_show">Náhled skladové položky</string>
-    <string name="title_activity_storage_edit">Editce skladové položky</string>
     <string name="edit_information_about_storage_item">Editujte informace o skladové položce</string>
     <string name="storage_item_has_been_edited">Skladová položka byla aktualizována</string>
     <string name="add">Přidejte</string>
@@ -153,12 +169,10 @@
     <string name="save_settings">Uložit nastavení</string>
     <string name="settings_saved">Nastavení bylo uloženo</string>
     <string name="select_year">Vyberte rok</string>
-    <string name="title_activity_income_show">Náhled příjmu</string>
     <string name="picture_is_not_available">Obrázek není dostupný</string>
     <string name="not_selected">Nevybrán</string>
     <string name="bill_has_been_deleted">Faktura byla smazána</string>
     <string name="bill_has_not_been_deleted">Faktura nebyla smazána</string>
-    <string name="title_activity_expense_show">Náhled výdaje</string>
     <string name="bill_delete_question">Opravdu chcete smazat tuto fakturu?</string>
     <string name="select_month">Vyberte měsíc</string>
     <string name="select">Vybrat</string>
@@ -175,10 +189,8 @@
     <string name="income_and_expense_space">Příjmy \n a \n výdaje</string>
     <string name="balance">Bilance</string>
     <string name="zero">0.00,-</string>
-    <string name="title_activity_bill_edit">Editace příjmu</string>
     <string name="save_income">Uložit příjem</string>
     <string name="save_expense">Uložit výdaj</string>
-    <string name="title_activity_expense_edit">Editace výdaje</string>
     <string name="edit_information_about_income">Editujte informace o příjmu</string>
     <string name="edit_information_about_expense">Editujte informace o výdaji</string>
     <string name="no_quantity_required">Ve skladu není požadované množství</string>
@@ -190,8 +202,6 @@
     <string name="year_summary">Roční přehled</string>
     <string name="vat_summary">Přehled DPH</string>
     <string name="traders_summary">Přehled obchodníků </string>
-    <string name="title_activity_home_year_summary">Roční přehled</string>
-    <string name="title_activity_info_about_app">O aplikaci</string>
     <string name="add_type_bill">Přidat druh faktury</string>
     <string name="version">Verze: </string>
     <string name="author">Autor: </string>
@@ -214,10 +224,6 @@
     <string name="sync_info_2">Data můžete ručně zálohovat na server tlačítem \"ZÁLOHOVAT DATA NYNÍ\" a obnovit data ze serveru můžete tlačítkem \"OBNOVIT DATA NYNÍ\".</string>
     <string name="sync_now">Synchronizovat nyní</string>
     <string name="fill_all_columns">Vyplňte všechny údaje</string>
-    <string name="title_activity_home_income">Přehled příjmů</string>
-    <string name="title_activity_home_expense">Přehled výdajů</string>
-    <string name="title_activity_home_vat">Přehled DPH</string>
-    <string name="title_activity_home_traders">Přehled obchodníků</string>
     <string name="permission_info_camera">Aplikace potřebuje přístup k fotoaparátu k pořízení fotografie faktury a uložení fotografie do zařízení.</string>
     <string name="permission_info_gallery">Aplikace potřebuje přístup k fotografiím k přidání obrázku k faktuře.</string>
     <string name="permission_info_currency">Aplikcae potřebuje přístup k paměti pro načítání a ukládání potřebných dat.</string>
@@ -238,7 +244,8 @@
     <string name="all_data_is_backed_up">Všechna data jsou zálohována</string>
     <string name="links">Odkazy</string>
     <string name="useful_links">Užitečné odkazy</string>
-    <string name="title_activity_info_links">Užitečné odkazy</string>
+    <string name="dates">Termíny</string>
+    <string name="important_dates">Důležité termíny pro živnostníky</string>
 
     <!-- ODKAZY -->
     <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>
@@ -254,6 +261,7 @@
     <string name="www.zivnostnik.cz">&#8226; www.zivnostnik.cz</string>
     <string name="www.zivnostnik.cz_hint">Portál pro živnostníky a drobné podnikatele.</string>
 
+    <!-- POLE -->
     <string-array name="photo">
         <item>galerie</item>
         <item>fotoaparátu</item>

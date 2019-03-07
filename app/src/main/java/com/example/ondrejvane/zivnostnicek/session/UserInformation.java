@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.helper;
+package com.example.ondrejvane.zivnostnicek.session;
 
 import com.example.ondrejvane.zivnostnicek.model.User;
 

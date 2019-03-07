@@ -13,7 +13,7 @@ import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 /**
  * Kativita, která zobrazuje uživateli informace o aplikaci.

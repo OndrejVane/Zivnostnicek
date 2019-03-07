@@ -31,9 +31,9 @@ import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 

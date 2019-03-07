@@ -1,12 +1,12 @@
 package com.example.ondrejvane.zivnostnicek.helper;
 
-import android.content.Context;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 
 
 /**

@@ -123,14 +123,14 @@
                      android:layout_width="64dp"
                      android:layout_height="64dp"
                      android:background="@drawable/circle"
-                     android:src="@drawable/ic_dollar"
+                     android:src="@drawable/ic_calendar_white"
                      android:padding="10dp"/>
                  <TextView
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:textStyle="bold"
                      android:layout_marginTop="10dp"
-                     android:text="Pokus3"/>
+                     android:text="@string/dates"/>
                  <View
                      android:layout_width="match_parent"
                      android:layout_height="1dp"
@@ -140,7 +140,7 @@
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
                      android:gravity="center"
-                     android:text="Pokus pokus"
+                     android:text="@string/important_dates"
                      android:padding="5dp"
                      android:textColor="@android:color/darker_gray"/>
 

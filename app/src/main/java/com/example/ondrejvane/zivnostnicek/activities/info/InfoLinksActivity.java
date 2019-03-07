@@ -12,7 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 public class InfoLinksActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

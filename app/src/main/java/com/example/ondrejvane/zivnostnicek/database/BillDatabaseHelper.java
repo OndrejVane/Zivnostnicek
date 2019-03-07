@@ -6,9 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
-import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 

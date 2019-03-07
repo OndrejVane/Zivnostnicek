@@ -5,11 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class TypeBillDatabaseHelper extends DatabaseHelper {

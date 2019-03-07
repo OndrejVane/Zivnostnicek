@@ -3,6 +3,8 @@ package com.example.ondrejvane.zivnostnicek.helper;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class Settings {

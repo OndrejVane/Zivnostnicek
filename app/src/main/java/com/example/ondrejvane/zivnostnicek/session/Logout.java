@@ -1,16 +1,15 @@
-package com.example.ondrejvane.zivnostnicek.helper;
+package com.example.ondrejvane.zivnostnicek.session;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.LoginActivity;
-import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
+import com.example.ondrejvane.zivnostnicek.helper.Settings;
 
 public class Logout extends AppCompatActivity {
 

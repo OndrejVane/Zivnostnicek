@@ -29,10 +29,10 @@ import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.server.Server;
-import com.example.ondrejvane.zivnostnicek.session.MySingleton;
+import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
 import org.json.JSONException;
@@ -279,7 +279,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
 
-            MySingleton.getInstance(this).addToRequestQueue(jsObjectRequest);
+            RequestQueue.getInstance(this).addToRequestQueue(jsObjectRequest);
         }
 
     }

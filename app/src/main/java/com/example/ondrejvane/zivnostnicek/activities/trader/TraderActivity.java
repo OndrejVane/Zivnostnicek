@@ -23,8 +23,8 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
 
 /**

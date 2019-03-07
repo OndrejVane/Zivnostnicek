@@ -22,7 +22,7 @@ import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;

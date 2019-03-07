@@ -27,14 +27,14 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.server.Pull;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.server.Server;
-import com.example.ondrejvane.zivnostnicek.session.MySingleton;
+import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -230,7 +230,7 @@ public class SynchronizationActivity extends AppCompatActivity
                     }
                 });
 
-        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+        RequestQueue.getInstance(this).addToRequestQueue(jsonArrayRequest);
 
     }
 
@@ -310,7 +310,7 @@ public class SynchronizationActivity extends AppCompatActivity
                     }
                 });
 
-        MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+        RequestQueue.getInstance(this).addToRequestQueue(jsonArrayRequest);
     }
 
     /**

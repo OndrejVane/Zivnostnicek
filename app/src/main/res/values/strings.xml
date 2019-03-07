@@ -1,5 +1,43 @@
 <resources>
+    <!-- NÁZEV APLIKACE -->
     <string name="app_name">Zivnostnicek</string>
+
+    <!-- TITULKY AKTIVIT -->
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_income">Income</string>
+    <string name="title_activity_expense">Expense</string>
+    <string name="title_activity_trader">Traders</string>
+    <string name="title_activity_storage">Storage</string>
+    <string name="title_activity_info">Information</string>
+    <string name="title_activity_synchronization">Synchronization</string>
+    <string name="title_activity_trader_new">Add trader</string>
+    <string name="title_activity_trader_show">Show trader</string>
+    <string name="title_activity_trader_edit">Edit trader</string>
+    <string name="title_activity_trader_note">TraderNoteActivity</string>
+    <string name="title_activity_trader_new_note">Add rating</string>
+    <string name="title_activity_trader_show_note">Show Note</string>
+    <string name="title_activity_trader_edit_note">TraderEditNoteActivity</string>
+    <string name="title_activity_income_new">Add new income</string>
+    <string name="title_activity_expense_new">ExpenseNewActivity</string>
+    <string name="title_activity_info_currency">Info currency</string>
+    <string name="title_activity_storage_new">Add storage item</string>
+    <string name="title_activity_storage_show">Show storage item</string>
+    <string name="title_activity_storage_edit">Edit storage item</string>
+    <string name="title_activity_expense_show">Show expense</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_income_show">Show income</string>
+    <string name="title_activity_expense_edit">Edit expense</string>
+    <string name="title_activity_info_about_app">About application</string>
+    <string name="title_activity_home_income">Home income</string>
+    <string name="title_activity_home_expense">Home expense</string>
+    <string name="title_activity_home_year_summary">Home year summary</string>
+    <string name="title_activity_home_vat">Home vat summary</string>
+    <string name="title_activity_home_traders">Home traders summary</string>
+    <string name="title_activity_info_links">Useful Links</string>
+    <string name="title_activity_bill_edit">Edit income</string>
+
+    <!-- OSTATNÍ -->
     <string name="password">Password</string>
     <string name="user_name">E-mail</string>
     <string name="remember_me">Remember Me</string>
@@ -19,7 +57,6 @@
     <string name="email_is_not_valid">E-mail address is not valid</string>
     <string name="wrong_password_or_address">Wrong password or e-mail address</string>
     <string name="you_are_successfully_login">You are successfully login</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -28,7 +65,6 @@
     <string name="action_settings">Settings</string>
     <string name="user_is_created">User is created</string>
     <string name="user_already_exists">User already exists</string>
-    <string name="title_activity_home">Home</string>
     <string name="home">Home</string>
     <string name="income">Income</string>
     <string name="expense">Expense</string>
@@ -38,16 +74,9 @@
     <string name="data_synchronization">Data synchronization</string>
     <string name="logout">Logout</string>
     <string name="header_logo">Header logo</string>
-    <string name="title_activity_income">Income</string>
-    <string name="title_activity_expense">Expense</string>
-    <string name="title_activity_trader">Traders</string>
-    <string name="title_activity_storage">Storage</string>
-    <string name="title_activity_info">Information</string>
-    <string name="title_activity_synchronization">Synchronization</string>
     <string name="log_out_question">Are you really want to log out?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="title_activity_trader_new">Add trader</string>
     <string name="add_trader">Add trader</string>
     <string name="name">Name</string>
     <string name="contact_person">Contact person</string>
@@ -70,7 +99,6 @@
     <string name="trader_is_created">Trader is created</string>
     <string name="search">Search</string>
     <string name="no_result">No result</string>
-    <string name="title_activity_trader_show">Show trader</string>
     <string name="trader_name_show">Trader name</string>
     <string name="edit">Edit</string>
     <string name="add_rating">Add rating</string>
@@ -78,26 +106,19 @@
     <string name="delete_trader_question">Are you really want to delete this trader?</string>
     <string name="trader_deleted_message">Trader has been deleted</string>
     <string name="trader_not_deleted_message">Trader has not been deleted</string>
-    <string name="title_activity_trader_edit">Edit trader</string>
     <string name="save">Save</string>
     <string name="edit_information_about_trader">Edit information about trader</string>
-    <string name="title_activity_trader_note">TraderNoteActivity</string>
-    <string name="title_activity_trader_new_note">Add rating</string>
     <string name="title">Title</string>
     <string name="note">Note</string>
     <string name="rating">Rating</string>
     <string name="note_title_is_empty">Note title is empty</string>
     <string name="note_is_empty">Note is empty</string>
     <string name="note_has_been_added">Note has been added</string>
-    <string name="title_activity_trader_show_note">Show Note</string>
     <string name="date">Date</string>
     <string name="note_delete_message">Note has been deleted</string>
     <string name="note_not_deleted_message">Note not has been deleted</string>
     <string name="note_delete_question">Are you really want to delete this note?</string>
-    <string name="title_activity_trader_edit_note">TraderEditNoteActivity</string>
     <string name="note_update_message">Note has been updated</string>
-    <string name="title_activity_income_new">Add new income</string>
-    <string name="title_activity_expense_new">ExpenseNewActivity</string>
     <string name="fill_information_about_expense">Fill information about expense</string>
     <string name="number_of_bill_name">*Number of bill(Name)</string>
     <string name="bill_name">Number of bill(Name)</string>
@@ -106,7 +127,6 @@
     <string name="VAT">VAT[%]</string>
     <string name="valuty_list">Exchange Rates</string>
     <string name="basic_currency">Basic currency</string>
-    <string name="title_activity_info_currency">Info currency</string>
     <string name="europe">European Union</string>
     <string name="eur">EUR</string>
     <string name="dot">…</string>
@@ -137,15 +157,12 @@
     <string name="unit">Unit</string>
     <string name="item_name_is_empty">Item name is empty</string>
     <string name="quantity_is_empty">Quantity is empty</string>
-    <string name="title_activity_storage_new">Add storage item</string>
     <string name="fill_information_about_storage_item">Fill information about storage item</string>
     <string name="storage_item_has_been_added">Storage item has been added</string>
     <string name="delete_storage_item_question">Are you really want to delete this storage item?</string>
     <string name="storage_item_has_been_deleted">Storage item has been deleted</string>
     <string name="item_name_show">Item name</string>
     <string name="quantity_show">Quantity</string>
-    <string name="title_activity_storage_show">Show storage item</string>
-    <string name="title_activity_storage_edit">Edit storage item</string>
     <string name="edit_information_about_storage_item">Edit information about storage item</string>
     <string name="storage_item_has_been_edited">Storage item has been edited</string>
     <string name="add">Add</string>
@@ -169,7 +186,6 @@
     <string name="not_selected">Not selected</string>
     <string name="bill_has_been_deleted">Bill has been deleted</string>
     <string name="bill_has_not_been_deleted">Bill has not been deleted</string>
-    <string name="title_activity_expense_show">Show expense</string>
     <string name="bill_delete_question">Are you really want to delete this bill?</string>
     <string name="select_month">Select month</string>
     <string name="select">Select</string>
@@ -186,12 +202,8 @@
     <string name="income_and_expense_space">Income \n and \n expense</string>
     <string name="balance">Balance</string>
     <string name="zero">0.00,-</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_income_show">Show income</string>
-    <string name="title_activity_bill_edit">Edit income</string>
-    <string name="save_income">Save income</string>
     <string name="save_expense">Save expense</string>
-    <string name="title_activity_expense_edit">Edit expense</string>
+    <string name="save_income">Save income</string>
     <string name="edit_information_about_income">Edit information about income</string>
     <string name="edit_information_about_expense">Edit information about expense</string>
     <string name="no_quantity_required">No quantity required</string>
@@ -203,7 +215,6 @@
     <string name="year_summary">Year summary</string>
     <string name="vat_summary">VAT summary</string>
     <string name="traders_summary">Traders summary</string>
-    <string name="title_activity_info_about_app">About application</string>
     <string name="add_type_bill">Add type bill</string>
     <string name="version">Version:</string>
     <string name="author">Author: </string>
@@ -226,11 +237,6 @@
     <string name="sync_info_2">You can synchronize data now by clicking on button below.</string>
     <string name="sync_now">Synchronize now</string>
     <string name="fill_all_columns">Fill all columns</string>
-    <string name="title_activity_home_income">Home income</string>
-    <string name="title_activity_home_expense">Home expense</string>
-    <string name="title_activity_home_year_summary">Home year summary</string>
-    <string name="title_activity_home_vat">Home vat summary</string>
-    <string name="title_activity_home_traders">Home traders summary</string>
     <string name="permission_info_camera">The application needs access to the camera to take a photo of the bill and save the photo to the device.</string>
     <string name="permission_info_gallery">The application needs access to the gallery to add a photo of the bill.</string>
     <string name="permission_info_currency">The application needs access to save and read data from mobile memory.</string>
@@ -251,7 +257,8 @@
     <string name="all_data_is_backed_up">All data is backed up</string>
     <string name="links">Links</string>
     <string name="useful_links">Useful links</string>
-    <string name="title_activity_info_links">Useful Links</string>
+    <string name="dates">Dates</string>
+    <string name="important_dates">Important dates</string>
 
 
     <!-- ODKAZY -->
@@ -268,6 +275,8 @@
     <string name="www.zivnostnik.cz">&#8226; www.zivnostnik.cz</string>
     <string name="www.zivnostnik.cz_hint">Portal for Tradesmen and Small Entrepreneurs.</string>
 
+
+    <!-- POLE -->
     <string-array name="vat_amount">
         <item>21</item>
         <item>15</item>

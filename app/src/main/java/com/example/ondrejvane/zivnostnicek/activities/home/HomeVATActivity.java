@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.Logout;
+import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;

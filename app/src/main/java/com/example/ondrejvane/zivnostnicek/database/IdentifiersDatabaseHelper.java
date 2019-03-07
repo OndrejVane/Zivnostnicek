@@ -4,13 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.nfc.Tag;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 
 public class IdentifiersDatabaseHelper extends DatabaseHelper {
 

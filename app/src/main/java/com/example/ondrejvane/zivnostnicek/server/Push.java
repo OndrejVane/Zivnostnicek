@@ -9,7 +9,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
@@ -17,7 +16,7 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.Bill;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.Note;
@@ -25,7 +24,6 @@ import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.example.ondrejvane.zivnostnicek.model.User;
-import com.example.ondrejvane.zivnostnicek.session.MySingleton;
 import com.example.ondrejvane.zivnostnicek.utilities.WifiCheckerUtility;
 
 import org.json.JSONArray;
@@ -104,7 +102,7 @@ public class Push {
                     }
                 });
 
-        MySingleton.getInstance(this.context).addToRequestQueue(jsonArrayRequest);
+        RequestQueue.getInstance(this.context).addToRequestQueue(jsonArrayRequest);
     }
 
 

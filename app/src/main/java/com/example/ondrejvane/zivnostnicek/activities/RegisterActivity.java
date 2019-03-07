@@ -23,7 +23,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
 import com.example.ondrejvane.zivnostnicek.server.Server;
-import com.example.ondrejvane.zivnostnicek.session.MySingleton;
+import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -171,7 +171,7 @@ public class RegisterActivity extends AppCompatActivity {
                     });
 
             // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(this).addToRequestQueue(jsArrayRequest);
+            RequestQueue.getInstance(this).addToRequestQueue(jsArrayRequest);
         }
 
     }

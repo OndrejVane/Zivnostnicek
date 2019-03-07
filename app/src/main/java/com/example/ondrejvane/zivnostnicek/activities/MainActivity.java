@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
-import com.example.ondrejvane.zivnostnicek.helper.UserInformation;
+import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
