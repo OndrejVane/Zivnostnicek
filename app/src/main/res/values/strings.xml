@@ -259,6 +259,8 @@
     <string name="useful_links">Useful links</string>
     <string name="dates">Dates</string>
     <string name="important_dates">Important dates</string>
+    <string name="show_on_map">Show on map</string>
+    <string name="address_is_empty">Address is empty</string>
 
 
     <!-- ODKAZY -->
