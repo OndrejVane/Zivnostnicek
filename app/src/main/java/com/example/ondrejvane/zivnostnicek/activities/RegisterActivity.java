@@ -124,6 +124,8 @@ public class RegisterActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
+            Log.d(TAG, "JSON register: " + request.toString());
+
             //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
             HttpsTrustManager.allowAllSSL();
 
