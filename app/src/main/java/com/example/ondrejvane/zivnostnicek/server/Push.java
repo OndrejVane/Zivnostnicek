@@ -60,6 +60,9 @@ public class Push {
             return;
         }
 
+        //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+        HttpsTrustManager.allowAllSSL();
+
         JSONArray request = makeMessage();
 
         String url = Server.getInstance().getPushUrl();
@@ -123,7 +126,7 @@ public class Push {
             if(settings.isSyncAllowWifi()){
                 return WifiCheckerUtility.isConnected(this.context);
             }else {
-                return false;
+                return true;
             }
         }else {
             return false;

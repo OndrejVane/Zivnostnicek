@@ -29,6 +29,7 @@ import com.example.ondrejvane.zivnostnicek.database.IdentifiersDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
+import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.server.Server;
@@ -188,6 +189,9 @@ public class LoginActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+            HttpsTrustManager.allowAllSSL();
 
             String url = Server.getInstance().getLoginUrl();
             //poslání JSONu na server a čekání na odpověd

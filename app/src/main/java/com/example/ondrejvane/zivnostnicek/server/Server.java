@@ -12,7 +12,7 @@ public class Server {
     private String serverProtocol = "http://";
     private int serverProtocolId = 0;
 
-    private String serverName = "www.zivnostnicek.cz";
+    private String serverName = "www.zivnostnicek.000webhostapp.com";
 
     private static final String LOGIN_URL = "/api/login.php";
     private static final String REGISTER_URL = "/api/register.php";

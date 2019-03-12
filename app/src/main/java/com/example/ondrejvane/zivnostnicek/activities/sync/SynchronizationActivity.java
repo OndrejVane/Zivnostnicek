@@ -27,6 +27,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
@@ -173,6 +174,9 @@ public class SynchronizationActivity extends AppCompatActivity
             return;
         }
 
+        //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+        HttpsTrustManager.allowAllSSL();
+
         String url = Server.getInstance().getPullUrl();
         //poslání JSONu na server a čekání na odpověd
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
@@ -248,6 +252,9 @@ public class SynchronizationActivity extends AppCompatActivity
         displayLoader(getString(R.string.saving_data_to_the_server));
         final Push push = new Push(SynchronizationActivity.this);
         JSONArray request = push.makeMessage();
+
+        //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+        HttpsTrustManager.allowAllSSL();
 
         String url = Server.getInstance().getPushUrl();
         //poslání JSONu na server a čekání na odpověd

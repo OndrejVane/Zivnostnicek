@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
+import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 
@@ -122,6 +123,9 @@ public class RegisterActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
+            //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+            HttpsTrustManager.allowAllSSL();
 
             String url = Server.getInstance().getRegisterUrl();
             JsonObjectRequest jsArrayRequest = new JsonObjectRequest

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 public class InfoLinksActivity extends AppCompatActivity
@@ -33,6 +34,10 @@ public class InfoLinksActivity extends AppCompatActivity
 
         NavigationView navigationView =  findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //nastavení headeru do aktivity
+        Header header = new Header(navigationView);
+        header.setTextToHeader();
     }
 
 
