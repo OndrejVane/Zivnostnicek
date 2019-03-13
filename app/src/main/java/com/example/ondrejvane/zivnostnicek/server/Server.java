@@ -42,7 +42,7 @@ public class Server {
         if (self == null) {
             getInstance();
         }
-        this.serverName = serverName;
+        this.serverName = removeWWWFromServerName(serverName);
         this.serverProtocol = PROTOCOLS_ARRAY[serverProtocol];
         this.serverProtocolId = serverProtocol;
     }
@@ -80,7 +80,7 @@ public class Server {
 
         //pokus o načtení hosnot ze SP
         serverProtocolId = sp.getInt(SERVER_PROTOCOL_KEY , 0);
-        serverName = sp.getString(SERVER_NAME_KEY, "www.zivnostnicek.cz");
+        serverName = sp.getString(SERVER_NAME_KEY, serverName);
         serverProtocol = PROTOCOLS_ARRAY[serverProtocolId];
 
     }
@@ -91,6 +91,14 @@ public class Server {
         editor.putInt(SERVER_PROTOCOL_KEY, serverProtocolId);
         editor.putString(SERVER_NAME_KEY, serverName);
         editor.apply();
+    }
+
+    private String removeWWWFromServerName(String address){
+        if(address.contains("www.")){
+            return address.substring(4);
+        }
+
+        return address;
     }
 
 
