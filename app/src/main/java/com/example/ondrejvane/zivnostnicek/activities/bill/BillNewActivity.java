@@ -97,7 +97,7 @@ public class BillNewActivity extends AppCompatActivity
     private BillDatabaseHelper billDatabaseHelper;
     private ItemQuantityDatabaseHelper itemQuantityDatabaseHelper;
     private TypeBillDatabaseHelper typeBillDatabaseHelper;
-    private Uri pictureUri = null;
+    private String picturePath = null;
 
     //kod oprávnění přístupu ke kameře a uložišti
     private final int PERMISSION_REQUEST_CODE_CAMERA = 123;
@@ -347,6 +347,54 @@ public class BillNewActivity extends AppCompatActivity
     }
 
     /**
+     * Metoda, která se spustí po načtení obrázku.
+     *
+     * @param requestCode kod požadavku
+     * @param resultCode  kod výsledku
+     * @param data        požadovaná data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            switch (requestCode) {
+                case 0:
+                    if (resultCode == RESULT_OK) {
+                        //převedení uri na bitmapu pro zobrazení
+                        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
+                        //zobrazení bitmapy
+                        photoView.setImageBitmap(bitmap);
+
+                        //uložení obrázku do uložiště zařízení
+                        picturePath = PictureUtility.saveToInternalStorage(bitmap, this);
+
+                        //vypis názvu soboru
+                        Log.d(TAG, "Picture path " + picturePath);
+
+                    }
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+                        //získání Uri z intentu
+                        Uri pickedImage = data.getData();
+                        //uložení odkazu na obrázek do globální proměnné
+                        //picturePath = pickedImage;
+                        //získání bitmapy z Uri
+                        Bitmap bitmap = PictureUtility.getBitmapFromUri(pickedImage, this);
+                        //nastavení bitmapy do image view
+                        photoView.setImageBitmap(bitmap);
+
+                        Log.d(TAG, "Picture URI " + picturePath);
+                    }
+            }
+        } catch (NullPointerException e) {
+            picturePath = null;
+            Log.d(TAG, "On activity result null pointer exception");
+        }
+    }
+
+    /**
      * Metoda, která zobrazí dialogové okno pro přídání
      * nové položky aktury.
      *
@@ -371,50 +419,6 @@ public class BillNewActivity extends AppCompatActivity
                     });
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
-        }
-    }
-
-    /**
-     * Metoda, která se spustí po načtení obrázku.
-     *
-     * @param requestCode kod požadavku
-     * @param resultCode  kod výsledku
-     * @param data        požadovaná data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        try {
-            switch (requestCode) {
-                case 0:
-                    if (resultCode == RESULT_OK) {
-                        //uložení odkazu na ubrázek do globální proměnné
-                        pictureUri = data.getData();
-                        //převedení uri na bitmapu pro zobrazení
-                        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                        //zobrazení bitmapy
-                        photoView.setImageBitmap(bitmap);
-
-                        Log.d(TAG, "Picture URInm " + data.getDataString());
-                    }
-                    break;
-                case 1:
-                    if (resultCode == RESULT_OK && data != null) {
-                        //získání Uri z intentu
-                        Uri pickedImage = data.getData();
-                        //uložení odkazu na obrázek do globální proměnné
-                        pictureUri = pickedImage;
-                        //získání bitmapy z Uri
-                        Bitmap bitmap = PictureUtility.getBitmapFromUri(pickedImage, this);
-                        //nastavení bitmapy do image view
-                        photoView.setImageBitmap(bitmap);
-
-                        Log.d(TAG, "Picture URI " + pictureUri);
-                    }
-            }
-        } catch (NullPointerException e) {
-            pictureUri = null;
-            Log.d(TAG, "On activity result null pointer exception");
         }
     }
 
@@ -656,8 +660,8 @@ public class BillNewActivity extends AppCompatActivity
         bill.setIsDirty(1);
         bill.setIsDeleted(0);
         //pokud je pořízen obrázek k faktuře
-        if (pictureUri != null) {
-            bill.setPhoto(pictureUri.toString());
+        if (picturePath != null) {
+            bill.setPhoto(picturePath.toString());
         }
         //zda se jedná o příjem nebo výdaje
         if (isExpense) {

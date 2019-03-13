@@ -166,9 +166,9 @@ public class BillShowActivity extends AppCompatActivity
         textViewBillVAT.setText(Integer.toString(bill.getVAT()));
         textViewBillDate.setText(bill.getDate());
 
-        if (bill.getPhoto() != null && PictureUtility.tryReadPicture(Uri.parse(bill.getPhoto()), this)) {
-
-            PictureUtility.setBitmap(Uri.parse(bill.getPhoto()), this, photoViewBillPhoto);
+        if (bill.getPhoto() != null && PictureUtility.tryLoadImageFromStorage(bill.getPhoto())) {
+            //načtení obrázku z uložiště zařízení
+            photoViewBillPhoto.setImageBitmap(PictureUtility.loadImageFromStorage(bill.getPhoto()));
             isPictureFound = true;
 
         } else {
@@ -236,7 +236,7 @@ public class BillShowActivity extends AppCompatActivity
             Intent intent = new Intent(BillShowActivity.this, ShowPictureActivity.class);
             Log.d(TAG, "Start activity Show PictureActivity");
             Log.d(TAG, "URI: " + bill.getPhoto());
-            intent.putExtra("BITMAP_URI", bill.getPhoto());
+            intent.putExtra("BITMAP_PATH", bill.getPhoto());
             startActivity(intent);
         } else {
             String message = getString(R.string.picture_is_not_available);

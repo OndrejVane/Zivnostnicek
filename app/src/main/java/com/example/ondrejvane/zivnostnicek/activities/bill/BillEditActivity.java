@@ -204,9 +204,9 @@ public class BillEditActivity extends AppCompatActivity
         editTextBillEditDate.setText(bill.getDate());
 
         //nastavení obrázku do image view
-        if (bill.getPhoto() != null && PictureUtility.tryReadPicture(Uri.parse(bill.getPhoto()), this)) {
-
-            PictureUtility.setBitmap(Uri.parse(bill.getPhoto()), this, photoViewBillEdit);
+        if (bill.getPhoto() != null && PictureUtility.tryLoadImageFromStorage(bill.getPhoto())) {
+            //načtení obrázku z uložiště zařízení
+            photoViewBillEdit.setImageBitmap(PictureUtility.loadImageFromStorage(bill.getPhoto()));
         }
 
         //načtení položek faktury a uložení do listu

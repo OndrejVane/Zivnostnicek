@@ -32,10 +32,11 @@ public class ShowPictureActivity extends AppCompatActivity {
 
         touchImageView = findViewById(R.id.touchImageView);
 
-        if (getIntent().hasExtra("BITMAP_URI")) {
-            setBitmap(Uri.parse(getIntent().getStringExtra("BITMAP_URI")));
+        if (getIntent().hasExtra("BITMAP_PATH")) {
+            setBitmap(getIntent().getStringExtra("BITMAP_PATH"));
         } else {
-            setBitmap(Uri.parse("content://media/external/images/media/5694"));
+            //pouze pro účely unit testů
+            setBitmap("content://media/external/images/media/5694");
         }
 
     }
@@ -45,7 +46,7 @@ public class ShowPictureActivity extends AppCompatActivity {
      *
      * @param pickedImage cesta vybraného obrázku
      */
-    private void setBitmap(Uri pickedImage) {
+    private void setBitmap(String pickedImage) {
         double percentageSize = 0.6;
         int width = (int) (ApplicationClass.screenWidth * percentageSize);
         int height = (int) (ApplicationClass.screenHeight * percentageSize);
