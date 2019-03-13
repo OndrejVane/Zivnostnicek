@@ -27,7 +27,7 @@
         <!--Spinner pro vybrání roku-->
         <Spinner
             android:id="@+id/spinnerIncomeYear"
-            android:layout_width="110dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent"
             android:entries="@array/years"
             android:layout_marginEnd="15dp"
@@ -46,7 +46,7 @@
         <!--Spinner pro vybrání mesíce-->
         <Spinner
             android:id="@+id/spinnerIncomeMonth"
-            android:layout_width="110dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent"
             android:entries="@array/months">
 
