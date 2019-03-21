@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
+import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
@@ -307,7 +308,9 @@ public class HomeActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která se porvede po stisknutí talčítka zpět
+     * Metoda, která se provede po stisknutí tlačítka zpět.
+     * Zobrazí dialogové okno, které se táže uživatele
+     * jestli chce ukončit app.
      */
     @Override
     public void onBackPressed() {
@@ -315,7 +318,8 @@ public class HomeActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            ExitApp exitApp = new ExitApp(this, this);
+            exitApp.alertExitApp();
         }
     }
 

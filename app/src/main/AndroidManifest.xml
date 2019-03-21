@@ -135,7 +135,7 @@
         <activity
             android:name=".activities.info.InfoLinksActivity"
             android:label="@string/title_activity_info_links"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -147,6 +147,10 @@
                 android:resource="@xml/file_path" />
         </provider>
 
+        <activity
+            android:name=".activities.info.InfoDateActivity"
+            android:label="@string/title_activity_info_date"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

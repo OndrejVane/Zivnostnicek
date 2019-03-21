@@ -28,6 +28,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
+import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
@@ -366,7 +367,8 @@ public class SynchronizationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            ExitApp exitApp = new ExitApp(this, this);
+            exitApp.alertExitApp();
         }
     }
 

@@ -31,6 +31,7 @@ import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
@@ -420,7 +421,8 @@ public class BillActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            ExitApp exitApp = new ExitApp(this, this);
+            exitApp.alertExitApp();
         }
     }
 

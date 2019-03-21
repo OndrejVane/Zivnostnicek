@@ -36,6 +36,7 @@
     <string name="title_activity_home_traders">Home traders summary</string>
     <string name="title_activity_info_links">Useful Links</string>
     <string name="title_activity_bill_edit">Edit income</string>
+    <string name="title_activity_info_date">Info Date</string>
 
     <!-- OSTATNÍ -->
     <string name="password">Password</string>
@@ -261,6 +262,7 @@
     <string name="important_dates">Important dates</string>
     <string name="show_on_map">Show on map</string>
     <string name="address_is_empty">Address is empty</string>
+    <string name="exit_question">Are you really want to close Zivnostnicek?</string>
 
 
     <!-- ODKAZY -->
@@ -336,4 +338,5 @@
         <item>http://</item>
         <item>https://</item>
     </string-array>
+
 </resources>

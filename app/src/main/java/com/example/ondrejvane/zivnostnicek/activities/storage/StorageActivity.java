@@ -24,6 +24,7 @@ import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewStorageAdapter;
+import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
@@ -248,7 +249,8 @@ public class StorageActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            ExitApp exitApp = new ExitApp(this, this);
+            exitApp.alertExitApp();
         }
     }
 

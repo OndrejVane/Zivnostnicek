@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 
@@ -205,7 +206,8 @@ public class SettingsActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            ExitApp exitApp = new ExitApp(this, this);
+            exitApp.alertExitApp();
         }
     }
 
