@@ -142,8 +142,8 @@
             android:layout_gravity="center">
             <ImageView
                 android:id="@+id/photoViewIncomeShow"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="150dp"
+                android:layout_height="160dp"
                 android:src="@drawable/ic_image"
                 android:onClick="showPicture"/>
 

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -87,7 +88,7 @@ public class BillEditActivity extends AppCompatActivity
     private Bill bill;
     private Calendar cal;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private Uri pictureUri = null;
+    private String picturePath = null;
     private String[][] traders;
     private String[][] billTypes;
     private String[][] storageItems;
@@ -204,9 +205,14 @@ public class BillEditActivity extends AppCompatActivity
         editTextBillEditDate.setText(bill.getDate());
 
         //nastavení obrázku do image view
-        if (bill.getPhoto() != null && PictureUtility.tryLoadImageFromStorage(bill.getPhoto())) {
-            //načtení obrázku z uložiště zařízení
-            photoViewBillEdit.setImageBitmap(PictureUtility.loadImageFromStorage(bill.getPhoto()));
+        if (bill.getPhoto() != null) {
+            //načtení bitmapy z cesty
+            Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
+
+            //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
+            if(bitmap != null){
+                photoViewBillEdit.setImageBitmap(bitmap);
+            }
         }
 
         //načtení položek faktury a uložení do listu
@@ -367,12 +373,12 @@ public class BillEditActivity extends AppCompatActivity
 
     }
 
-    private void openCamera(){
+    private void openCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, 0);
     }
 
-    private void openGallery(){
+    private void openGallery() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
@@ -576,28 +582,42 @@ public class BillEditActivity extends AppCompatActivity
             switch (requestCode) {
                 case 0:
                     if (resultCode == RESULT_OK) {
-                        //uložení odkazu na ubrázek do globální proměnné
-                        pictureUri = data.getData();
                         //převedení uri na bitmapu pro zobrazení
                         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+
                         //zobrazení bitmapy
                         photoViewBillEdit.setImageBitmap(bitmap);
+
+                        //uložení obrázku do uložiště zařízení
+                        picturePath = PictureUtility.saveToInternalStorage(bitmap, this);
+
+                        //vypis názvu soboru
+                        Log.d(TAG, "Picture path " + picturePath);
                     }
                     break;
+                //galerie
                 case 1:
                     if (resultCode == RESULT_OK && data != null) {
                         //získání Uri z intentu
-                        Uri pickedImage = data.getData();
-                        //uložení odkazu na obrázek do globální proměnné
-                        pictureUri = pickedImage;
-                        //získání bitmapy z Uri
-                        Bitmap bitmap = PictureUtility.getBitmapFromUri(pickedImage, this);
-                        //nastavení bitmapy do image view
-                        photoViewBillEdit.setImageBitmap(bitmap);
+                        Uri imageUri = data.getData();
+
+                        //získání absolutní cesty k souboru
+                        String imageFilePath = PictureUtility.getAbsolutePathFromUri(imageUri, getContentResolver());
+
+                        //pokud je cesta správně, tak se zobrazí obrázek do aktivity
+                        if (imageFilePath != null) {
+
+                            //načtení obrazku z cesty
+                            Bitmap bitmap = PictureUtility.getBitmap(imageFilePath);
+                            photoViewBillEdit.setImageBitmap(bitmap);
+                            picturePath = imageFilePath;
+                        }
+
+                        Log.d(TAG, "Picture URI " + picturePath);
                     }
             }
         } catch (NullPointerException e) {
-            pictureUri = null;
+            picturePath = null;
         }
     }
 
@@ -716,8 +736,8 @@ public class BillEditActivity extends AppCompatActivity
         bill.setIsDeleted(0);
 
         //pokud je pořízena fotka, tak uložit do db
-        if (pictureUri != null) {
-            bill.setPhoto(pictureUri.toString());
+        if (picturePath != null) {
+            bill.setPhoto(picturePath.toString());
         }
 
         //zda se jedná o příjem nebo výdaje

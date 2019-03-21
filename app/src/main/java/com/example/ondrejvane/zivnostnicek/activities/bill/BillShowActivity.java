@@ -2,6 +2,8 @@ package com.example.ondrejvane.zivnostnicek.activities.bill;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
@@ -40,6 +44,7 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -166,10 +171,21 @@ public class BillShowActivity extends AppCompatActivity
         textViewBillVAT.setText(Integer.toString(bill.getVAT()));
         textViewBillDate.setText(bill.getDate());
 
-        if (bill.getPhoto() != null && PictureUtility.tryLoadImageFromStorage(bill.getPhoto())) {
-            //načtení obrázku z uložiště zařízení
-            photoViewBillPhoto.setImageBitmap(PictureUtility.loadImageFromStorage(bill.getPhoto()));
-            isPictureFound = true;
+        if (bill.getPhoto() != null) {
+
+            Log.d(TAG, "bill picture: "+ bill.getPhoto());
+
+            //načtení bitmapy z cesty
+            Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
+
+            //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
+            if(bitmap != null){
+                photoViewBillPhoto.setImageBitmap(bitmap);
+                isPictureFound = true;
+            }else {
+                textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
+                isPictureFound = false;
+            }
 
         } else {
             textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
@@ -178,6 +194,7 @@ public class BillShowActivity extends AppCompatActivity
 
         showBillItemsToActivity(bill.getId());
     }
+
 
     /**
      * Nastavení titulku do aktivity podle příjmu nebo výdaje.
@@ -226,7 +243,7 @@ public class BillShowActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která po stisknutí text view nastartuje novou
+     * Metoda, která po stisknutí image view nastartuje novou
      * aktivittu pro zobrazení obrázku na celou obrazovku.
      *
      * @param view view aktivity

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.utilities.EncryptionUtility;
 
 public class UserDatabaseHelper extends DatabaseHelper {
 
@@ -31,11 +32,14 @@ public class UserDatabaseHelper extends DatabaseHelper {
             //odstranění speciálních znaků proti SQL injection
             user.removeSpecialChars();
 
+            //zašifrování hesla pro uložení
+            String encryptedPass = EncryptionUtility.encrypt(user.getPassword());
+
             ContentValues values = new ContentValues();
             values.put(COLUMN_USER_ID, user.getId());
             values.put(COLUMN_USER_FULL_NAME, user.getFullName());
             values.put(COLUMN_USER_EMAIL, user.getEmail());
-            values.put(COLUMN_USER_PASSWORD, user.getPassword());
+            values.put(COLUMN_USER_PASSWORD, encryptedPass);
             values.put(COLUMN_USER_SYNC_NUMBER, user.getSyncNumber());
 
             // Inserting Row
@@ -71,7 +75,7 @@ public class UserDatabaseHelper extends DatabaseHelper {
             user.setId(userId);
             user.setFullName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
+            user.setPassword(EncryptionUtility.decrypt(cursor.getString(2)));
             user.setSyncNumber(cursor.getInt(3));
         }else {
             user = null;

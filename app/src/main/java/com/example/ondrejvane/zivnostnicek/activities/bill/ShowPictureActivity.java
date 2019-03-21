@@ -47,7 +47,7 @@ public class ShowPictureActivity extends AppCompatActivity {
      * @param pickedImage cesta vybraného obrázku
      */
     private void setBitmap(String pickedImage) {
-        double percentageSize = 0.6;
+        double percentageSize = 0.9;
         int width = (int) (ApplicationClass.screenWidth * percentageSize);
         int height = (int) (ApplicationClass.screenHeight * percentageSize);
         Glide.with(this).load(pickedImage).apply(new RequestOptions().override(width, height)).into(touchImageView);
