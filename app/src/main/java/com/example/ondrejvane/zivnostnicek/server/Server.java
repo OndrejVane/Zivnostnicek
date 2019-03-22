@@ -18,6 +18,7 @@ public class Server {
     private static final String REGISTER_URL = "/api/register.php";
     private static final String PULL_URL = "/api/pull.php";
     private static final String PUSH_URL = "/api/push.php";
+    private static final String DATES_URL = "/api/files/dates.txt";
 
     //klíče pro uložení do SP pro pozdější použití
     private static final String SERVER_NAME_SP = "ServerSettings";
@@ -69,6 +70,10 @@ public class Server {
 
     public String getRegisterUrl() {
         return getServerNameAndProtocol() + REGISTER_URL;
+    }
+
+    public String getDatesUrl(){
+        return getServerNameAndProtocol() + DATES_URL;
     }
 
     public int getServerProtocolId(){

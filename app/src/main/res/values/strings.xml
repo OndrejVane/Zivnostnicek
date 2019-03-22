@@ -263,6 +263,7 @@
     <string name="show_on_map">Show on map</string>
     <string name="address_is_empty">Address is empty</string>
     <string name="exit_question">Are you really want to close Zivnostnicek?</string>
+    <string name="use_tax_person">* if you are using tax advisor</string>
 
 
     <!-- ODKAZY -->

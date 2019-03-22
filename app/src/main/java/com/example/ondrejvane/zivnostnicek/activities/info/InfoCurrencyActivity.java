@@ -96,7 +96,6 @@ public class InfoCurrencyActivity extends AppCompatActivity
         initActivity();
 
         //nastavení dat do aktivity
-        //setTextToActivity();
         trySetTextToActivity();
     }
 
@@ -114,7 +113,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
     }
 
     /**
-     * Pokud jsou v lokálním uložišti nějaká data, tak jso unačtena
+     * Pokud jsou v lokálním uložišti nějaká data, tak jsou načtena
      * a zobrazena do aktivity.
      */
     private void setTextToActivity() {
@@ -184,7 +183,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
             Toast.makeText(this, "Connect to internet", Toast.LENGTH_SHORT).show();
             //cnb není dostuoné
         } else if (returnValue == -2) {
-            Toast.makeText(this, "Website is not reachable", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.can_not_connect_to_the_server, Toast.LENGTH_SHORT).show();
             //úspěch
         } else if (returnValue == 1) {
             Toast.makeText(this, "Data successfully updated", Toast.LENGTH_SHORT).show();
@@ -248,10 +247,10 @@ public class InfoCurrencyActivity extends AppCompatActivity
 
             }
         } catch (FileNotFoundException e) {
-            System.out.println("Can not read file");
+            Log.d(TAG, "File not found");
             return null;
         } catch (IOException e) {
-            System.out.println("File not found");
+            Log.d(TAG, "Can not read file");
             return null;
         }
         return ret;
