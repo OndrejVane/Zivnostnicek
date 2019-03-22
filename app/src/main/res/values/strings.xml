@@ -264,6 +264,9 @@
     <string name="address_is_empty">Address is empty</string>
     <string name="exit_question">Are you really want to close Zivnostnicek?</string>
     <string name="use_tax_person">* if you are using tax advisor</string>
+    <string name="data_not_found">Data not found</string>
+    <string name="connect_to_internet">Connect to internet</string>
+    <string name="data_sucessfully_updated">Data successfully updated</string>
 
 
     <!-- ODKAZY -->

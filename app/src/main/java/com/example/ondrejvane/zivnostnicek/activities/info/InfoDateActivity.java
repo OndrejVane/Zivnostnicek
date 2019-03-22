@@ -130,7 +130,7 @@ public class InfoDateActivity extends AppCompatActivity
             //parsování souboru a získání potřebných dat
             parseFileAndSetToTextField();
         } else {
-            Toast.makeText(this, "Data not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.data_not_found, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -170,13 +170,13 @@ public class InfoDateActivity extends AppCompatActivity
         });
         //instarnet není dostupný
         if (returnValue == -1) {
-            Toast.makeText(this, "Connect to internet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.connect_to_internet, Toast.LENGTH_SHORT).show();
             //cnb není dostuoné
         } else if (returnValue == -2) {
             Toast.makeText(this, R.string.can_not_connect_to_the_server, Toast.LENGTH_SHORT).show();
             //úspěch
         } else if (returnValue == 1) {
-            Toast.makeText(this, "Data successfully updated", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.data_sucessfully_updated, Toast.LENGTH_SHORT).show();
         }
     }
 

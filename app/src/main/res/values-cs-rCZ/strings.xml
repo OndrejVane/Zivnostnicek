@@ -249,6 +249,9 @@
     <string name="dates">Termíny</string>
     <string name="important_dates">Důležité termíny pro živnostníky</string>
     <string name="use_tax_person">* s daňovým poradce</string>
+    <string name="data_not_found">Data nenalezena</string>
+    <string name="connect_to_internet">Připojte se k internetu</string>
+    <string name="data_sucessfully_updated">Data úspěšně aktualizována</string>
 
     <!-- ODKAZY -->
     <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>
