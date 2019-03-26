@@ -74,7 +74,7 @@ public class TextInputLength {
      */
 
     //maximální délka názvu faktury
-    public static final int BILL_NAME_LENGHT = 45;
+    public static final int BILL_NAME_LENGTH = 45;
 
 
 }

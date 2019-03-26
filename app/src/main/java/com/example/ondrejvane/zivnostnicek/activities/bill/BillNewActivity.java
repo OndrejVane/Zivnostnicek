@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -771,7 +770,7 @@ public class BillNewActivity extends AppCompatActivity
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
             return false;
-        } else if (name.length() > TextInputLength.BILL_NAME_LENGHT) {
+        } else if (name.length() > TextInputLength.BILL_NAME_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
