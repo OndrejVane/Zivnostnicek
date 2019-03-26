@@ -39,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
@@ -661,6 +662,11 @@ public class BillNewActivity extends AppCompatActivity
      */
     public void submitNewBillForm(View view) {
 
+        //validace povinných polí
+        if (!inputValidation()) {
+            return;
+        }
+
         //načtení dat ze vstupních polí
         String name = billName.getText().toString();
         String amount = billAmount.getText().toString();
@@ -683,21 +689,6 @@ public class BillNewActivity extends AppCompatActivity
             billTypeId = Integer.parseInt(billTypes[0][(int) spinnerBillType.getSelectedItemId() - 1]);
         } else {
             billTypeId = -1;
-        }
-
-        //validate povinných polí => částka a název faktury
-        if (!InputValidation.validateIsEmpty(name)) {
-            String message = getString(R.string.name_of_bill_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
-            return;
-        }
-
-        if (!InputValidation.validateIsEmpty(amount)) {
-            String message = getString(R.string.amount_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutBillAmount.setError(getString(R.string.amount_is_empty));
-            return;
         }
 
         //vytvoření nové faktury a nastavení dat z aktivity
@@ -770,6 +761,33 @@ public class BillNewActivity extends AppCompatActivity
         finish();
     }
 
+    private boolean inputValidation() {
+        String name = billName.getText().toString();
+        String amount = billAmount.getText().toString();
+
+        //validate povinných polí => částka a název faktury
+        if (name.isEmpty()) {
+            String message = getString(R.string.name_of_bill_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
+            return false;
+        } else if (name.length() > TextInputLength.BILL_NAME_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutBillName.setError(getString(R.string.name_of_bill_is_empty));
+            return false;
+        }
+
+        if (amount.isEmpty()) {
+            String message = getString(R.string.amount_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutBillAmount.setError(getString(R.string.amount_is_empty));
+            return false;
+        }
+
+        return true;
+    }
+
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
@@ -811,6 +829,12 @@ public class BillNewActivity extends AppCompatActivity
     Čast kodu, která se stará o přidělení přistupu aplikace ke kameře a uložišti
      */
 
+    /**
+     * Metoda, která nejprve zsjití zda byli přiděleny
+     * potřebné oprávnění a potom zavolá metoda, která otevře fotoaparát.
+     * Pokud nejsou oprávnění přidělena, je volána další metoda, která
+     * se zeptá uživatele zda chce přidělit pověřní.
+     */
     @AfterPermissionGranted(PERMISSION_REQUEST_CODE_CAMERA)
     public void callCamera() {
         String[] perms = {Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -822,6 +846,12 @@ public class BillNewActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Metoda, která nejprve zsjití zda byli přiděleny
+     * potřebné oprávnění a potom zavolá metoda, která otevře galerii.
+     * Pokud nejsou oprávnění přidělena, je volána další metoda, která
+     * se zeptá uživatele zda chce přidělit pověřní.
+     */
     @AfterPermissionGranted(PERMISSION_REQUEST_CODE_GALLERY)
     public void callGallery() {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE};

@@ -19,15 +19,12 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.server.Push;
-
-import org.w3c.dom.Text;
 
 /**
  * Aktivity, která vytvoří novou skladovou položku
@@ -163,7 +160,7 @@ public class StorageNewActivity extends AppCompatActivity
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemName.setError(message);
             return false;
-        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGHT){
+        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH){
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemName.setError(message);
@@ -177,7 +174,7 @@ public class StorageNewActivity extends AppCompatActivity
             return false;
         }
 
-        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.NOTE_TEXT_LENGTH){
+        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.STORAGE_ITEM_NOTE_LENGTH){
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;

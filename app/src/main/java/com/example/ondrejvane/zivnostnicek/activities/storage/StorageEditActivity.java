@@ -20,7 +20,6 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
@@ -197,7 +196,7 @@ public class StorageEditActivity extends AppCompatActivity
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemNameEdit.setError(message);
             return false;
-        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGHT){
+        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH){
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemNameEdit.setError(message);

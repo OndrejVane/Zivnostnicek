@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -42,6 +41,7 @@ import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
@@ -210,7 +210,7 @@ public class BillEditActivity extends AppCompatActivity
             Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
 
             //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
-            if(bitmap != null){
+            if (bitmap != null) {
                 photoViewBillEdit.setImageBitmap(bitmap);
             }
         }
@@ -681,9 +681,14 @@ public class BillEditActivity extends AppCompatActivity
      * Metoda, která zpracuje vstupní formulář a aktualizuje
      * data v databázi.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void updateBillForm(View view) {
+
+        //validace vstupních polí
+        if (!inputValidation()) {
+            return;
+        }
 
         //načtení vstupních polí
         String name = textInputBillEditName.getText().toString();
@@ -693,21 +698,6 @@ public class BillEditActivity extends AppCompatActivity
         int traderId;
         int billTypeId;
 
-
-        //validate povinných polí => částka a název faktury
-        if (!InputValidation.validateIsEmpty(name)) {
-            String message = getString(R.string.name_of_bill_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            textLayoutInputBillEditName.setError(getString(R.string.name_of_bill_is_empty));
-            return;
-        }
-
-        if (!InputValidation.validateIsEmpty(amount)) {
-            String message = getString(R.string.amount_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            textLayoutInputBillEditAmount.setError(getString(R.string.amount_is_empty));
-            return;
-        }
 
         //obchodník vybrán
         if (spinnerTraderBillEdit.getSelectedItemId() != 0) {
@@ -737,7 +727,7 @@ public class BillEditActivity extends AppCompatActivity
 
         //pokud je pořízena fotka, tak uložit do db
         if (picturePath != null) {
-            bill.setPhoto(picturePath.toString());
+            bill.setPhoto(picturePath);
         }
 
         //zda se jedná o příjem nebo výdaje
@@ -803,6 +793,33 @@ public class BillEditActivity extends AppCompatActivity
         intent.putExtra("BILL_ID", billId);
         startActivity(intent);
         finish();
+    }
+
+    private boolean inputValidation() {
+        String name = textInputBillEditName.getText().toString();
+        String amount = textInputBillEditAmount.getText().toString();
+
+        //validate povinných polí => částka a název faktury
+        if (name.isEmpty()) {
+            String message = getString(R.string.name_of_bill_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            textLayoutInputBillEditName.setError(getString(R.string.name_of_bill_is_empty));
+            return false;
+        } else if (name.length() > TextInputLength.BILL_NAME_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            textLayoutInputBillEditName.setError(getString(R.string.name_of_bill_is_empty));
+            return false;
+        }
+
+        if (amount.isEmpty()) {
+            String message = getString(R.string.amount_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            textLayoutInputBillEditAmount.setError(getString(R.string.amount_is_empty));
+            return false;
+        }
+
+        return true;
     }
 
     /*

@@ -56,17 +56,17 @@ public class TextInputLength {
      */
 
     //maximální délka pro název skladové položky
-    public static final int STORAGE_ITEM_NAME_LENGHT = 45;
+    public static final int STORAGE_ITEM_NAME_LENGTH = 45;
 
     //maximální délka poznámky ke skladové položce
-    public static final int STORAGE_ITEM_NOTE_LENGHT = 150;
+    public static final int STORAGE_ITEM_NOTE_LENGTH = 150;
 
     /*
     Hodnoty BILL TYPE
      */
 
     //maximální délka názvu typu faktury
-    public static final int BILL_TYPE_NAME_LENGHT = 45;
+    public static final int BILL_TYPE_NAME_LENGTH = 45;
 
 
     /*

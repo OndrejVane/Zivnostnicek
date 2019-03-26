@@ -1,5 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,9 +29,9 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
@@ -307,6 +308,7 @@ public class BillActivity extends AppCompatActivity
      */
     private void addTypeBillDialogShow() {
         final AlertDialog.Builder mBuilder = new AlertDialog.Builder(BillActivity.this);
+        @SuppressLint("InflateParams")
         View mView = getLayoutInflater().inflate(R.layout.type_bill_add_dialog, null);
         //inicializace polí v dialogovém okně
         final Button btnPickColor = mView.findViewById(R.id.buttonPickColor);
@@ -354,8 +356,12 @@ public class BillActivity extends AppCompatActivity
             public void onClick(View v) {
                 String billTypeName = editTextBillTypeName.getText().toString();
 
-                if (!InputValidation.validateIsEmpty(billTypeName)) {
+                //kontrola vstupních polí
+                if (billTypeName.isEmpty()) {
                     layouBillTypeName.setError(getString(R.string.bill_type_name_is_empty));
+                    return;
+                } else if (billTypeName.length() > TextInputLength.BILL_TYPE_NAME_LENGTH) {
+                    layouBillTypeName.setError(getString(R.string.input_is_too_long));
                     return;
                 }
 
