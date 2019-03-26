@@ -267,6 +267,7 @@
     <string name="data_not_found">Data not found</string>
     <string name="connect_to_internet">Connect to internet</string>
     <string name="data_sucessfully_updated">Data successfully updated</string>
+    <string name="input_is_too_long">Input is too long</string>
 
 
     <!-- ODKAZY -->

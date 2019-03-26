@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.HashPassword;
 import com.example.ondrejvane.zivnostnicek.helper.SecureSending;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
@@ -61,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         //zákaz orientace na šířku
-        setRequestedOrientation (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_register);
 
         initActivity();
@@ -96,19 +97,18 @@ public class RegisterActivity extends AppCompatActivity {
      * Metoda, která po kliknutí na textView ukončím aktivitu
      * RegisterActivity a vrátí se do LoginActivity.
      *
-     * @param view
+     * @param view view aktivity
      */
     public void goToLoginActivity(View view) {
         finish();
     }
 
     /**
-     *
-     * @param view
+     * @param view view aktivity
      */
-    public void makeRegistration(View view){
+    public void makeRegistration(View view) {
 
-        if(checkIfIsAllFilled()){
+        if (checkIfIsAllFilled()) {
             displayLoader();
 
             JSONObject request = new JSONObject();
@@ -136,7 +136,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onResponse(JSONObject response) {
                             pDialog.dismiss();
                             try {
-                                Log.d(TAG, "KEY_STATUS = "+ response.getString(KEY_STATUS));
+                                Log.d(TAG, "KEY_STATUS = " + response.getString(KEY_STATUS));
 
                                 int status = Integer.parseInt(secureSending.decrypt(response.getString(KEY_STATUS)));
                                 if (status == 0) {
@@ -146,12 +146,12 @@ public class RegisterActivity extends AppCompatActivity {
                                             getString(R.string.user_is_created), Toast.LENGTH_SHORT).show();
                                     finish();
 
-                                }else if(status == 1){
+                                } else if (status == 1) {
                                     //Display error message if username is already existsing
                                     userAddressET.setError(getString(R.string.user_already_exists));
                                     userAddressET.requestFocus();
 
-                                }else{
+                                } else {
                                     Toast.makeText(getApplicationContext(),
                                             getResources().getString(R.string.fill_all_columns),
                                             Toast.LENGTH_SHORT).show();
@@ -196,47 +196,68 @@ public class RegisterActivity extends AppCompatActivity {
         String password2 = password2ET.getText().toString().trim();
         String message;
 
-        if (name.isEmpty()){
+        //kontrola správnosti vyplněných polí
+        if (name.isEmpty()) {
             message = getString(R.string.empty_name);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            nameET.setError(message);
+            return false;
+        } else if (name.length() > TextInputLength.USER_FULL_NAME_LENGTH) {
+            message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            nameET.setError(message);
             return false;
         }
 
-        if (userAddress.isEmpty()){
+        if (userAddress.isEmpty()) {
             message = getString(R.string.empty_user_name);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            userAddressET.setError(message);
+            return false;
+        } else if (userAddress.length() > TextInputLength.USER_EMAIL_LENGTH) {
+            message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            userAddressET.setError(message);
             return false;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(userAddress).matches()) {
             message = getString(R.string.email_is_not_valid);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            userAddressET.setError(message);
             return false;
         }
 
-        if (password1.isEmpty()){
+        if (password1.isEmpty()) {
             message = getString(R.string.empty_password1);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            password1ET.setError(message);
             return false;
         }
 
-        if (password2.isEmpty()){
+        if (password2.isEmpty()) {
             message = getString(R.string.empty_password2);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            password2ET.setError(message);
             return false;
         }
 
-        if (password1.compareTo(password2) != 0){
+        if (password1.compareTo(password2) != 0) {
             message = getString(R.string.passwords_are_not_equal);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            password1ET.setError(message);
+            password2ET.setError(message);
             return false;
         }
 
-        if (password1.length() <=7){
+        if (password1.length() <= TextInputLength.PASSWORD_MIN_LENGTH) {
             message = getString(R.string.passwords_is_too_short);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            password1ET.setError(message);
+            password2ET.setError(message);
             return false;
         }
+
 
         //načtení do globálních proměnných
         fullName = nameET.getText().toString().trim();
@@ -251,6 +272,7 @@ public class RegisterActivity extends AppCompatActivity {
      * Zobrazení dialogového okna pro nastavení
      * atributů serveru. Následné infomrace jsou uloženy do
      * třídy server a také do
+     *
      * @param view view aktivity
      */
     public void showServerDialog(View view) {
@@ -282,11 +304,11 @@ public class RegisterActivity extends AppCompatActivity {
                 int protocol = spinnerProtocol.getSelectedItemPosition();
                 String serverName = editTextServerName.getText().toString();
 
-                if(serverName.isEmpty()){
+                if (serverName.isEmpty()) {
                     inputLayoutServerName.setError(getString(R.string.empty_name));
                     return;
                 }
-                Log.d(TAG, "id: "+ protocol);
+                Log.d(TAG, "id: " + protocol);
 
                 server.setServerNameAndProtocol(serverName, protocol);
                 server.saveDataToSharedPref(RegisterActivity.this);
