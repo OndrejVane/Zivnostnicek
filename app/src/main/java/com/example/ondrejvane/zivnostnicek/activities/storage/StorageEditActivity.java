@@ -21,6 +21,7 @@ import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
@@ -121,6 +122,11 @@ public class StorageEditActivity extends AppCompatActivity
      */
     public void editStorageItem(View view) {
 
+        //validace vstupů
+        if (!validateInputs()){
+            return;
+        }
+
         //načtení dat z aktivity
         String name = inputStorageItemNameEdit.getText().toString();
         String quantity = inputStorageItemQuantityEdit.getText().toString();
@@ -129,23 +135,6 @@ public class StorageEditActivity extends AppCompatActivity
 
         //načtení aktuálního množství
         float currentQuantity = itemQuantityDatabaseHelper.getQuantityWithStorageItemId(storageItemID);
-
-        //validace vstupů
-        if(!InputValidation.validateIsEmpty(name)){
-            String message = getString(R.string.item_name_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutStorageItemNameEdit.setError(message);
-            return;
-        }
-
-        //validace vstupů
-        if(!InputValidation.validateIsEmpty(quantity)){
-            String message = getString(R.string.quantity_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            layoutStorageItemQuantityEdit.setError(message);
-            return;
-        }
-
 
         StorageItem storageItem = new StorageItem();
         storageItem.setUserId(UserInformation.getInstance().getUserId());
@@ -191,6 +180,44 @@ public class StorageEditActivity extends AppCompatActivity
         startActivity(intent);
         finish();
 
+    }
+
+    /**
+     * validace vstupníhc polí při ukládání skladové položky.
+     *
+     * @return logická hodnota, která určuje zda je validace Ok
+     */
+    private boolean validateInputs(){
+        String storageName = inputStorageItemNameEdit.getText().toString();
+        String storageQuantity = inputStorageItemQuantityEdit.getText().toString();
+        String storageNote = inputStorageItemNote.getText().toString();
+
+        if(storageName.isEmpty()){
+            String message = getString(R.string.item_name_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemNameEdit.setError(message);
+            return false;
+        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGHT){
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemNameEdit.setError(message);
+            return false;
+        }
+
+        if (storageQuantity.isEmpty()){
+            String message = getString(R.string.quantity_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemQuantityEdit.setError(message);
+            return false;
+        }
+
+        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.NOTE_TEXT_LENGTH){
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -22,7 +22,6 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
@@ -201,7 +200,7 @@ public class NoteEditActivity extends AppCompatActivity
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteTitleEdit.setError(message);
             return false;
-        } else if (noteTitle.length() > TextInputLength.NOTE_TITLE_LENGHT) {
+        } else if (noteTitle.length() > TextInputLength.NOTE_TITLE_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteTitleEdit.setError(message);
@@ -213,7 +212,7 @@ public class NoteEditActivity extends AppCompatActivity
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteEdit.setError(message);
             return false;
-        } else if (note.length() > TextInputLength.NOTE_TEXT_LENGHT) {
+        } else if (note.length() > TextInputLength.NOTE_TEXT_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             inputLayoutNoteEdit.setError(message);

@@ -45,10 +45,10 @@ public class TextInputLength {
      */
 
     //maxiální délka nadpisu poznámky
-    public static final int NOTE_TITLE_LENGHT = 45;
+    public static final int NOTE_TITLE_LENGTH = 45;
 
     //maximální délka textu poznáky
-    public static final int NOTE_TEXT_LENGHT = 150;
+    public static final int NOTE_TEXT_LENGTH = 150;
 
 
     /*

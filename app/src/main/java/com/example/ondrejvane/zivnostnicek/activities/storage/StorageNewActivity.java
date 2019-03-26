@@ -20,11 +20,14 @@ import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.server.Push;
+
+import org.w3c.dom.Text;
 
 /**
  * Aktivity, která vytvoří novou skladovou položku
@@ -151,17 +154,32 @@ public class StorageNewActivity extends AppCompatActivity
      * @return logická hodnota, která určuje zda je validace Ok
      */
     private boolean validateInputs(){
-        if(!InputValidation.validateIsEmpty(storageItemName.getText().toString())){
+        String storageName = storageItemName.getText().toString();
+        String storageQuantity = storageItemQuantity.getText().toString();
+        String storageNote = storageItemNote.getText().toString();
+
+        if(storageName.isEmpty()){
             String message = getString(R.string.item_name_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            layoutStorageItemName.setError(message);
+            return false;
+        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGHT){
+            String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemName.setError(message);
             return false;
         }
 
-        if (!InputValidation.validateIsEmpty(storageItemQuantity.getText().toString())){
+        if (storageQuantity.isEmpty()){
             String message = getString(R.string.quantity_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemQuantity.setError(message);
+            return false;
+        }
+
+        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.NOTE_TEXT_LENGTH){
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
         }
 
