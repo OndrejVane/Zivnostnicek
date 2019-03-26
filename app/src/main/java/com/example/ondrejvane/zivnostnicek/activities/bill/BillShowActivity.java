@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -177,6 +179,22 @@ public class BillShowActivity extends AppCompatActivity
 
             //načtení bitmapy z cesty
             Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
+
+            //POKUS
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArrayImage = stream.toByteArray();
+            bitmap.recycle();
+
+            String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+
+            Log.d(TAG,"Enc picture: " + encodedImage);
+
+            byteArrayImage = Base64.decode(encodedImage, Base64.DEFAULT);
+            bitmap = BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.length);
+
+
+            //POKUS
 
             //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
             if(bitmap != null){

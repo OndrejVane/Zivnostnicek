@@ -12,27 +12,12 @@ public class Bill {
     private int traderId;
     private String date;
     private String photo;
-    private String place;
     private int typeId;
     private int userId;
     private int isExpense;
     private int isDirty;
     private int isDeleted;
 
-
-    public Bill(int id, String name, float amount, int VAT, int traderId, String date, String photo, String place, int typeId, int userId, int isExpense) {
-        this.id = id;
-        this.name = name;
-        this.amount = amount;
-        this.VAT = VAT;
-        this.traderId = traderId;
-        this.date = date;
-        this.photo = photo;
-        this.place = place;
-        this.typeId = typeId;
-        this.userId = userId;
-        this.isExpense = isExpense;
-    }
 
     public Bill() {
     }
@@ -91,14 +76,6 @@ public class Bill {
 
     public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
     }
 
     public int getTypeId() {

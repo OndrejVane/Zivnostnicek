@@ -24,6 +24,7 @@ import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 import com.example.ondrejvane.zivnostnicek.utilities.WifiCheckerUtility;
 
 import org.json.JSONArray;
@@ -116,21 +117,12 @@ public class Push {
      *
      * @return logická hodnota, která říká, jestli mám zálohovat
      */
-    private boolean checkUserSettings(){
+    private boolean checkUserSettings() {
 
         Settings settings = Settings.getInstance();
 
-        //kontrola, zda má nastavenou automatickou zálohu dat
-        if(settings.isSyncOn()){
-
-            if(settings.isSyncAllowWifi()){
-                return WifiCheckerUtility.isConnected(this.context);
-            }else {
-                return true;
-            }
-        }else {
-            return false;
-        }
+        //kontrola, zda má uživatel nastavenou automatickou zálohu dat
+        return settings.isSyncOn() && (!settings.isSyncAllowWifi() || WifiCheckerUtility.isConnected(this.context));
 
     }
 
@@ -247,6 +239,7 @@ public class Push {
                 jsonObject.put("vat", bill.getVAT());
                 jsonObject.put("date", bill.getDate());
                 jsonObject.put("photo", bill.getPhoto());
+                jsonObject.put("photo_data", PictureUtility.getPhotoData(bill.getPhoto()));
                 jsonObject.put("is_expense", bill.getIsExpense());
                 jsonObject.put("type_id", bill.getTypeId());
                 jsonObject.put("trader_id", bill.getTraderId());
@@ -383,7 +376,7 @@ public class Push {
         JSONObject types = getTypesData();
         JSONObject bills = getBillsData();
         JSONObject storageItems = getStorageItemsData();
-        JSONObject itemQuantities =  getItemQuantitiesData();;
+        JSONObject itemQuantities =  getItemQuantitiesData();
 
         try {
             temp = traders.getJSONArray("traders");

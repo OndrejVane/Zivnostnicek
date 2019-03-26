@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -142,6 +143,21 @@ public class PictureUtility {
         String imageFilePath = cursor.getString(0);
         cursor.close();
         return imageFilePath;
+    }
+
+    public static String getPhotoData(String photoPath){
+        String image = null;
+        if(photoPath != null){
+            Bitmap bitmap = PictureUtility.getBitmap(photoPath);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            assert bitmap != null;
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArrayImage = stream.toByteArray();
+            bitmap.recycle();
+
+            image = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+        }
+        return image;
     }
 
 
