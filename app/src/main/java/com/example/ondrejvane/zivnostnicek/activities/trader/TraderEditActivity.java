@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.trader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
@@ -43,7 +45,8 @@ public class TraderEditActivity extends AppCompatActivity
     /**
      * Metoda, která se provede při spuštění akctivity a porovede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState
+     *
+     * @param savedInstanceState saved instace state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,7 @@ public class TraderEditActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         initActivity();
@@ -128,48 +131,13 @@ public class TraderEditActivity extends AppCompatActivity
     /**
      * Metoda, která provede editaci obchodníka. Načte vstupní pole,
      * následně je zvaliduje a změny uloží do databáze.
-     * @param view  view příslušné aktivity
+     *
+     * @param view view příslušné aktivity
      */
     public void editInformationAboutTrader(View view) {
-        if(!InputValidation.validateCompanyName(inputCompanyNameEdit.getText().toString())){
-            String message = getString(R.string.company_name_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutCompanyNameEdit.setError(getString(R.string.company_name_is_empty));
+
+        if (!inputValidation()) {
             return;
-        }
-
-        if(!InputValidation.validatePhoneNumber(inputTelephoneNumberEdit.getText().toString())){
-            String message = getString(R.string.telephone_has_wrong_format);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutTelephoneNumberEdit.setError(getString(R.string.telephone_has_wrong_format));
-            return;
-        }
-
-        if(!InputValidation.validateIdentificationNumber(inputIdentificationNumberEdit.getText().toString())){
-            //implementace nastavení
-            if(!Settings.getInstance().isIsForeignIdentificationNumberPossible()){
-                String message = getString(R.string.wrong_id_number);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutIdentificationNumberEdit.setError(getString(R.string.wrong_id_number));
-                return;
-            }
-        }
-
-        //validace českého dič
-        if (!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())) {
-            //implementace nastavení
-            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
-                String message = getString(R.string.wrong_format_of_tid);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));
-                return;
-                //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
-            } else if (!InputValidation.validateForeignTaxIdentificationNumber(inputTaxIdentificationNumberEdit.getText().toString())) {
-                String message = getString(R.string.wrong_format_of_tid);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));
-                return;
-            }
         }
 
         trader = new Trader();
@@ -201,15 +169,114 @@ public class TraderEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která validuje vstupní hodnoty.
+     *
+     * @return logická hodnota, která označuje, zda validace proběhla v pořádku
+     */
+    private boolean inputValidation() {
+        //načtení vstupních hodnot
+        String tradeName = inputCompanyNameEdit.getText().toString();
+        String contactPerson = inputContactPersonEdit.getText().toString();
+        String phoneNumber = inputTelephoneNumberEdit.getText().toString();
+        String identificationNumber = inputIdentificationNumberEdit.getText().toString();
+        String taxIdentificationNumber = inputTaxIdentificationNumberEdit.getText().toString();
+        String traderCity = inputCityEdit.getText().toString();
+        String traderStreet = inputStreetEdit.getText().toString();
+        String traderHouseNumber = inputHouseNumberEdit.getText().toString();
+
+        //validace názvu obchodníka
+        if (tradeName.isEmpty()) {
+            String message = getString(R.string.company_name_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutCompanyNameEdit.setError(message);
+            return false;
+        } else if (tradeName.length() > TextInputLength.TRADER_NAME_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutCompanyNameEdit.setError(message);
+            return false;
+        }
+
+        //validace kontaktní osoby
+        if (contactPerson.length() > TextInputLength.TRADER_CONTACT_PERSON_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputContactPersonEdit.setError(message);
+            return false;
+        }
+
+
+        //validace telefoního čísla
+        if (!InputValidation.validatePhoneNumber(phoneNumber)) {
+            String message = getString(R.string.telephone_has_wrong_format);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutTelephoneNumberEdit.setError(message);
+            return false;
+        }
+
+        //validace IČO
+        if (!InputValidation.validateIdentificationNumber(identificationNumber)) {
+            //implementace nastavení
+            if (!Settings.getInstance().isIsForeignIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_id_number);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutIdentificationNumberEdit.setError(message);
+                return false;
+            }
+        }
+
+        //validace českého dič
+        if (!InputValidation.validateCzechTaxIdentificationNumber(taxIdentificationNumber)) {
+            //implementace nastavení
+            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumberEdit.setError(message);
+                return false;
+                //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
+            } else if (!InputValidation.validateForeignTaxIdentificationNumber(taxIdentificationNumber)) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumberEdit.setError(getString(R.string.wrong_format_of_tid));
+                return false;
+            }
+        }
+
+        if (!traderCity.isEmpty() && traderCity.length() > TextInputLength.TRADER_CITY_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputCityEdit.setError(message);
+            return false;
+        }
+
+        if (!traderStreet.isEmpty() && traderStreet.length() > TextInputLength.TRADER_STREET_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputStreetEdit.setError(message);
+            return false;
+        }
+
+        if (!traderHouseNumber.isEmpty() && traderHouseNumber.length() > TextInputLength.TRADER_HOUSE_NUMBER_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputHouseNumberEdit.setError(message);
+            return false;
+        }
+
+        return true;
+    }
+
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 
@@ -221,10 +288,10 @@ public class TraderEditActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

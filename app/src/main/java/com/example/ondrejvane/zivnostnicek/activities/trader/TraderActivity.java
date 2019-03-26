@@ -30,7 +30,6 @@ import com.example.ondrejvane.zivnostnicek.menu.Menu;
 
 /**
  * Aktivita, která zobrazí všechny obchodníky příslušného uživatele.
- *
  */
 public class TraderActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,7 +46,8 @@ public class TraderActivity extends AppCompatActivity
     /**
      * Metoda, která se provede při spuštění akctivity a porovede nezbytné
      * úkony ke správnému fungování aktivity.
-     * @param savedInstanceState    savedInstanceState
+     *
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class TraderActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         initActivity();
@@ -89,7 +89,7 @@ public class TraderActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int traderId = ID[position];
-                if(traderId != -1){
+                if (traderId != -1) {
                     Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
                     intent.putExtra("TRADER_ID", traderId);
                     startActivity(intent);
@@ -120,37 +120,37 @@ public class TraderActivity extends AppCompatActivity
                 String tempTraderContactPerson[];
                 int tempId[];
                 String findingString = inputSearch.getText().toString().toLowerCase();
-                if (traderName.length == 0){
-                    tempTraderName = new String [1];
-                    tempTraderContactPerson = new String [1];
+                if (traderName.length == 0) {
+                    tempTraderName = new String[1];
+                    tempTraderContactPerson = new String[1];
                     tempId = new int[1];
-                    tempTraderName[0]=getString(R.string.no_result);
-                    tempTraderContactPerson[0]=getString(R.string.no_result);
+                    tempTraderName[0] = getString(R.string.no_result);
+                    tempTraderContactPerson[0] = getString(R.string.no_result);
                     tempId[0] = -1;
                     ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
+                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this, tempTraderName, tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
                     return;
 
-                }else {
+                } else {
                     //zjištění počtu nalezených obchodníků a vytvoření pole příslušné délky pro data
                     int foundTraders = 0;
-                    for (int i = 0; i<traderName.length;i++){
-                        if (traderName[i].toLowerCase().contains(findingString) ||  traderContactPerson[i].toLowerCase().contains(findingString)){
+                    for (int i = 0; i < traderName.length; i++) {
+                        if (traderName[i].toLowerCase().contains(findingString) || traderContactPerson[i].toLowerCase().contains(findingString)) {
                             foundTraders++;
                         }
                     }
-                    tempTraderName = new String [foundTraders];
-                    tempTraderContactPerson = new String [foundTraders];
+                    tempTraderName = new String[foundTraders];
+                    tempTraderContactPerson = new String[foundTraders];
                     tempId = new int[foundTraders];
                 }
-                int tempI=0;
+                int tempI = 0;
                 boolean found = false;
 
 
-                for (int i = 0; i<traderName.length;i++){
-                    if (traderName[i].toLowerCase().contains(findingString) ||  traderContactPerson[i].toLowerCase().contains(findingString)){
+                for (int i = 0; i < traderName.length; i++) {
+                    if (traderName[i].toLowerCase().contains(findingString) || traderContactPerson[i].toLowerCase().contains(findingString)) {
                         tempTraderName[tempI] = traderName[i];
                         tempTraderContactPerson[tempI] = traderContactPerson[i];
                         tempId[tempI] = holderId[i];
@@ -158,22 +158,21 @@ public class TraderActivity extends AppCompatActivity
                         found = true;
                     }
                 }
-                if (found){
+                if (found) {
                     ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
+                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this, tempTraderName, tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
-                }
-                else {
-                    tempTraderName = new String [1];
-                    tempTraderContactPerson = new String [1];
+                } else {
+                    tempTraderName = new String[1];
+                    tempTraderContactPerson = new String[1];
                     tempId = new int[1];
-                    tempTraderName[0]=getString(R.string.no_result);
-                    tempTraderContactPerson[0]=getString(R.string.no_result);
+                    tempTraderName[0] = getString(R.string.no_result);
+                    tempTraderContactPerson[0] = getString(R.string.no_result);
                     tempId[0] = -1;
                     ID = tempId;
                     listViewTrader = findViewById(R.id.listViewTrader);
-                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this,tempTraderName,tempTraderContactPerson);
+                    listViewTraderAdapter = new ListViewTraderAdapter(TraderActivity.this, tempTraderName, tempTraderContactPerson);
                     listViewTrader.setAdapter(listViewTraderAdapter);
                     return;
                 }
@@ -226,8 +225,9 @@ public class TraderActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -243,10 +243,10 @@ public class TraderActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

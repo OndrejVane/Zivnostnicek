@@ -250,7 +250,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
-        if (password1.length() <= TextInputLength.PASSWORD_MIN_LENGTH) {
+        if (password1.length() < TextInputLength.PASSWORD_MIN_LENGTH) {
             message = getString(R.string.passwords_is_too_short);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             password1ET.setError(message);

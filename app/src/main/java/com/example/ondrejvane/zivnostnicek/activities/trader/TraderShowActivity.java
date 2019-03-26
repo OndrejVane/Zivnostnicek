@@ -45,6 +45,7 @@ public class TraderShowActivity extends AppCompatActivity
     /**
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
+     *
      * @param savedInstanceState savedInstanceState
      */
     @Override
@@ -75,7 +76,7 @@ public class TraderShowActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //skryje klávesnici při startu aktivity
@@ -123,8 +124,9 @@ public class TraderShowActivity extends AppCompatActivity
     /**
      * Metoda, která vytvoří boční navigační menu po
      * zahájení atcitivity.
-     * @param menu  bočnínavigační menu
-     * @return      boolean
+     *
+     * @param menu bočnínavigační menu
+     * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,8 +137,9 @@ public class TraderShowActivity extends AppCompatActivity
     /**
      * Metoda, která se stará o boční navigační menu a přechod
      * mezi aktivitami
-     * @param item  vybraný item z menu
-     * @return      boolean
+     *
+     * @param item vybraný item z menu
+     * @return boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -168,7 +171,7 @@ public class TraderShowActivity extends AppCompatActivity
      * Pokud ano zavolá proceduru deteleTrader. Pokdu ne, upozorněné se zavře
      * a nic se nestane.
      */
-    public void alertDelete(){
+    public void alertDelete() {
         AlertDialog.Builder alert = new AlertDialog.Builder(TraderShowActivity.this);
         alert.setMessage(R.string.delete_trader_question).setCancelable(false)
                 .setPositiveButton(R.string.no, new DialogInterface.OnClickListener() {
@@ -193,11 +196,11 @@ public class TraderShowActivity extends AppCompatActivity
      * Procedura, která odstraní z databáze obchodníka podle ID
      * a přepne intent do předchozí aktivity.
      */
-    private void deleteTrader(){
+    private void deleteTrader() {
         boolean result = traderDatabaseHelper.deleteTraderById(traderID);
-        if(result){
+        if (result) {
             Toast.makeText(this, R.string.trader_deleted_message, Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             Toast.makeText(this, R.string.trader_not_deleted_message, Toast.LENGTH_SHORT).show();
         }
         //záloha dat
@@ -211,8 +214,9 @@ public class TraderShowActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -228,10 +232,10 @@ public class TraderShowActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

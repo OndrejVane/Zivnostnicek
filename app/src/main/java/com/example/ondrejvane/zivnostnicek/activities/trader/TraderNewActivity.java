@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.trader;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,6 +19,7 @@ import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.menu.Menu;
@@ -115,45 +117,9 @@ public class TraderNewActivity extends AppCompatActivity
      * @param view view příslušné aktivity
      */
     public void submitTraderForm(View view) {
-        if (!InputValidation.validateCompanyName(inputCompanyName.getText().toString())) {
-            String message = getString(R.string.company_name_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutCompanyName.setError(getString(R.string.company_name_is_empty));
+
+        if (!inputValidation()) {
             return;
-        }
-
-        if (!InputValidation.validatePhoneNumber(inputTelephoneNumber.getText().toString())) {
-            String message = getString(R.string.telephone_has_wrong_format);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutTelephoneNumber.setError(getString(R.string.telephone_has_wrong_format));
-            return;
-        }
-
-        if (!InputValidation.validateIdentificationNumber(inputIdentificationNumber.getText().toString())) {
-            //implementace nastavení
-            if (!Settings.getInstance().isIsForeignIdentificationNumberPossible()) {
-                String message = getString(R.string.wrong_id_number);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutIdentificationNumber.setError(getString(R.string.wrong_id_number));
-                return;
-            }
-        }
-
-        //validace českého dič
-        if (!InputValidation.validateCzechTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())) {
-            //implementace nastavení
-            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
-                String message = getString(R.string.wrong_format_of_tid);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
-                return;
-            //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
-            } else if (!InputValidation.validateForeignTaxIdentificationNumber(inputTaxIdentificationNumber.getText().toString())) {
-                String message = getString(R.string.wrong_format_of_tid);
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-                inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
-                return;
-            }
         }
 
         Trader trader = new Trader();
@@ -183,6 +149,105 @@ public class TraderNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Kontrola všechn vstupních hodnot
+     *
+     * @return logická hodnota, která označuje zda je vše v pořádku
+     */
+    private boolean inputValidation() {
+        //načtení vstupních hodnot
+        String tradeName = inputCompanyName.getText().toString();
+        String contactPerson = inputContactPerson.getText().toString();
+        String phoneNumber = inputTelephoneNumber.getText().toString();
+        String identificationNumber = inputIdentificationNumber.getText().toString();
+        String taxIdentificationNumber = inputTaxIdentificationNumber.getText().toString();
+        String traderCity = inputCity.getText().toString();
+        String traderStreet = inputStreet.getText().toString();
+        String traderHouseNumber = inputHouseNumber.getText().toString();
+
+
+        //validace názvu obchodníka
+        if (tradeName.isEmpty()) {
+            String message = getString(R.string.company_name_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutCompanyName.setError(message);
+            return false;
+        } else if (tradeName.length() > TextInputLength.TRADER_NAME_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutCompanyName.setError(message);
+            return false;
+        }
+
+        //validace kontaktní osoby
+        if (contactPerson.length() > TextInputLength.TRADER_CONTACT_PERSON_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputContactPerson.setError(message);
+            return false;
+        }
+
+
+        //validace telefoního čísla
+        if (!InputValidation.validatePhoneNumber(phoneNumber)) {
+            String message = getString(R.string.telephone_has_wrong_format);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutTelephoneNumber.setError(message);
+            return false;
+        }
+
+        //validace IČO
+        if (!InputValidation.validateIdentificationNumber(identificationNumber)) {
+            //implementace nastavení
+            if (!Settings.getInstance().isIsForeignIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_id_number);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutIdentificationNumber.setError(message);
+                return false;
+            }
+        }
+
+        //validace českého dič
+        if (!InputValidation.validateCzechTaxIdentificationNumber(taxIdentificationNumber)) {
+            //implementace nastavení
+            if (!Settings.getInstance().isIsForeignTaxIdentificationNumberPossible()) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumber.setError(message);
+                return false;
+                //pokud je nastavena volba povolit zahraniční DIČ, tak je použita tato validace
+            } else if (!InputValidation.validateForeignTaxIdentificationNumber(taxIdentificationNumber)) {
+                String message = getString(R.string.wrong_format_of_tid);
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                inputLayoutTaxIdentificationNumber.setError(getString(R.string.wrong_format_of_tid));
+                return false;
+            }
+        }
+
+        if (!traderCity.isEmpty() && traderCity.length() > TextInputLength.TRADER_CITY_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputCity.setError(message);
+            return false;
+        }
+
+        if (!traderStreet.isEmpty() && traderStreet.length() > TextInputLength.TRADER_STREET_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputStreet.setError(message);
+            return false;
+        }
+
+        if (!traderHouseNumber.isEmpty() && traderHouseNumber.length() > TextInputLength.TRADER_HOUSE_NUMBER_LENGTH) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputHouseNumber.setError(message);
+            return false;
+        }
+
+        return true;
+    }
+
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
@@ -192,7 +257,7 @@ public class TraderNewActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

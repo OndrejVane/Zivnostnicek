@@ -18,7 +18,7 @@ public class TextInputLength {
     public static final int USER_EMAIL_LENGTH = 45;
 
     //minimální délka hesla
-    public static final int PASSWORD_MIN_LENGTH = 7;
+    public static final int PASSWORD_MIN_LENGTH = 8;
 
 
     /*
@@ -29,16 +29,16 @@ public class TextInputLength {
     public static final int TRADER_NAME_LENGTH = 45;
 
     //maximální délka kontaktní osoby
-    public static final int TRADER_CONTACT_PERSON_LENGHT = 45;
+    public static final int TRADER_CONTACT_PERSON_LENGTH = 45;
 
     //maximální délka názvu města
-    public static final int TRADER_CITY_LENGHT = 45;
+    public static final int TRADER_CITY_LENGTH = 45;
 
     //maxiální délka čísla popisného
-    public static final int TRADER_HOUSE_NUMBER_LENGHT = 10;
+    public static final int TRADER_HOUSE_NUMBER_LENGTH = 10;
 
     //maximální délka názvu ulice
-    public static final int TRADER_STREET_LENGHT = 45;
+    public static final int TRADER_STREET_LENGTH = 45;
 
     /*
     Hodnoty pro NOTE
