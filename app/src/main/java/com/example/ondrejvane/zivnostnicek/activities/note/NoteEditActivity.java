@@ -23,6 +23,7 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.server.Push;
@@ -152,19 +153,12 @@ public class NoteEditActivity extends AppCompatActivity
      * @param view view aktivity
      */
     public void updateNoteForm(View view) {
-        if (!InputValidation.validateNote(inputNoteTitleEdit.getText().toString())) {
-            String message = getString(R.string.note_title_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutNoteTitleEdit.setError(message);
+
+        //kontrola vstupních hodnot
+        if (!inputValidation()) {
             return;
         }
 
-        if (!InputValidation.validateNote(inputNoteEdit.getText().toString())) {
-            String message = getString(R.string.note_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutNoteEdit.setError(message);
-            return;
-        }
 
         Note note = new Note();
         DateFormat dateFormat1 = DateFormat.getDateInstance();
@@ -191,6 +185,41 @@ public class NoteEditActivity extends AppCompatActivity
         intent.putExtra("NOTE_ID", noteID);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Metoda, která kontroluje vstupní hodnoty.
+     *
+     * @return logická hodnota, která označuje zda validace probělha vpořádku
+     */
+    private boolean inputValidation() {
+        String noteTitle = inputNoteTitleEdit.getText().toString();
+        String note = inputNoteTitleEdit.getText().toString();
+
+        if (noteTitle.isEmpty()) {
+            String message = getString(R.string.note_title_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteTitleEdit.setError(message);
+            return false;
+        } else if (noteTitle.length() > TextInputLength.NOTE_TITLE_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteTitleEdit.setError(message);
+            return false;
+        }
+
+        if (note.isEmpty()) {
+            String message = getString(R.string.note_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteEdit.setError(message);
+            return false;
+        } else if (note.length() > TextInputLength.NOTE_TEXT_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteEdit.setError(message);
+            return false;
+        }
+        return true;
     }
 
     /**

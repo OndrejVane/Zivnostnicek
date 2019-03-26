@@ -22,6 +22,7 @@ import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
 import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
+import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.server.Push;
@@ -48,7 +49,7 @@ public class NoteNewActivity extends AppCompatActivity
      * Metoda, která se provede při spuštění akctivity a provede nezbytné
      * úkony ke správnému fungování aktivity.
      *
-     * @param savedInstanceState    savedInstanceState
+     * @param savedInstanceState savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class NoteNewActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headeru
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //incializace aktivity
@@ -85,9 +86,9 @@ public class NoteNewActivity extends AppCompatActivity
     private void initActivity() {
         noteDatabaseHelper = new NoteDatabaseHelper(NoteNewActivity.this);
         //načtení id obchodnía z předchozí aktivity
-        if(getIntent().hasExtra("TRADER_ID")){
+        if (getIntent().hasExtra("TRADER_ID")) {
             traderID = Integer.parseInt(getIntent().getExtras().get("TRADER_ID").toString());
-        }else {
+        } else {
             traderID = 1;
         }
 
@@ -119,22 +120,16 @@ public class NoteNewActivity extends AppCompatActivity
     /**
      * Procedura, která načte vložená data od uživatele. Zkontroluje, zda jsou
      * data validní a následně je vloží do databáze.
+     *
      * @param view view aktivity
      */
     public void submitNoteForm(View view) {
-        if(!InputValidation.validateNote(inputNoteTitle.getText().toString())){
-            String message = getString(R.string.note_title_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutNoteTitle.setError(message);
+
+        //kontrola vstupních hodnot
+        if(!inputValidation()){
             return;
         }
 
-        if(!InputValidation.validateNote(inputNote.getText().toString())){
-            String message = getString(R.string.note_is_empty);
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-            inputLayoutNote.setError(message);
-            return;
-        }
 
         Note note = new Note();
         DateFormat dateFormat1 = DateFormat.getDateInstance();
@@ -163,9 +158,45 @@ public class NoteNewActivity extends AppCompatActivity
     }
 
     /**
+     * Metoda, která kontroluje vstupní hodnoty.
+     *
+     * @return logická hodnota, která označuje zda validace probělha vpořádku
+     */
+    private boolean inputValidation() {
+        String noteTitle = inputNoteTitle.getText().toString();
+        String note = inputNoteTitle.getText().toString();
+
+        if (noteTitle.isEmpty()) {
+            String message = getString(R.string.note_title_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteTitle.setError(message);
+            return false;
+        } else if (noteTitle.length() > TextInputLength.NOTE_TITLE_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNoteTitle.setError(message);
+            return false;
+        }
+
+        if (note.isEmpty()) {
+            String message = getString(R.string.note_is_empty);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNote.setError(message);
+            return false;
+        } else if (note.length() > TextInputLength.NOTE_TEXT_LENGHT) {
+            String message = getString(R.string.input_is_too_long);
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            inputLayoutNote.setError(message);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -181,10 +212,10 @@ public class NoteNewActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();
