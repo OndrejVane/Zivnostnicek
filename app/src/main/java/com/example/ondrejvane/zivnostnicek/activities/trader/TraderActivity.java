@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
@@ -63,7 +64,6 @@ public class TraderActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent income = new Intent(TraderActivity.this, TraderNewActivity.class);
                 startActivity(income);
-                finish();
             }
         });
 
@@ -93,7 +93,6 @@ public class TraderActivity extends AppCompatActivity
                     Intent intent = new Intent(TraderActivity.this, TraderShowActivity.class);
                     intent.putExtra("TRADER_ID", traderId);
                     startActivity(intent);
-                    finish();
                 }
             }
         });
@@ -217,8 +216,8 @@ public class TraderActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            ExitApp exitApp = new ExitApp(this, this);
-            exitApp.alertExitApp();
+            Intent homeActivity = new Intent(this, HomeActivity.class);
+            startActivity(homeActivity);
         }
     }
 

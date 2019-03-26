@@ -104,8 +104,7 @@ public class TraderNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent income = new Intent(TraderNewActivity.this, TraderActivity.class);
-        startActivity(income);
+
         finish();
     }
 

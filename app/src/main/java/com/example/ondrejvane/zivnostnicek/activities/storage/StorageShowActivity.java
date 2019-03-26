@@ -124,8 +124,6 @@ public class StorageShowActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-        Intent intent = new Intent(StorageShowActivity.this, StorageActivity.class);
-        startActivity(intent);
         finish();
     }
 

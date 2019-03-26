@@ -486,9 +486,7 @@ public class BillNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent intent = new Intent(BillNewActivity.this, BillActivity.class);
-        intent.putExtra("IS_EXPENSE", isExpense);
-        startActivity(intent);
+
         finish();
     }
 

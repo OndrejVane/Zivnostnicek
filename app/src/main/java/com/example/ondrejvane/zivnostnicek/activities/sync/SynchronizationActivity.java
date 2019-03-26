@@ -25,6 +25,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.database.UserDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
@@ -370,8 +371,8 @@ public class SynchronizationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            ExitApp exitApp = new ExitApp(this, this);
-            exitApp.alertExitApp();
+            Intent homeActivity = new Intent(this, HomeActivity.class);
+            startActivity(homeActivity);
         }
     }
 

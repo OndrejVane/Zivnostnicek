@@ -2,6 +2,7 @@ package com.example.ondrejvane.zivnostnicek.activities.storage;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
@@ -99,7 +100,9 @@ public class StorageNewActivity extends AppCompatActivity
         long storageItemId;
 
         //validace, zda jsou potřebné položky vyplněné
-        validateInputs();
+        if(!validateInputs()){
+            return;
+        }
 
         //načtení položek
         name = storageItemName.getText().toString();
@@ -194,8 +197,7 @@ public class StorageNewActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent home = new Intent(StorageNewActivity.this, StorageActivity.class);
-        startActivity(home);
+
         finish();
     }
 
@@ -207,7 +209,7 @@ public class StorageNewActivity extends AppCompatActivity
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         //id vybrané položky v menu
         int id = item.getItemId();
 

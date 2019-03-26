@@ -115,8 +115,6 @@ public class TraderShowActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Intent home = new Intent(TraderShowActivity.this, TraderActivity.class);
-        startActivity(home);
         finish();
     }
 

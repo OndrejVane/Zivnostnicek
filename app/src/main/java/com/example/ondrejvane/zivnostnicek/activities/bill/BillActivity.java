@@ -26,13 +26,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
+import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.model.BillBox;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.session.ExitApp;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
@@ -83,7 +83,7 @@ public class BillActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //po stisknutí na floating button spuštění aktivity pr přídání záznamu
+        //po stisknutí na floating button spuštění aktivity pro přídání nové faktury
         final FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +91,6 @@ public class BillActivity extends AppCompatActivity
                 Intent intent = new Intent(BillActivity.this, BillNewActivity.class);
                 intent.putExtra("IS_EXPENSE", isExpense);
                 startActivity(intent);
-                finish();
             }
         });
 
@@ -427,8 +426,8 @@ public class BillActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            ExitApp exitApp = new ExitApp(this, this);
-            exitApp.alertExitApp();
+            Intent homeActivity = new Intent(this, HomeActivity.class);
+            startActivity(homeActivity);
         }
     }
 
