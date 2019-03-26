@@ -175,6 +175,9 @@ public class SynchronizationActivity extends AppCompatActivity
             return;
         }
 
+        //vypis poždadkvu
+        Log.d(TAG, request.toString());
+
         //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
         HttpsTrustManager.allowAllSSL();
 

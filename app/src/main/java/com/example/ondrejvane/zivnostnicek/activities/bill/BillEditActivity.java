@@ -331,13 +331,6 @@ public class BillEditActivity extends AppCompatActivity
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(BillEditActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListener,
-                year, month, day);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -346,6 +339,13 @@ public class BillEditActivity extends AppCompatActivity
                 editTextBillEditDate.setText(date);
             }
         };
+
+        DatePickerDialog dialog = new DatePickerDialog(BillEditActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListener,
+                year, month, day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     /**

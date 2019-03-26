@@ -167,4 +167,10 @@ public class PictureUtility {
         return timeStamp;
     }
 
+    public static boolean isFileExists(String filePath){
+        File file = new File(filePath);
+
+        return file.exists();
+    }
+
 }

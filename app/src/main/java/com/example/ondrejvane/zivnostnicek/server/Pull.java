@@ -18,12 +18,15 @@ import com.example.ondrejvane.zivnostnicek.model.Note;
 import com.example.ondrejvane.zivnostnicek.model.StorageItem;
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
+import com.example.ondrejvane.zivnostnicek.utilities.PictureUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Pull {
+
+    private static final String TAG = "Pull class";
 
     private Context context;
     private static final String NULL = "null";
@@ -33,7 +36,7 @@ public class Pull {
     }
 
 
-    public void pull(JSONArray response){
+    public void pull(JSONArray response) {
         deleteAllUserData();
         saveDataFromServer(response);
         refreshAllIdentifiers();
@@ -51,7 +54,7 @@ public class Pull {
      * Metoda, která po načtení dat
      * ze serveru aktualizuje lokální identifikátory.
      */
-    public void refreshAllIdentifiers(){
+    public void refreshAllIdentifiers() {
         IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(this.context);
         identifiersDatabaseHelper.refreshIdentifiers();
     }
@@ -184,6 +187,13 @@ public class Pull {
                 //kontrola, zda je položka nulová nebo ne
                 if (!temp.getString("photo").equals(NULL)) {
                     bill.setPhoto(temp.getString("photo"));
+
+                    //pokud soubor lokálně neexistuje, tak je třeba soubor uložit
+                    if (!PictureUtility.isFileExists(bill.getPhoto())) {
+                        Log.d(TAG, "Picture is not exist");
+                    }else {
+                        Log.d(TAG, "Picture is exist");
+                    }
                 }
 
                 billDatabaseHelper.addBill(bill, true);
@@ -195,7 +205,7 @@ public class Pull {
         }
     }
 
-    private void saveTypesDataFromServer(JSONArray types){
+    private void saveTypesDataFromServer(JSONArray types) {
         TypeBillDatabaseHelper typeBillDatabaseHelper = new TypeBillDatabaseHelper(this.context);
 
         for (int i = 0; i < types.length(); i++) {
