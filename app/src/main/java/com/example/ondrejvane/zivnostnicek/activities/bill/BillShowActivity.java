@@ -3,8 +3,6 @@ package com.example.ondrejvane.zivnostnicek.activities.bill;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -14,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
 import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
@@ -179,22 +174,6 @@ public class BillShowActivity extends AppCompatActivity
 
             //načtení bitmapy z cesty
             Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
-
-            //POKUS
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArrayImage = stream.toByteArray();
-            bitmap.recycle();
-
-            String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-
-            Log.d(TAG,"Enc picture: " + encodedImage);
-
-            byteArrayImage = Base64.decode(encodedImage, Base64.DEFAULT);
-            bitmap = BitmapFactory.decodeByteArray(byteArrayImage, 0, byteArrayImage.length);
-
-
-            //POKUS
 
             //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
             if(bitmap != null){

@@ -129,7 +129,7 @@ public class PictureUtility {
                     resultBitmap.getHeight());
             return resultBitmap;
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage(), e);
+            Log.e(TAG, "File not found!");
             return null;
         }
     }
