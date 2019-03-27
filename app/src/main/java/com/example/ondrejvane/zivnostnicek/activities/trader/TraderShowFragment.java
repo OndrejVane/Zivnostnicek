@@ -33,6 +33,9 @@ public class TraderShowFragment extends Fragment {
     private Trader trader;
 
 
+    /**
+     *
+     */
     public TraderShowFragment() {
         // Required empty public constructor
     }
@@ -62,6 +65,10 @@ public class TraderShowFragment extends Fragment {
 
     }
 
+    /**
+     * Procedura pro nastavení informací do
+     * aktivity.
+     */
     private void setTextToFragment() {
         inputCompanyNameShow.setText(trader.getName());
         inputContactPersonShow.setText(trader.getContactPerson());
@@ -73,6 +80,11 @@ public class TraderShowFragment extends Fragment {
         inputHouseNumberShow.setText(trader.getHouseNumber());
     }
 
+    /**
+     * Inicializace všech prvků ve fragmentu.
+     *
+     * @param view view aktivity
+     */
     private void initFragment(View view) {
         traderDatabaseHelper = new TraderDatabaseHelper(getContext());
         traderID = Integer.parseInt(getActivity().getIntent().getExtras().get("TRADER_ID").toString());
@@ -88,6 +100,10 @@ public class TraderShowFragment extends Fragment {
         buttonShowMap = view.findViewById(R.id.buttonShowMap);
     }
 
+    /**
+     * Metoda pro zobrazení mapy na základě
+     * adresy.
+     */
     private void showMap() {
         String city = inputCityShow.getText().toString();
         String street = inputStreetShow.getText().toString();
@@ -99,7 +115,7 @@ public class TraderShowFragment extends Fragment {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
             startActivity(i);
         } else {
-            Toast.makeText(getContext(), "Message is empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.address_is_empty, Toast.LENGTH_SHORT).show();
         }
 
     }
