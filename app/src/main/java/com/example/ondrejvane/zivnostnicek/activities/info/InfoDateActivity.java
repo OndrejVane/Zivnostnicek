@@ -113,6 +113,8 @@ public class InfoDateActivity extends AppCompatActivity
         //zavolání metody pro nastavení textu do aktivity přes metodu, která se zeptá uživatele o povolení práv
         trySetTextToActivity();
 
+        /*
+
         //nastavení naslouchače pro text view po stisknutí
         textViewDate1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +187,8 @@ public class InfoDateActivity extends AppCompatActivity
                 addEventToTheCalendar(event);
             }
         });
+
+        */
     }
 
     private void initActivity() {

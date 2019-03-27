@@ -12,6 +12,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,6 +39,7 @@ public class TraderNewActivity extends AppCompatActivity
     private EditText inputCity, inputStreet, inputHouseNumber;
     private TextInputLayout inputLayoutCompanyName, inputLayoutTelephoneNumber;
     private TextInputLayout inputLayoutIdentificationNumber, inputLayoutTaxIdentificationNumber;
+    private CheckBox checkBoxTinAndIn;
 
     private TraderDatabaseHelper traderDatabaseHelper;
 
@@ -68,6 +71,14 @@ public class TraderNewActivity extends AppCompatActivity
         header.setTextToHeader();
 
         initView();
+
+        checkBoxTinAndIn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String IN = "CZ" + inputIdentificationNumber.getText().toString();
+                inputTaxIdentificationNumber.setText(IN);
+            }
+        });
     }
 
     /**
@@ -87,6 +98,7 @@ public class TraderNewActivity extends AppCompatActivity
         inputLayoutTelephoneNumber = findViewById(R.id.textInputLayoutTelephoneNumber);
         inputLayoutIdentificationNumber = findViewById(R.id.textInputLayoutIdentificationNumber);
         inputLayoutTaxIdentificationNumber = findViewById(R.id.textInputLayoutTaxIdentificationNumber);
+        checkBoxTinAndIn = findViewById(R.id.checkBoxSameINasTIN);
         traderDatabaseHelper = new TraderDatabaseHelper(TraderNewActivity.this);
 
     }

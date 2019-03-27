@@ -254,6 +254,7 @@
     <string name="data_sucessfully_updated">Data úspěšně aktualizována</string>
     <string name="input_is_too_long">Vstup je příliš dlouhý</string>
     <string name="name_of_app">Název aplikace:</string>
+    <string name="check_if_IN_is_same_as_TIN">Zaškrtněte pokud je IČO stejné jako DIČ</string>
 
     <!-- ODKAZY -->
     <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>
