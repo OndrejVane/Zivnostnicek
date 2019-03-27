@@ -15,8 +15,7 @@ import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;
-import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
 
 /**

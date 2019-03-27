@@ -24,11 +24,11 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewBillItemAdapter;
-import com.example.ondrejvane.zivnostnicek.database.BillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.ItemQuantityDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.StorageItemDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.TraderDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.ItemQuantityDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.StorageItemDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.server.Push;
@@ -40,8 +40,6 @@ import com.example.ondrejvane.zivnostnicek.model.Trader;
 import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.database;
+package com.example.ondrejvane.zivnostnicek.database.ModelHelpers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 
 public class IdentifiersDatabaseHelper extends DatabaseHelper {

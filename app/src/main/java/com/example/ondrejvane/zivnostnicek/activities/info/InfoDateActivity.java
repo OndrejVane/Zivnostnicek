@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.model.Event;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
@@ -32,6 +34,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -106,6 +112,79 @@ public class InfoDateActivity extends AppCompatActivity
 
         //zavolání metody pro nastavení textu do aktivity přes metodu, která se zeptá uživatele o povolení práv
         trySetTextToActivity();
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate1.getText().toString();
+                String title = textViewDate11.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate2.getText().toString();
+                Log.d(TAG, date);
+                String title = textViewDate22.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate3.getText().toString();
+                String title = textViewDate33.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate4.getText().toString();
+                String title = textViewDate44.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate5.getText().toString();
+                String title = textViewDate55.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
+
+        //nastavení naslouchače pro text view po stisknutí
+        textViewDate6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String date = textViewDate6.getText().toString();
+                String title = textViewDate66.getText().toString();
+                Event event = new Event(title, date);
+                addEventToTheCalendar(event);
+            }
+        });
     }
 
     private void initActivity() {
@@ -139,7 +218,7 @@ public class InfoDateActivity extends AppCompatActivity
         String[] splitted = stringFromFile.split(";");
 
         textViewDate1.setText(splitted[0]);
-        textViewDate11.setText(splitted[1].replace("\n",""));
+        textViewDate11.setText(splitted[1].replace("\n", ""));
         textViewDate2.setText(splitted[2]);
         textViewDate22.setText(splitted[3]);
         textViewDate3.setText(splitted[4]);
@@ -246,6 +325,31 @@ public class InfoDateActivity extends AppCompatActivity
         return ret;
     }
 
+    /**
+     * Meotda, která vloží nouvou událost do
+     * kalendáře.
+     *
+     * @param event Třída událsoti, která obsahuje informace.
+     */
+    private void addEventToTheCalendar(Event event) {
+
+        Intent intent = new Intent(Intent.ACTION_INSERT);
+        intent.setType("vnd.android.cursor.item/event");
+
+
+        long startTime = event.getCalendar().getTimeInMillis();
+        long endTime = event.getCalendar().getTimeInMillis() + 60 * 60 * 1000;
+
+        intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime);
+        intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true);
+
+        intent.putExtra(CalendarContract.Events.TITLE, event.getTitle());
+
+        startActivity(intent);
+
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -300,7 +404,7 @@ public class InfoDateActivity extends AppCompatActivity
 
     @AfterPermissionGranted(PERMISSION_REQUEST_CODE)
     public void trySetTextToActivity() {
-        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CALENDAR};
 
         if (EasyPermissions.hasPermissions(this, perms)) {
             setTextToActivity();

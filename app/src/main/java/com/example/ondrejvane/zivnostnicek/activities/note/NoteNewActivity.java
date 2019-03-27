@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowActivity;
-import com.example.ondrejvane.zivnostnicek.database.NoteDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.NoteDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
