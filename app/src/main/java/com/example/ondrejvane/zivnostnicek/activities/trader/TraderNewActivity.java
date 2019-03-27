@@ -72,11 +72,17 @@ public class TraderNewActivity extends AppCompatActivity
 
         initView();
 
+        //listener, který kopíruje IČO na pozici DIČ
         checkBoxTinAndIn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                String IN = "CZ" + inputIdentificationNumber.getText().toString();
-                inputTaxIdentificationNumber.setText(IN);
+                if(checkBoxTinAndIn.isChecked()){
+                    String IN = "CZ" + inputIdentificationNumber.getText().toString();
+                    inputTaxIdentificationNumber.setText(IN);
+                }else {
+                    inputTaxIdentificationNumber.setText("");
+                }
+
             }
         });
     }
