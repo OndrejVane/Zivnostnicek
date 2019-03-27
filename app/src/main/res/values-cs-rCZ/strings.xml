@@ -253,6 +253,7 @@
     <string name="connect_to_internet">Připojte se k internetu</string>
     <string name="data_sucessfully_updated">Data úspěšně aktualizována</string>
     <string name="input_is_too_long">Vstup je příliš dlouhý</string>
+    <string name="name_of_app">Název aplikace:</string>
 
     <!-- ODKAZY -->
     <string name="www.podnikatel.cz">&#8226; www.podnikatel.cz</string>

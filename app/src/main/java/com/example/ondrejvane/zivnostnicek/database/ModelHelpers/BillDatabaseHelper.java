@@ -21,7 +21,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
     /**
      * Kontruktor pro bill database helper.
      *
-     * @param context context
+     * @param context Kontext aktivity
      */
     public BillDatabaseHelper(Context context) {
         super(context);

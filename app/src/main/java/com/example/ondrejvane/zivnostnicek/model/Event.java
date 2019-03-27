@@ -35,7 +35,7 @@ public class Event {
     }
 
     private Calendar formatDate(String strDate) {
-        strDate = "1.4.2019";
+        strDate = "1.1.2019";
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         Date date = null;
