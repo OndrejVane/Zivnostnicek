@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class Event {
 
@@ -13,6 +14,12 @@ public class Event {
     private Calendar calendar;
 
 
+    /**
+     * Konstruktor třídy událost.
+     *
+     * @param title   nadpis udásloti
+     * @param strDate den události
+     */
     public Event(String title, String strDate) {
         this.title = title;
         this.calendar = formatDate(strDate);
@@ -34,10 +41,16 @@ public class Event {
         this.calendar = calendar;
     }
 
+    /**
+     * Metoda, která vytvoří kalendář s příslučným datem
+     * podle vstupního stringu.
+     *
+     * @param strDate řetězec, který představuje datum v evropském formátu
+     * @return kalendář s přesným datem
+     */
     private Calendar formatDate(String strDate) {
-        strDate = "1.1.2019";
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy", Locale.UK);
         Date date = null;
         try {
             date = sdf.parse(strDate);
