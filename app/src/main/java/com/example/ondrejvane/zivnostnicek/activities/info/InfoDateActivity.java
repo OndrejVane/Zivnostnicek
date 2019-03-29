@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.model.Event;
+import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
@@ -271,6 +272,10 @@ public class InfoDateActivity extends AppCompatActivity
         String file = "";
 
         try {
+
+            //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+            HttpsTrustManager.allowAllSSL();
+
             URL url = new URL(Server.getInstance().getDatesUrl());
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
