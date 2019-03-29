@@ -48,12 +48,11 @@ public class NoteFragment extends Fragment {
 
 
     /**
-     *
      * Meotda, která je volána při vytvoření fragmentu a provede úkoný
      * k inicializaci fragmentu.
      *
-     * @param inflater inflater
-     * @param container container
+     * @param inflater           inflater
+     * @param container          container
      * @param savedInstanceState savedInstanceState
      * @return view aktivity
      */
@@ -83,6 +82,7 @@ public class NoteFragment extends Fragment {
 
     /**
      * Inializace všech prvků fragmentu.
+     *
      * @param view view aktivtiy
      */
     private void initFragment(View view) {

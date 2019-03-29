@@ -63,6 +63,12 @@ public class InfoCurrencyActivity extends AppCompatActivity
     //kod požadavku přístupu
     private static final int PERMISSION_REQUEST_CODE = 345;
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

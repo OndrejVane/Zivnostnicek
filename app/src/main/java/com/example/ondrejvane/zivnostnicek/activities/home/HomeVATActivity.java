@@ -56,6 +56,12 @@ public class HomeVATActivity extends AppCompatActivity
     private boolean isFirstPickYear = true;
     private boolean isFirstPickMonth = true;
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -18,12 +18,24 @@ import com.example.ondrejvane.zivnostnicek.model.User;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 
+/**
+ * Aktivita, která je spuštěna jako první v aplikace.
+ * Tato aktivita zjištujě, zda je nějaký uživatel přihlášen.
+ * Pokud není je zobrazeno aktivita pro přihlášení. Pokud již
+ * je uživatel přihlášen je spuštěna domovská aktivita aplikace.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private SessionHandler sessionHandler;
     private Settings settings;
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

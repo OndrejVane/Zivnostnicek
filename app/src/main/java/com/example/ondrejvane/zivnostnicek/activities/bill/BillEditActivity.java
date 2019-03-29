@@ -61,7 +61,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * Aktivity pro editaci faktury
+ * Aktivita pro editaci faktury
  */
 public class BillEditActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {

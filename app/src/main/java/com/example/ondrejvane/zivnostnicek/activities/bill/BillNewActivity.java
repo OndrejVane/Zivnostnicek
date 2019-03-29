@@ -71,7 +71,7 @@ import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * Kativity pro přidávání nové faktury
+ * Aktivita pro přidávání nové faktury
  */
 public class BillNewActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
@@ -90,7 +90,6 @@ public class BillNewActivity extends AppCompatActivity
     private TextInputLayout layoutBillName;
     private TextInputLayout layoutBillAmount;
     private TextView fillLabel;
-    private CheckBox checkBoxGeneratePDF;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     //pomocné globální proměnné

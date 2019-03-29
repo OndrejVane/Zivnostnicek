@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import top.defaults.colorpicker.ColorPickerPopup;
 
 /**
- * Aktivity pro zobrazení všech příjmu.
+ * Aktivita pro zobrazení všech příjmu.
  */
 public class BillActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -214,7 +214,7 @@ public class BillActivity extends AppCompatActivity
 
     /**
      * Funkce, která načte data z databáze a uloží je do
-     * globálních proměnných. tato akce je prováděna v jiném
+     * globálních proměnných. Tato akce je prováděna v jiném
      * vlákně něž vlákno GUI.
      */
     private void readDataFromDatabase() {

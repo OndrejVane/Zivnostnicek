@@ -76,10 +76,10 @@ public class TraderNewActivity extends AppCompatActivity
         checkBoxTinAndIn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(checkBoxTinAndIn.isChecked()){
+                if (checkBoxTinAndIn.isChecked()) {
                     String IN = "CZ" + inputIdentificationNumber.getText().toString();
                     inputTaxIdentificationNumber.setText(IN);
-                }else {
+                } else {
                     inputTaxIdentificationNumber.setText("");
                 }
 

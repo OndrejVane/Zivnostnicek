@@ -16,11 +16,17 @@ import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 /**
- * Kativita, která zobrazuje uživateli informace o aplikaci.
+ * Aktivita, která zobrazuje uživateli informace o aplikaci.
  */
 public class InfoAboutAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

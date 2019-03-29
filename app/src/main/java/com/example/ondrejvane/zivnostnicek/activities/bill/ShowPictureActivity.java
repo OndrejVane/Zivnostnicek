@@ -13,13 +13,19 @@ import com.ortiz.touchview.TouchImageView;
 
 
 /**
- * Aktivity, která zobrazuje obrázek na celou plochu obrazovky
+ * Aktivita, která zobrazuje obrázek na celou plochu obrazovky
  */
 public class ShowPictureActivity extends AppCompatActivity {
 
 
     private TouchImageView touchImageView;
 
+    /**
+     * Metoda, která je volána při spuštění aktivity a nastaví
+     * všechny potřebné prvky aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

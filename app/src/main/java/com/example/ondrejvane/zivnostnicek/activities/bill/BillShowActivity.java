@@ -43,7 +43,7 @@ import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 import java.util.ArrayList;
 
 /**
- * Aktivity pro zobrazení faktury.
+ * Aktivita pro zobrazení faktury.
  */
 public class BillShowActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -73,6 +73,11 @@ public class BillShowActivity extends AppCompatActivity
     private int billId;
 
 
+    /**
+     * Metoda, která je volaná ihned po spuštění aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +108,7 @@ public class BillShowActivity extends AppCompatActivity
     }
 
     /**
-     * Inicializace aktivity
+     * Procedura pro inicialiazci aktivity.
      */
     private void initActivity() {
 
@@ -168,16 +173,16 @@ public class BillShowActivity extends AppCompatActivity
 
         if (bill.getPhoto() != null) {
 
-            Log.d(TAG, "bill picture: "+ bill.getPhoto());
+            Log.d(TAG, "bill picture: " + bill.getPhoto());
 
             //načtení bitmapy z cesty
             Bitmap bitmap = PictureUtility.getBitmap(bill.getPhoto());
 
             //pokud byla bitmapa úspěšně načtena, zobrazí se do aktivity
-            if(bitmap != null){
+            if (bitmap != null) {
                 photoViewBillPhoto.setImageBitmap(bitmap);
                 isPictureFound = true;
-            }else {
+            } else {
                 textViewBillPhoto.setText(getText(R.string.picture_is_not_available));
                 isPictureFound = false;
             }

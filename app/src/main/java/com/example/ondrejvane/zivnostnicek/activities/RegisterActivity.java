@@ -30,6 +30,9 @@ import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Aktivita, která se stará o registraci uživatele.
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
@@ -270,8 +273,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Zobrazení dialogového okna pro nastavení
-     * atributů serveru. Následné infomrace jsou uloženy do
-     * třídy server a také do
+     * atributů serveru. Následné informace jsou uloženy do
+     * třídy server.
      *
      * @param view view aktivity
      */

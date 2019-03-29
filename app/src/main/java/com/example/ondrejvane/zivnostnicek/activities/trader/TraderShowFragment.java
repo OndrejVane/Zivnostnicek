@@ -17,7 +17,7 @@ import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TraderDatabaseH
 import com.example.ondrejvane.zivnostnicek.model.Trader;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Fragment, který zobrazí podrobnosti o obchodníkovi.
  */
 public class TraderShowFragment extends Fragment {
 
@@ -34,13 +34,19 @@ public class TraderShowFragment extends Fragment {
 
 
     /**
-     *
+     * Povinná metoda při použití fragmentu.
      */
     public TraderShowFragment() {
         // Required empty public constructor
     }
 
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

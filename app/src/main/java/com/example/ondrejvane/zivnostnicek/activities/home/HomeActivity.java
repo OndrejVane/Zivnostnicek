@@ -33,7 +33,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
 
 /**
- * Aktivity, která zobrazuje hlavní přehled přímů a výdajů.
+ * Aktivita, která zobrazuje hlavní přehled přímů a výdajů.
  */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

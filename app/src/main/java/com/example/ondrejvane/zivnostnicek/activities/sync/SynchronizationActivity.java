@@ -42,6 +42,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Aktivita, která se stará o ruční zálohování a obnovu dat a
+ * také nastavení nastevení automatické synchronizace.
+ */
 public class SynchronizationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -64,6 +68,12 @@ public class SynchronizationActivity extends AppCompatActivity
     private static final String KEY_STATUS = "status";
 
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +123,7 @@ public class SynchronizationActivity extends AppCompatActivity
     private void checkIfIsAllSynced() {
         Push push = new Push(SynchronizationActivity.this);
         if (push.isAllSynced()) {
-            textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_cloud_on, 0, 0, 0);
+            textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cloud_on, 0, 0, 0);
             textViewIsAllSynced.setText(R.string.all_data_is_backed_up);
         }
     }
@@ -282,7 +292,7 @@ public class SynchronizationActivity extends AppCompatActivity
                                 push.setAllRecordsClear();
 
                                 //nastavení, že všechna data jsou zálohovaná
-                                textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_cloud_on, 0, 0, 0);
+                                textViewIsAllSynced.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_cloud_on, 0, 0, 0);
                                 textViewIsAllSynced.setText(R.string.all_data_is_backed_up);
 
                                 //skyrytí progres dialogu

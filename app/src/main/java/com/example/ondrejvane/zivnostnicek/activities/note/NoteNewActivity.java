@@ -125,7 +125,7 @@ public class NoteNewActivity extends AppCompatActivity
     public void submitNoteForm(View view) {
 
         //kontrola vstupních hodnot
-        if(!inputValidation()){
+        if (!inputValidation()) {
             return;
         }
 

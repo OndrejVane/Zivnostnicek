@@ -56,7 +56,7 @@ public class StorageNewActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -66,7 +66,7 @@ public class StorageNewActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headur
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //inicializace aktivity
@@ -100,7 +100,7 @@ public class StorageNewActivity extends AppCompatActivity
         long storageItemId;
 
         //validace, zda jsou potřebné položky vyplněné
-        if(!validateInputs()){
+        if (!validateInputs()) {
             return;
         }
 
@@ -153,31 +153,31 @@ public class StorageNewActivity extends AppCompatActivity
      *
      * @return logická hodnota, která určuje zda je validace Ok
      */
-    private boolean validateInputs(){
+    private boolean validateInputs() {
         String storageName = storageItemName.getText().toString();
         String storageQuantity = storageItemQuantity.getText().toString();
         String storageNote = storageItemNote.getText().toString();
 
-        if(storageName.isEmpty()){
+        if (storageName.isEmpty()) {
             String message = getString(R.string.item_name_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemName.setError(message);
             return false;
-        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH){
+        } else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemName.setError(message);
             return false;
         }
 
-        if (storageQuantity.isEmpty()){
+        if (storageQuantity.isEmpty()) {
             String message = getString(R.string.quantity_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemQuantity.setError(message);
             return false;
         }
 
-        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.STORAGE_ITEM_NOTE_LENGTH){
+        if (!storageNote.isEmpty() && storageNote.length() > TextInputLength.STORAGE_ITEM_NOTE_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
@@ -204,8 +204,9 @@ public class StorageNewActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -221,10 +222,10 @@ public class StorageNewActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

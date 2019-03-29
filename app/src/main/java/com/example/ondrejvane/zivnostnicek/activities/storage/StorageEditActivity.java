@@ -58,11 +58,11 @@ public class StorageEditActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_storage_edit);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,7 +72,7 @@ public class StorageEditActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headeru
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //inicializace aktivity
@@ -86,9 +86,9 @@ public class StorageEditActivity extends AppCompatActivity
     @SuppressLint("SetTextI18n")
     private void initActivity() {
         //pokus o načtení dat předaných z předchozí aktivity
-        if(getIntent().hasExtra("STORAGE_ITEM_ID")){
+        if (getIntent().hasExtra("STORAGE_ITEM_ID")) {
             storageItemID = Integer.parseInt(getIntent().getExtras().get("STORAGE_ITEM_ID").toString());
-        }else {
+        } else {
             storageItemID = 1;
         }
 
@@ -117,12 +117,13 @@ public class StorageEditActivity extends AppCompatActivity
     /**
      * Metoda, která po stisknutí tlačítku uloží změny skladové
      * položky do databáze.
+     *
      * @param view view aktivity
      */
     public void editStorageItem(View view) {
 
         //validace vstupů
-        if (!validateInputs()){
+        if (!validateInputs()) {
             return;
         }
 
@@ -145,20 +146,20 @@ public class StorageEditActivity extends AppCompatActivity
         storageItem.setId(storageItemID);
 
         //pokud se nové množství a editované množství nebude rovnat, tak potřebuju provést výpočet nového množství
-        if(currentQuantity != Float.parseFloat(quantity)){
+        if (currentQuantity != Float.parseFloat(quantity)) {
             ItemQuantity itemQuantity = new ItemQuantity();
             itemQuantity.setBillId(-1);         //nepatří k žádné faktuře
             itemQuantity.setStorageItemId(storageItemID);
             itemQuantity.setIsDirty(1);
             itemQuantity.setIsDeleted(0);
-            if(currentQuantity > Float.parseFloat(quantity)){
-                itemQuantity.setQuantity(-1*(currentQuantity - Float.parseFloat(quantity)));
+            if (currentQuantity > Float.parseFloat(quantity)) {
+                itemQuantity.setQuantity(-1 * (currentQuantity - Float.parseFloat(quantity)));
                 itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, false);
             }
 
-            if(currentQuantity < Float.parseFloat(quantity)){
+            if (currentQuantity < Float.parseFloat(quantity)) {
                 itemQuantity.setQuantity(Float.parseFloat(quantity) - currentQuantity);
-                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity,false);
+                itemQuantityDatabaseHelper.addItemQuantity(itemQuantity, false);
             }
         }
 
@@ -186,31 +187,31 @@ public class StorageEditActivity extends AppCompatActivity
      *
      * @return logická hodnota, která určuje zda je validace Ok
      */
-    private boolean validateInputs(){
+    private boolean validateInputs() {
         String storageName = inputStorageItemNameEdit.getText().toString();
         String storageQuantity = inputStorageItemQuantityEdit.getText().toString();
         String storageNote = inputStorageItemNote.getText().toString();
 
-        if(storageName.isEmpty()){
+        if (storageName.isEmpty()) {
             String message = getString(R.string.item_name_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemNameEdit.setError(message);
             return false;
-        }else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH){
+        } else if (storageName.length() > TextInputLength.STORAGE_ITEM_NAME_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemNameEdit.setError(message);
             return false;
         }
 
-        if (storageQuantity.isEmpty()){
+        if (storageQuantity.isEmpty()) {
             String message = getString(R.string.quantity_is_empty);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             layoutStorageItemQuantityEdit.setError(message);
             return false;
         }
 
-        if(!storageNote.isEmpty() && storageNote.length() > TextInputLength.NOTE_TEXT_LENGTH){
+        if (!storageNote.isEmpty() && storageNote.length() > TextInputLength.NOTE_TEXT_LENGTH) {
             String message = getString(R.string.input_is_too_long);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return false;
@@ -240,8 +241,9 @@ public class StorageEditActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -257,10 +259,10 @@ public class StorageEditActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

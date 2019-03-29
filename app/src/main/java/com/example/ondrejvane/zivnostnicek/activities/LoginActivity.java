@@ -39,6 +39,10 @@ import com.example.ondrejvane.zivnostnicek.session.SessionHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Aktivita, která se stará o přihlášení uživatele do aplikace.
+ * Autoriazce uživatele probíhá ve spolupráci se serverem.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     private final String TAG = "LoginActivity";
@@ -60,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     private SessionHandler session;
     private String hashedPassword;
 
+    //pomocné klíče
     private static final String KEY_STATUS = "status";
     private static final String KEY_FULL_NAME = "full_name";
     private static final String KEY_EMAIL = "email";
@@ -67,6 +72,12 @@ public class LoginActivity extends AppCompatActivity {
     private static final String KEY_ID = "id";
 
 
+    /**
+     * Metoda, která se provede při spuštění akctivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

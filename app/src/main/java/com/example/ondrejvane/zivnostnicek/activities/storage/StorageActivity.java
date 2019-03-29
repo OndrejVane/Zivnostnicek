@@ -52,6 +52,7 @@ public class StorageActivity extends AppCompatActivity
 
     /**
      * Meotoda, která je volána při vytvoření aktivity
+     *
      * @param savedInstanceState savedInstanceState
      */
     @Override
@@ -81,7 +82,7 @@ public class StorageActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headeru
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //inicializace aktivity
@@ -95,7 +96,7 @@ public class StorageActivity extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 int storageItemId = ID[position];
-                if(storageItemId != -1){
+                if (storageItemId != -1) {
                     Intent intent = new Intent(StorageActivity.this, StorageShowActivity.class);
                     intent.putExtra("STORAGE_ITEM_ID", storageItemId);
                     startActivity(intent);
@@ -132,12 +133,12 @@ public class StorageActivity extends AppCompatActivity
                 int tempId[];
                 String findingString = inputSearch.getText().toString().toLowerCase();
 
-                if (storageItemName.length == 0){
-                    tempStorageItemName = new String [1];
+                if (storageItemName.length == 0) {
+                    tempStorageItemName = new String[1];
                     tempStorageItemQuantity = new float[1];
                     tempStorageItemUnit = new String[1];
                     tempId = new int[1];
-                    tempStorageItemName[0]=getString(R.string.no_result);
+                    tempStorageItemName[0] = getString(R.string.no_result);
                     tempStorageItemQuantity[0] = (float) 0.0;
                     tempStorageItemUnit[0] = "";
                     tempId[0] = -1;
@@ -146,26 +147,26 @@ public class StorageActivity extends AppCompatActivity
                     listViewStorageItem.setAdapter(listViewStorageAdapter);
                     return;
 
-                }else {
+                } else {
                     //zjištění počtu nalezených položek a inicializace polí
                     int foundStorageItems = 0;
-                    for (int i = 0; i<storageItemName.length;i++){
-                        if (storageItemName[i].toLowerCase().contains(findingString)){
+                    for (int i = 0; i < storageItemName.length; i++) {
+                        if (storageItemName[i].toLowerCase().contains(findingString)) {
                             foundStorageItems++;
                         }
                     }
-                    tempStorageItemName = new String [foundStorageItems];
-                    tempStorageItemQuantity = new float [foundStorageItems];
+                    tempStorageItemName = new String[foundStorageItems];
+                    tempStorageItemQuantity = new float[foundStorageItems];
                     tempStorageItemUnit = new String[foundStorageItems];
                     tempId = new int[foundStorageItems];
                 }
 
-                int tempI=0;
+                int tempI = 0;
                 boolean found = false;
 
 
-                for (int i = 0; i<storageItemName.length;i++){
-                    if (storageItemName[i].toLowerCase().contains(findingString)){
+                for (int i = 0; i < storageItemName.length; i++) {
+                    if (storageItemName[i].toLowerCase().contains(findingString)) {
                         tempStorageItemName[tempI] = storageItemName[i];
                         tempStorageItemQuantity[tempI] = storageItemQuantity[i];
                         tempStorageItemUnit[tempI] = storageItemUnit[i];
@@ -174,17 +175,16 @@ public class StorageActivity extends AppCompatActivity
                         found = true;
                     }
                 }
-                if (found){
-                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this,tempStorageItemName,tempStorageItemQuantity, tempStorageItemUnit);
+                if (found) {
+                    listViewStorageAdapter = new ListViewStorageAdapter(StorageActivity.this, tempStorageItemName, tempStorageItemQuantity, tempStorageItemUnit);
                     listViewStorageItem.setAdapter(listViewStorageAdapter);
                     ID = tempId;
-                }
-                else {
-                    tempStorageItemName = new String [1];
+                } else {
+                    tempStorageItemName = new String[1];
                     tempStorageItemQuantity = new float[1];
                     tempStorageItemUnit = new String[1];
                     tempId = new int[1];
-                    tempStorageItemName[0]=getString(R.string.no_result);
+                    tempStorageItemName[0] = getString(R.string.no_result);
                     tempStorageItemQuantity[0] = (float) 0.0;
                     tempStorageItemUnit[0] = "";
                     tempId[0] = -1;
@@ -223,7 +223,7 @@ public class StorageActivity extends AppCompatActivity
 
 
         //projdu list a získám informace o položkách, které potřebuju
-        for (int i=0; i<listStorageItem.size(); i++){
+        for (int i = 0; i < listStorageItem.size(); i++) {
             ID[i] = listStorageItem.get(i).getId();
             holderId[i] = listStorageItem.get(i).getId();
             storageItemName[i] = listStorageItem.get(i).getName();
@@ -255,8 +255,9 @@ public class StorageActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -272,10 +273,10 @@ public class StorageActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

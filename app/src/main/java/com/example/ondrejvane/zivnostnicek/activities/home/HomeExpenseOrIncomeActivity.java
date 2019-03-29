@@ -35,7 +35,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
 
 /**
- * Aktivity, která zobrazuje příjmy nebo výdaje členěné podle druhů.
+ * Aktivita, která zobrazuje příjmy nebo výdaje členěné podle druhů.
  */
 public class HomeExpenseOrIncomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -61,6 +61,12 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
     private boolean isFirstPickYear = true;
     private boolean isFirstPickMonth = true;
 
+    /**
+     * Metoda, která je volána při spuštění aktivity a nastaví
+     * všechny potřebné prvky aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,7 +159,7 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
     }
 
     private void setTitle() {
-        if(isExpense){
+        if (isExpense) {
             setTitle(getResources().getString(R.string.title_activity_home_expense));
         }
     }
@@ -208,9 +214,10 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
 
     /**
      * Metoda, která nastavuje načtená data z databáze do grafu.
-     * @param typeName  pole s názvem typu
-     * @param typeColor pole s barvou typu
-     * @param typeAmount    pole se součtem všech P/V v daném typu
+     *
+     * @param typeName   pole s názvem typu
+     * @param typeColor  pole s barvou typu
+     * @param typeAmount pole se součtem všech P/V v daném typu
      */
     private void setDataToGraph(String[] typeName, int[] typeColor, float[] typeAmount) {
         //inicializace grafu
@@ -256,9 +263,10 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
 
     /**
      * Nastavení dat do do listu pomocí adapteru
-     * @param typeName  pole s názvem typu
-     * @param typeColor pole s barvou typu
-     * @param typeAmount    pole se součtem všech P/V v daném typu
+     *
+     * @param typeName   pole s názvem typu
+     * @param typeColor  pole s barvou typu
+     * @param typeAmount pole se součtem všech P/V v daném typu
      */
     private void setAdapterToList(String[] typeName, int[] typeColor, float[] typeAmount) {
         ListViewHomeAdapter listViewHomeAdapter = new ListViewHomeAdapter(this, typeColor, typeName, typeAmount);
@@ -299,6 +307,7 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o vykreslení bočního navigačního menu.
+     *
      * @param menu menu
      * @return boolean
      */

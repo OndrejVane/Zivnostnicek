@@ -24,7 +24,7 @@ import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 
 /**
- * KAtivita, která se stará o uživatelské nastavení aplikace a pozdější
+ * Aktivita, která se stará o uživatelské nastavení aplikace a pozdější
  * uložení nastavení do shared preferences.
  */
 public class SettingsActivity extends AppCompatActivity
@@ -66,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //nastavení textu do headeru
-        Header header = new Header( navigationView);
+        Header header = new Header(navigationView);
         header.setTextToHeader();
 
         //inicializace aktivity
@@ -77,11 +77,11 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isSelectedYear){
+                if (isSelectedYear) {
                     spinnerYear.setEnabled(false);
                     checkBoxMonth.setEnabled(false);
                     isSelectedYear = false;
-                }else {
+                } else {
                     spinnerYear.setEnabled(true);
                     checkBoxMonth.setEnabled(true);
                     isSelectedYear = true;
@@ -94,10 +94,10 @@ public class SettingsActivity extends AppCompatActivity
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(isSelectedMonth){
+                if (isSelectedMonth) {
                     spinnerMonth.setEnabled(false);
                     isSelectedMonth = false;
-                }else {
+                } else {
                     spinnerMonth.setEnabled(true);
                     isSelectedMonth = true;
                 }
@@ -128,12 +128,12 @@ public class SettingsActivity extends AppCompatActivity
         checkBoxTIN.setChecked(settings.isIsForeignTaxIdentificationNumberPossible());
         checkBoxYear.setChecked(isSelectedYear);
         checkBoxMonth.setChecked(isSelectedMonth);
-        if (isSelectedYear){
+        if (isSelectedYear) {
             //nastavit vybraný rok do spinneru
             spinnerYear.setSelection(settings.getArrayYearId());
         }
 
-        if(isSelectedMonth){
+        if (isSelectedMonth) {
             spinnerMonth.setSelection(settings.getArrayMonthId());
         }
     }
@@ -150,40 +150,40 @@ public class SettingsActivity extends AppCompatActivity
         settings.setIsForeignTaxIdentificationNumberPossible(checkBoxTIN.isChecked());
 
         //uložení nastavení roku do tříd settings
-        if (isSelectedYear){
+        if (isSelectedYear) {
             settings.setIsPickedOneYear(true);
-            if(spinnerYear.getSelectedItemId() != 0){
+            if (spinnerYear.getSelectedItemId() != 0) {
                 settings.setYear(spinnerYear.getSelectedItem().toString());
                 settings.setArrayYearId((int) spinnerYear.getSelectedItemId());
 
-            }else {
+            } else {
                 //pokud není vybrán žádný rok
                 String message = getString(R.string.select_year);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 return;
             }
 
-        }else {
+        } else {
             settings.setIsPickedOneYear(false);
             settings.setYear(null);
             settings.setArrayYearId(-1);
         }
 
         //uložení nastavní měsíce do třídy settings
-        if (isSelectedMonth){
+        if (isSelectedMonth) {
             settings.setIsPickedOneMonth(true);
-            if(spinnerMonth.getSelectedItemId() != 0){
+            if (spinnerMonth.getSelectedItemId() != 0) {
                 settings.setMonth(spinnerMonth.getSelectedItem().toString());
                 settings.setArrayMonthId((int) spinnerMonth.getSelectedItemId());
 
-            }else {
+            } else {
                 //pokud není vybrán žádný měsíc
                 String message = getString(R.string.select_month);
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 return;
             }
 
-        }else {
+        } else {
             settings.setIsPickedOneMonth(false);
             settings.setMonth(null);
             settings.setArrayMonthId(-1);
@@ -214,8 +214,9 @@ public class SettingsActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o hlavní navigační menu aplikace.
-     * @param item  vybraná položka v menu
-     * @return      boolean
+     *
+     * @param item vybraná položka v menu
+     * @return boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -231,10 +232,10 @@ public class SettingsActivity extends AppCompatActivity
         newIntent = menu.getMenu(id);
 
         //pokud jedná o nějakou aktivitu, tak se spustí
-        if(newIntent != null){
+        if (newIntent != null) {
             startActivity(menu.getMenu(id));
             finish();
-        }else {
+        } else {
             //pokud byla stisknuta položka odhlášení
             Logout logout = new Logout(thisActivity, this);
             logout.logout();

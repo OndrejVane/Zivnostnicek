@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Kativity, která zobrazouje roční přehled příjmů a výdajů po měsících.
+ * Aktivita, která zobrazuje roční přehled příjmů a výdajů po měsících.
  */
 public class HomeYearSummaryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -57,6 +57,12 @@ public class HomeYearSummaryActivity extends AppCompatActivity
     private float incomeYear;
     private boolean isFisrtPick = true;
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -47,6 +47,12 @@ public class HomeTraderActivity extends AppCompatActivity
     private NoteDatabaseHelper noteDatabaseHelper;
     private TraderDatabaseHelper traderDatabaseHelper;
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

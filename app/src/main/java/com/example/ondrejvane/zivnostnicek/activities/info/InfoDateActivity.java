@@ -45,6 +45,10 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
+/**
+ * Aktivita, která zobrazuje důležité termíny pro podnikatele a malé živnostníky.
+ * Důležité termíny jsou načítány přes API ze serveru.
+ */
 public class InfoDateActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EasyPermissions.PermissionCallbacks {
 
@@ -78,6 +82,12 @@ public class InfoDateActivity extends AppCompatActivity
     private String stringFromFile;
 
 
+    /**
+     * Metoda, která se provede při spuštění aktivity a provede nezbytné
+     * úkony ke správnému fungování aktivity.
+     *
+     * @param savedInstanceState savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
