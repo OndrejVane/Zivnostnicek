@@ -285,6 +285,13 @@
     <string name="www.zivnostnik.cz">&#8226; www.zivnostnik.cz</string>
     <string name="www.zivnostnik.cz_hint">Portal for Tradesmen and Small Entrepreneurs.</string>
 
+    <!-- INICIALIZAČNÍ HODNOTY PRO MĚNY -->
+    <string name="amount_currency_date">28.3.2019</string>
+    <string name="eur_amount">25,780</string>
+    <string name="gbp_amount">30,070</string>
+    <string name="usd_amount">22,934</string>
+    <string name="cad_amount">17,072</string>
+    <string name="sek_amount">2,461</string>
 
     <!-- POLE -->
     <string-array name="vat_amount">
@@ -313,7 +320,7 @@
     </string-array>
 
     <string-array name="years">
-        <item>Nevybráno</item>
+        <item>None</item>
         <item>2018</item>
         <item>2019</item>
         <item>2020</item>
