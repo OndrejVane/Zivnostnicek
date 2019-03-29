@@ -16,6 +16,11 @@ import com.example.ondrejvane.zivnostnicek.model.TypeBill;
 
 import java.util.ArrayList;
 
+/**
+ * Třída, která dědí vše od třídy DatabaseHelper a rošiřuje jí
+ * o metody, které pracují s objektem faktury. Vkládá, čte
+ * a upravuje záznamy faktur v databázi.
+ */
 public class BillDatabaseHelper extends DatabaseHelper {
 
     /**
@@ -426,20 +431,26 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public ArrayList<Bill> getAllBillsForSync() {
+    /**
+     * Metoda, která načte všechny faktury přihlášeného uživatele, které ještě nabyly
+     * zálohovány a vytvoří z nich list, která vrátí jaok návratovou hodnotu.
+     *
+     * @return list nesynchronizovaných faktur
+     */
+    public synchronized ArrayList<Bill> getAllBillsForSync() {
         ArrayList<Bill> arrayList = new ArrayList<>();
         int userId = UserInformation.getInstance().getUserId();
 
         String[] columns = {COLUMN_BILL_ID, COLUMN_BILL_NUMBER, COLUMN_BILL_AMOUNT,
-                            COLUMN_BILL_DATE, COLUMN_BILL_VAT, COLUMN_BILL_PHOTO,
-                            COLUMN_BILL_TYPE_ID, COLUMN_BILL_TRADER_ID, COLUMN_BILL_IS_DELETED,
-                            COLUMN_BILL_IS_EXPENSE};
+                COLUMN_BILL_DATE, COLUMN_BILL_VAT, COLUMN_BILL_PHOTO,
+                COLUMN_BILL_TYPE_ID, COLUMN_BILL_TRADER_ID, COLUMN_BILL_IS_DELETED,
+                COLUMN_BILL_IS_EXPENSE};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selection = COLUMN_BILL_USER_ID + " = ? AND " + COLUMN_BILL_IS_DIRTY + " = 1";
 
-        String[] selectionArgs = { Integer.toString(userId)};
+        String[] selectionArgs = {Integer.toString(userId)};
 
         Cursor cursor = db.query(TABLE_BILL, //Table to query
                 columns,                    //columns to return
@@ -449,8 +460,8 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 null,                       //filter by row groups
                 null);
 
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 Bill bill = new Bill();
                 bill.setId(cursor.getInt(0));
                 bill.setName(cursor.getString(1));
@@ -467,7 +478,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
                 //přidání záznamu do listu
                 arrayList.add(bill);
 
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
 
         db.close();
@@ -476,7 +487,12 @@ public class BillDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public void deleteAllBillsByUserId(int userId) {
+    /**
+     * Metoda, která smaže všechyn data příslušného uživatele.
+     *
+     * @param userId id přihlášeného uživatele
+     */
+    public synchronized void deleteAllBillsByUserId(int userId) {
         String where = COLUMN_BILL_USER_ID + " = ?";
 
         String[] deleteArgs = {Integer.toString(userId)};
@@ -488,7 +504,13 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public void setAllBillsClear(int userId) {
+    /**
+     * Metoda, která po úspěnšném zálohování dat na
+     * server nastaví všechny faktury, jako zálohované.
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void setAllBillsClear(int userId) {
         String where = COLUMN_BILL_USER_ID + " = ? AND "
                 + COLUMN_BILL_IS_DIRTY + " = 1";
 
@@ -503,7 +525,13 @@ public class BillDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public int getMaxId() {
+    /**
+     * Metoda pro získání maximálního id faktury v databázi pro
+     * vybraného uživatele.
+     *
+     * @return maximální id v databázi u faktury
+     */
+    public synchronized int getMaxId() {
 
         int maxId = 1;
 

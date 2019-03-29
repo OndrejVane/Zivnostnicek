@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class TypeBillDatabaseHelper extends DatabaseHelper {
 
     /**
-     * Kontruktor type bill database helper
+     * Kontruktor databázového pomocníka pro typy faktur
      *
      * @param context kontext aktivity
      */
@@ -26,13 +26,13 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
      * Přidání záznamu druhu faktury do tabulky druh. Pokud se jedná o
      * data ze serveru, tak negeneruje nové id.
      *
-     * @param typeBill přidáváný prvek
-     * @param isFromServer  logická hodnota, která údává, zda jsou data ze serveru
+     * @param typeBill     přidáváný prvek
+     * @param isFromServer logická hodnota, která údává, zda jsou data ze serveru
      * @return id přidané položky
      */
     public synchronized long addTypeBill(TypeBill typeBill, boolean isFromServer) {
         //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
-        if(!isFromServer){
+        if (!isFromServer) {
             //získání primárního klíče
             IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
             int typeId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_TYPE_ID);
@@ -60,7 +60,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     * Získání potžebných dat pro zobrazení typu faktur do spinneru.
+     * Získání potřebných dat pro zobrazení typu faktur do spinneru.
      *
      * @param userId id uživatele
      * @return
@@ -130,7 +130,6 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
                 null);
 
 
-
         if (cursor.moveToFirst()) {
             typeBill.setId(typeId);
             typeBill.setName(cursor.getString(1));
@@ -144,13 +143,12 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     *
      * Načtení všech typů podle id uživatele.
      *
      * @param userId id uživatele
-     * @return  list typů faktur
+     * @return list typů faktur
      */
-    public synchronized ArrayList<TypeBill> getAllTypeByUserId(int userId){
+    public synchronized ArrayList<TypeBill> getAllTypeByUserId(int userId) {
         ArrayList<TypeBill> billTypes = new ArrayList<>();
 
         String[] columns = {COLUMN_TYPE_ID, COLUMN_TYPE_NAME, COLUMN_TYPE_COLOR};
@@ -185,7 +183,12 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public synchronized ArrayList<TypeBill> getAllTypesForSync(){
+    /**
+     * Metoda, která vytvoří spojový seznam všechy typů faktru, které je třeba zálohovat
+     *
+     * @return spojový seznam typů faktur
+     */
+    public synchronized ArrayList<TypeBill> getAllTypesForSync() {
         ArrayList<TypeBill> arrayList = new ArrayList<>();
         int userId = UserInformation.getInstance().getUserId();
 
@@ -195,7 +198,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
 
         String selection = COLUMN_TYPE_USER_ID + " = ? AND " + COLUMN_TYPE_IS_DIRTY + " = 1";
 
-        String[] selectionArgs = { Integer.toString(userId)};
+        String[] selectionArgs = {Integer.toString(userId)};
 
         Cursor cursor = db.query(TABLE_TYPE, //Table to query
                 columns,                    //columns to return
@@ -205,8 +208,8 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
                 null,                       //filter by row groups
                 null);
 
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 TypeBill typeBill = new TypeBill();
                 typeBill.setId(cursor.getInt(0));
                 typeBill.setColor(cursor.getInt(1));
@@ -214,7 +217,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
                 typeBill.setIsDeleted(cursor.getInt(3));
                 typeBill.setUserId(userId);
                 arrayList.add(typeBill);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
 
         }
 
@@ -224,7 +227,13 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public void deleteAllTypesByUserId(int userId) {
+    /**
+     * Metoda, která smaže všechny záznamy v tabulce typů
+     * uživatele s userId
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void deleteAllTypesByUserId(int userId) {
         String where = COLUMN_TYPE_USER_ID + " = ?";
 
         String[] deleteArgs = {Integer.toString(userId)};
@@ -236,7 +245,13 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public void setAllTypeBillsClear(int userId) {
+    /**
+     * Procedura, která nastaví všechny položky v tabulce typů jako již
+     * zazálohované.
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void setAllTypeBillsClear(int userId) {
         String where = COLUMN_TYPE_USER_ID + " = ? AND "
                 + COLUMN_TYPE_IS_DIRTY + " = 1";
 
@@ -251,7 +266,12 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public int getMaxId() {
+    /**
+     * Metoda, která vrátí maximální id v tabulce typů faktur.
+     *
+     * @return maximální id
+     */
+    public synchronized int getMaxId() {
 
         int maxId = 1;
 

@@ -5,6 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
+/**
+ * Třída, která se stará o základní správu databáze.
+ * Vytvoření a mazání celé datbáze. Dále obsahuje názvy všech
+ * tabulek
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
@@ -245,7 +250,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     /**
-     * Konstruktor
+     * Konstruktor této třídy.
      *
      * @param context kontext aktivity
      */

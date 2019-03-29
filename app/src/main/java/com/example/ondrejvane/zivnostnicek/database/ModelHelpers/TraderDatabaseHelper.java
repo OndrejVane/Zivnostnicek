@@ -15,9 +15,9 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
 
     /**
-     * Konstruktor pro trader database helper
+     * Konstruktor databázového pomocníka pro tabulku obchodník
      *
-     * @param context context
+     * @param context kontext aktivity
      */
     public TraderDatabaseHelper(Context context) {
         super(context);
@@ -186,6 +186,11 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         return true;
     }
 
+    /**
+     * Procedura, která smaže všechny obchodníky přihlášeného uživatele.
+     *
+     * @param userId id uživatele
+     */
     public synchronized void deleteAllTradersByUserId(int userId) {
         String where = COLUMN_TRADER_USER_ID + " = ?";
 
@@ -231,6 +236,13 @@ public class TraderDatabaseHelper extends DatabaseHelper {
     }
 
 
+    /**
+     * Metoda, která vytvoří spojový seznam všech obchodníků
+     * pro synchronizaci na server. V seznamu budou pouze záznamy, které
+     * je třeba zálohovat.
+     *
+     * @return spojový seznam obchodníků
+     */
     public synchronized ArrayList<Trader> getAllTradersForSync() {
 
         ArrayList<Trader> arrayList = new ArrayList<>();
@@ -280,7 +292,13 @@ public class TraderDatabaseHelper extends DatabaseHelper {
 
     }
 
-    public void setAllTradersClear(int userId) {
+    /**
+     * Procedrua, která nastaví všechny záznamy daného uživatele
+     * jako zálohované.
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void setAllTradersClear(int userId) {
         String where = COLUMN_TRADER_USER_ID + " = ? AND "
                 + COLUMN_TRADER_IS_DIRTY + " = 1";
 
@@ -295,7 +313,12 @@ public class TraderDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public int getMaxId() {
+    /**
+     * Metoda pro získání maximálního id v tabulce obchodníka.
+     *
+     * @return maximální id s
+     */
+    public synchronized int getMaxId() {
 
         int maxId = 1;
 

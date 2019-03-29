@@ -14,7 +14,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
     private static final String TAG = "Identifiers db";
 
     /**
-     * Konstruktor identifiers database helper
+     * Konstruktor pro databázového pomocníka identifikátorů
      *
      * @param context kontext aktivity
      */
@@ -22,7 +22,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         super(context);
     }
 
-    public void addIdentifiersForUser(long currentFreeId) {
+    public synchronized void addIdentifiersForUser(long currentFreeId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -45,7 +45,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      * @param columnName název sloupce
      * @return volné id
      */
-    public int getFreeId(String columnName) {
+    public synchronized int getFreeId(String columnName) {
         int freeId = 0;
 
         String[] columns = {columnName};
@@ -82,7 +82,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
      * @param currentId  právě použite id
      * @param columnName název sloupce
      */
-    private void incrementValueOfId(int currentId, String columnName) {
+    private synchronized void incrementValueOfId(int currentId, String columnName) {
         String where = COLUMN_IDENTIFIERS_USER_ID + " = ?";
 
         currentId++;
@@ -100,7 +100,11 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public void refreshIdentifiers() {
+    /**
+     * Procedura, která obnoví aktuální identifikátory podle
+     * všech ostatních tabulek.
+     */
+    public synchronized void refreshIdentifiers() {
         TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
         BillDatabaseHelper billDatabaseHelper = new BillDatabaseHelper(getContext());
         ItemQuantityDatabaseHelper itemQuantityDatabaseHelper = new ItemQuantityDatabaseHelper(getContext());
@@ -133,7 +137,7 @@ public class IdentifiersDatabaseHelper extends DatabaseHelper {
         values.put(COLUMN_IDENTIFIERS_STORAGE_ITEM_ID, maxStorageItemId);
         values.put(COLUMN_IDENTIFIERS_TYPE_ID, maxTypeBillId);
 
-        int result = db.update(TABLE_IDENTIFIERS, values, where, updateArgs);
+        db.update(TABLE_IDENTIFIERS, values, where, updateArgs);
         db.close();
 
 

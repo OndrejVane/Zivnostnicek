@@ -12,7 +12,7 @@ import com.example.ondrejvane.zivnostnicek.utilities.EncryptionUtility;
 public class UserDatabaseHelper extends DatabaseHelper {
 
     /**
-     * Constructor
+     * Konstruktor databázového pomocníka pro tabulku uživatel
      *
      * @param context kontext aktivtiy
      */
@@ -21,12 +21,11 @@ public class UserDatabaseHelper extends DatabaseHelper {
     }
 
     /**
-     *
      * @param user uživatel
      */
     public synchronized long addUser(User user) {
         long inserted = 0;
-        if(getUserById(user.getId()) == null) {
+        if (getUserById(user.getId()) == null) {
 
             SQLiteDatabase db = this.getWritableDatabase();
 
@@ -52,10 +51,16 @@ public class UserDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public synchronized User getUserById(int userId){
+    /**
+     * Metoda pro získání uživatele podle id.
+     *
+     * @param userId id uživatelel
+     * @return uživatel
+     */
+    public synchronized User getUserById(int userId) {
         User user = new User();
 
-        String[] columns = { COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL, COLUMN_USER_PASSWORD, COLUMN_USER_SYNC_NUMBER};
+        String[] columns = {COLUMN_USER_FULL_NAME, COLUMN_USER_EMAIL, COLUMN_USER_PASSWORD, COLUMN_USER_SYNC_NUMBER};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -72,13 +77,13 @@ public class UserDatabaseHelper extends DatabaseHelper {
                 null);
 
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             user.setId(userId);
             user.setFullName(cursor.getString(0));
             user.setEmail(cursor.getString(1));
             user.setPassword(EncryptionUtility.decrypt(cursor.getString(2)));
             user.setSyncNumber(cursor.getInt(3));
-        }else {
+        } else {
             user = null;
         }
 
@@ -89,10 +94,16 @@ public class UserDatabaseHelper extends DatabaseHelper {
         return user;
     }
 
-    public int getSyncNumberByUserId(int userId){
+    /**
+     * Metoda, pro získání synchronizačního čísla uživatele.
+     *
+     * @param userId id uživatele
+     * @return synchronizační číslo
+     */
+    public int getSyncNumberByUserId(int userId) {
         int syncNumber = 0;
 
-        String[] columns = { COLUMN_USER_SYNC_NUMBER};
+        String[] columns = {COLUMN_USER_SYNC_NUMBER};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -109,7 +120,7 @@ public class UserDatabaseHelper extends DatabaseHelper {
                 null);
 
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             syncNumber = cursor.getInt(0);
         }
 
@@ -124,7 +135,7 @@ public class UserDatabaseHelper extends DatabaseHelper {
      *
      * @param userId id uživatele
      */
-    public void deleteAllUserData(int userId){
+    public synchronized void deleteAllUserData(int userId) {
         //inicializace pomocníku databáze
         TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
         NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());
@@ -141,7 +152,13 @@ public class UserDatabaseHelper extends DatabaseHelper {
         itemQuantityDatabaseHelper.deleteAllItemQuantitiesByUserId(userId);
     }
 
-    public void setAllRecordsClear(int userId) {
+    /**
+     * Metoda která volá ostaní metoda databázovýxh pomocníků pro nastavení
+     * všech záznamů jako zálohované.
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void setAllRecordsClear(int userId) {
         //inicializace pomocníku databáze
         TraderDatabaseHelper traderDatabaseHelper = new TraderDatabaseHelper(getContext());
         NoteDatabaseHelper noteDatabaseHelper = new NoteDatabaseHelper(getContext());

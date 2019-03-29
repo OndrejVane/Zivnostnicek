@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ItemQuantityDatabaseHelper extends DatabaseHelper {
 
     /**
-     * Konstruktor item quantity database helper
+     * Konstruktor databázového pomocníka pro tabulku skladového množství
      *
      * @param context kontext aktivity
      */
@@ -33,7 +33,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      */
     public synchronized void addItemQuantity(ItemQuantity itemQuantity, boolean isFromServer) {
         //pokud je záznam vkládán při synchronizaci se serverem, tak už id existuje. Nemusím ho generovat.
-        if(!isFromServer){
+        if (!isFromServer) {
             //získání primárního klíče
             IdentifiersDatabaseHelper identifiersDatabaseHelper = new IdentifiersDatabaseHelper(getContext());
             int itemQuantityId = identifiersDatabaseHelper.getFreeId(COLUMN_IDENTIFIERS_ITEM_QUANTITY_ID);
@@ -58,7 +58,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      * Získání množství skladové položky na základě id skladové položky
      *
      * @param storageItemId id skladové položky
-     * @return  množství skladové položky
+     * @return množství skladové položky
      */
     public synchronized float getQuantityWithStorageItemId(int storageItemId) {
         float quantity = 0;
@@ -98,7 +98,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      * Metoda, která získá množství skladových položek na základě id faktury.
      *
      * @param billId id faktury
-     * @return  list množství skladové položky
+     * @return list množství skladové položky
      */
     public synchronized ArrayList<ItemQuantity> getItemQuantityByBillId(int billId) {
         ArrayList<ItemQuantity> arrayList = new ArrayList<>();
@@ -147,7 +147,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      * @param itemId množství skladové položky  id
      * @return smazáno
      */
-    public boolean deleteItemQuantityById(int itemId){
+    public boolean deleteItemQuantityById(int itemId) {
         String where = COLUMN_ITEM_QUANTITY_ID + " = ? AND " + COLUMN_ITEM_QUANTITY_USER_ID + " = ?";
 
         int userId = UserInformation.getInstance().getUserId();
@@ -171,7 +171,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      * K němu nadjde odpovídající množství.
      *
      * @param billId id faktury
-     * @return  list skladových položek a množství
+     * @return list skladových položek a množství
      */
     public synchronized ArrayList<StorageItemBox> getItemQuantityAndStorageItemByBillId(int billId) {
 
@@ -196,8 +196,8 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
      *
      * @param storageItemId id sladové položky
      */
-    public synchronized void deleteAllItemQuantityByStorageItemId(int storageItemId){
-        String where = COLUMN_ITEM_QUANTITY_ID + " = ? AND "+ COLUMN_ITEM_QUANTITY_USER_ID + " = ?";
+    public synchronized void deleteAllItemQuantityByStorageItemId(int storageItemId) {
+        String where = COLUMN_ITEM_QUANTITY_ID + " = ? AND " + COLUMN_ITEM_QUANTITY_USER_ID + " = ?";
 
         int userId = UserInformation.getInstance().getUserId();
 
@@ -215,20 +215,26 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
     }
 
 
-    public ArrayList<ItemQuantity> getAllItemQuantitiesForSync() {
+    /**
+     * Metoda, která vytvoří spojový seznam všech nesynchronizovaných záznamů
+     * v databázi a vrátí jej jako návratovou hodnotu.
+     *
+     * @return spojový seznam skladového množství k synchronizaci
+     */
+    public synchronized ArrayList<ItemQuantity> getAllItemQuantitiesForSync() {
         ArrayList<ItemQuantity> arrayList = new ArrayList<>();
 
         int userId = UserInformation.getInstance().getUserId();
 
         String[] columns = {COLUMN_ITEM_QUANTITY_ID, COLUMN_ITEM_QUANTITY_STORAGE_ITEM_ID,
-                            COLUMN_ITEM_QUANTITY_BILL_ID, COLUMN_ITEM_QUANTITY_QUANTITY,
-                            COLUMN_ITEM_QUANTITY_IS_DELETED};
+                COLUMN_ITEM_QUANTITY_BILL_ID, COLUMN_ITEM_QUANTITY_QUANTITY,
+                COLUMN_ITEM_QUANTITY_IS_DELETED};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selection = COLUMN_ITEM_QUANTITY_USER_ID + " = ? AND " + COLUMN_ITEM_QUANTITY_IS_DIRTY + " = 1";
 
-        String[] selectionArgs = { Integer.toString(userId)};
+        String[] selectionArgs = {Integer.toString(userId)};
 
         Cursor cursor = db.query(TABLE_ITEM_QUANTITY, //Table to query
                 columns,                    //columns to return
@@ -238,8 +244,8 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
                 null,                       //filter by row groups
                 null);
 
-        if(cursor.moveToFirst()){
-            do{
+        if (cursor.moveToFirst()) {
+            do {
                 ItemQuantity itemQuantity = new ItemQuantity();
                 itemQuantity.setId(cursor.getInt(0));
                 itemQuantity.setStorageItemId(cursor.getInt(1));
@@ -249,7 +255,7 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
                 itemQuantity.setUserId(userId);
 
                 arrayList.add(itemQuantity);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
 
         }
 
@@ -259,7 +265,12 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         return arrayList;
     }
 
-    public void deleteAllItemQuantitiesByUserId(int userId) {
+    /**
+     * Smazání všech položek skladového množství z databáze.
+     *
+     * @param userId id přihlášeného uživatele
+     */
+    public synchronized void deleteAllItemQuantitiesByUserId(int userId) {
         String where = COLUMN_ITEM_QUANTITY_USER_ID + " = ?";
 
         String[] deleteArgs = {Integer.toString(userId)};
@@ -271,7 +282,12 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public void setAllItemQuantitiesClear(int userId) {
+    /**
+     * Nastavení všech záznamu v databázi jako zálohovaných.
+     *
+     * @param userId id uživatele
+     */
+    public synchronized void setAllItemQuantitiesClear(int userId) {
         String where = COLUMN_ITEM_QUANTITY_USER_ID + " = ? AND "
                 + COLUMN_ITEM_QUANTITY_IS_DIRTY + " = 1";
 
@@ -286,7 +302,12 @@ public class ItemQuantityDatabaseHelper extends DatabaseHelper {
         db.close();
     }
 
-    public int getMaxId() {
+    /**
+     * Metoda, která vrátí maximální id v tabulce skladového množství.
+     *
+     * @return maximální id v tabulce
+     */
+    public synchronized int getMaxId() {
 
         int maxId = 1;
 
