@@ -15,7 +15,15 @@ public class ListViewStorageAdapter extends BaseAdapter {
     private float[] storageItemQuantity;
     private String[] storageItemUnit;
 
-    public ListViewStorageAdapter(Activity context, String[] storageItemName,float storageItemQuantity[], String[] storageItemUnit) {
+    /**
+     * Konstruktor adapteru pro skladové položky
+     *
+     * @param context             kontext aktivity
+     * @param storageItemName     název skladových položek
+     * @param storageItemQuantity kvantita skladových položek
+     * @param storageItemUnit     jednotky skladových položek
+     */
+    public ListViewStorageAdapter(Activity context, String[] storageItemName, float storageItemQuantity[], String[] storageItemUnit) {
         this.context = context;
         this.storageItemName = storageItemName;
         this.storageItemQuantity = storageItemQuantity;
@@ -44,28 +52,25 @@ public class ListViewStorageAdapter extends BaseAdapter {
     }
 
     /**
-     * Název metody mluví sám za sebe. Vrací view, které se bude vykreslovat v ListView.
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
+     * Metoda, která nastaví text do list view
+     *
+     * @param position    pozice v list view
+     * @param convertView view
+     * @param parent      rodič listu view
+     * @return view
      */
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        LayoutInflater inflater =  context.getLayoutInflater();
+        LayoutInflater inflater = context.getLayoutInflater();
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.show_list_item_storage, null);
             holder = new ViewHolder();
             holder.txtViewStorageItemName = convertView.findViewById(R.id.storageItemName);
             holder.txtViewStorageItemQuantity = convertView.findViewById(R.id.storageItemQuantity);
             holder.txtViewStorageItemUnit = convertView.findViewById(R.id.storageItemUnit);
             convertView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 

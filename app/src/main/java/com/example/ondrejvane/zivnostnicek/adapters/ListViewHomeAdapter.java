@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 
-public class ListViewHomeAdapter extends BaseAdapter{
+public class ListViewHomeAdapter extends BaseAdapter {
 
     private Activity context;
     private int[] typeColor;
@@ -22,8 +22,16 @@ public class ListViewHomeAdapter extends BaseAdapter{
     private boolean isExpense;
 
 
-    public ListViewHomeAdapter(Activity activity, int[] typeColor, String[] typeBillName, float[] typeTotalAmount){
-        this.context = activity;
+    /**
+     * Konstruktor adapteru pro zobrazení faktury.
+     *
+     * @param context         kontext aktivity
+     * @param typeColor       barva typu
+     * @param typeBillName    název faktury
+     * @param typeTotalAmount částka
+     */
+    public ListViewHomeAdapter(Activity context, int[] typeColor, String[] typeBillName, float[] typeTotalAmount) {
+        this.context = context;
         this.typeColor = typeColor;
         this.typeBillName = typeBillName;
         this.typeTotalAmount = typeTotalAmount;
@@ -37,11 +45,11 @@ public class ListViewHomeAdapter extends BaseAdapter{
         this.isExpense = expense;
     }
 
-    public int getCount(){
+    public int getCount() {
         return typeBillName.length;
     }
 
-    public Object getItem(int position){
+    public Object getItem(int position) {
         return null;
     }
 
@@ -61,35 +69,32 @@ public class ListViewHomeAdapter extends BaseAdapter{
 
     /**
      * Metoda vrací view, které se bude vykreslovat v ListView.
-     * @param position  pozice v list view
-     * @param convertView   view
-     * @param parent    parent view
-     * @return  view
+     *
+     * @param position    pozice v list view
+     * @param convertView view
+     * @param parent      parent view
+     * @return view
      */
     @SuppressLint({"InflateParams", "SetTextI18n"})
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ListViewHomeAdapter.ViewHolder holder;
-        LayoutInflater inflater =  context.getLayoutInflater();
+        LayoutInflater inflater = context.getLayoutInflater();
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.show_list_item_home, null);
             holder = new ListViewHomeAdapter.ViewHolder();
             holder.txtViewHomeCapitalLetter = convertView.findViewById(R.id.textViewHomeCapitalLetter);
             holder.txtViewHomeTitle = convertView.findViewById(R.id.textViewHomeNameShow);
             holder.txtViewHomeAmount = convertView.findViewById(R.id.textViewHomeAmountShow);
             convertView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (ListViewHomeAdapter.ViewHolder) convertView.getTag();
         }
 
         holder.txtViewHomeTitle.setText(typeBillName[position]);
-        if(isExpense){
+        if (isExpense) {
             holder.txtViewHomeAmount.setText(FormatUtility.formatExpenseAmount(typeTotalAmount[position]));
-        }else {
+        } else {
             holder.txtViewHomeAmount.setText(FormatUtility.formatIncomeAmount(typeTotalAmount[position]));
         }
 
@@ -97,7 +102,7 @@ public class ListViewHomeAdapter extends BaseAdapter{
         holder.txtViewHomeCapitalLetter.setText(Character.toString(typeBillName[position].toUpperCase().charAt(0)));
 
         //nastavení barvy částky podle toho, jestli se jedná o příjem nebo výdaj
-        if(isExpense){
+        if (isExpense) {
             holder.txtViewHomeAmount.setTextColor(Color.RED);
         }
 

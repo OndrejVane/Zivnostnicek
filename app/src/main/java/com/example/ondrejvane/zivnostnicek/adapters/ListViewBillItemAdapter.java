@@ -17,14 +17,22 @@ public class ListViewBillItemAdapter extends BaseAdapter {
     private String[] billItemUnit;
     private boolean isTrashHidden = false;
 
-    public ListViewBillItemAdapter(Activity context, String[] billItemName, float[] billItemQuantity, String[] billItemUnit){
+    /**
+     * Konstruktor adapteru pro položky faktury.
+     *
+     * @param context          kontext aktivity
+     * @param billItemName     pole názvů položky faktury
+     * @param billItemQuantity pole kvatit
+     * @param billItemUnit     pole vybraných jednotek
+     */
+    public ListViewBillItemAdapter(Activity context, String[] billItemName, float[] billItemQuantity, String[] billItemUnit) {
         this.context = context;
         this.billItemName = billItemName;
         this.billItemQuantity = billItemQuantity;
         this.billItemUnit = billItemUnit;
     }
 
-    public void isTrashHidden(boolean isTrashHidden){
+    public void isTrashHidden(boolean isTrashHidden) {
         this.isTrashHidden = true;
     }
 
@@ -52,31 +60,28 @@ public class ListViewBillItemAdapter extends BaseAdapter {
 
     /**
      * Název metody mluví sám za sebe. Vrací view, které se bude vykreslovat v ListView.
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
+     *
+     * @param position    pozice v list view
+     * @param convertView view
+     * @param parent      rodič položky
+     * @return view
      */
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ListViewBillItemAdapter.ViewHolder holder;
-        LayoutInflater inflater =  context.getLayoutInflater();
+        LayoutInflater inflater = context.getLayoutInflater();
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.show_list_item_bill_item, null);
             holder = new ListViewBillItemAdapter.ViewHolder();
             holder.txtViewBillItemName = convertView.findViewById(R.id.storageBillItemName);
             holder.txtViewBillItemQuantity = convertView.findViewById(R.id.storageBillItemQuantity);
             holder.txtViewBillItemUnit = convertView.findViewById(R.id.storageBillItemUnit);
-            if (isTrashHidden){
+            if (isTrashHidden) {
                 holder.imageViewDelete = convertView.findViewById(R.id.imgDeleteItem);
                 holder.imageViewDelete.setImageBitmap(null);
             }
             convertView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (ListViewBillItemAdapter.ViewHolder) convertView.getTag();
         }
 

@@ -10,10 +10,19 @@ import android.widget.TextView;
 import com.example.ondrejvane.zivnostnicek.R;
 
 public class ListViewTraderAdapter extends BaseAdapter {
-    Activity context;
-    String traderName[];
-    String traderContactPerson[];
 
+    private Activity context;
+    private String traderName[];
+    private String traderContactPerson[];
+
+
+    /**
+     * Konstruktor adaptéru pro list obchodníků.
+     *
+     * @param context             kontext aktivity
+     * @param traderName          názvy obchodníků
+     * @param traderContactPerson kontaktní osoby
+     */
     public ListViewTraderAdapter(Activity context, String[] traderName, String[] traderContactPerson) {
         this.context = context;
         this.traderName = traderName;
@@ -21,17 +30,14 @@ public class ListViewTraderAdapter extends BaseAdapter {
     }
 
     public int getCount() {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return traderName.length;
     }
 
     public Object getItem(int position) {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return null;
     }
 
     public long getItemId(int position) {
-        // BaseAdapter vyžaduje několik metod, kterými se nemusíme zabývat
         return 0;
     }
 
@@ -44,27 +50,24 @@ public class ListViewTraderAdapter extends BaseAdapter {
     }
 
     /**
-     * Název metody mluví sám za sebe. Vrací view, které se bude vykreslovat v ListView.
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
+     * Metoda, která nastaví příslušný text do list view.
+     *
+     * @param position    pozice v list view
+     * @param convertView view
+     * @param parent      rodič položky listu
+     * @return view
      */
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        LayoutInflater inflater =  context.getLayoutInflater();
+        LayoutInflater inflater = context.getLayoutInflater();
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.show_list_item_trader, null);
             holder = new ViewHolder();
             holder.txtViewTraderName = convertView.findViewById(R.id.textViewTraderName);
             holder.txtViewTraderContactPerson = convertView.findViewById(R.id.textViewTradeContactPerson);
             convertView.setTag(holder);
-        }
-        else
-        {
+        } else {
             holder = (ViewHolder) convertView.getTag();
         }
 

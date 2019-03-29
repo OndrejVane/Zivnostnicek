@@ -21,6 +21,12 @@ public class ListViewBillAdapter extends BaseAdapter {
     private ArrayList<BillBox> billBox;
     private boolean isExpense = false;
 
+    /**
+     * Kosntruktor adaptéru pro faktury.
+     *
+     * @param context kontext aktivity
+     * @param billBox spojový seznam faktur
+     */
     public ListViewBillAdapter(Activity context, ArrayList<BillBox> billBox){
         this.billBox = billBox;
         this.context = context;
@@ -55,10 +61,10 @@ public class ListViewBillAdapter extends BaseAdapter {
 
     /**
      * Název metody mluví sám za sebe. Vrací view, které se bude vykreslovat v ListView.
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
+     * @param position pozice v listu
+     * @param convertView view položky
+     * @param parent rodič položky v lsitu
+     * @return view
      */
     public View getView(int position, View convertView, ViewGroup parent)
     {

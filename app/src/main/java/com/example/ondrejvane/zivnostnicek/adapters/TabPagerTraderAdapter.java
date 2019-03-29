@@ -8,12 +8,20 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.example.ondrejvane.zivnostnicek.activities.note.NoteFragment;
 import com.example.ondrejvane.zivnostnicek.activities.trader.TraderShowFragment;
 
-public class TabPagerTraderAdapter extends FragmentStatePagerAdapter{
+public class TabPagerTraderAdapter extends FragmentStatePagerAdapter {
 
     private String[] tabArray;
 
     private Integer numberOfTabs;
 
+    /**
+     * Konstruktor pro pomocnou třídu, která zajištuje přepnutí
+     * mezi dvěma fragmenty.
+     *
+     * @param fm           fragment manager
+     * @param titles       názvy fragmentů
+     * @param numberOfTabs počet fragramntů
+     */
     public TabPagerTraderAdapter(FragmentManager fm, String[] titles, int numberOfTabs) {
         super(fm);
         this.tabArray = titles;
@@ -30,7 +38,7 @@ public class TabPagerTraderAdapter extends FragmentStatePagerAdapter{
     public Fragment getItem(int position) {
 
 
-        switch (position){
+        switch (position) {
             case 0:
                 return new TraderShowFragment();
             case 1:
