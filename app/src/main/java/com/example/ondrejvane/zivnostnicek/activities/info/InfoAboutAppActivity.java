@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.activities.info;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
@@ -21,6 +23,8 @@ import com.example.ondrejvane.zivnostnicek.session.Logout;
  */
 public class InfoAboutAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView textViewAppVersion;
 
     /**
      * Metoda, která se provede při spuštění aktivity a provede nezbytné
@@ -47,6 +51,15 @@ public class InfoAboutAppActivity extends AppCompatActivity
         //nastavení textu do headeru
         Header header = new Header(navigationView);
         header.setTextToHeader();
+
+        //inicializace textového pole pro verzi aplikace
+        textViewAppVersion = findViewById(R.id.textViewAppVersion);
+
+        //získání aktuální verze verze aplikace
+        String versionName = getVersionInfo();
+
+        //nastavení získané verze do aktivity
+        textViewAppVersion.setText(versionName);
     }
 
 
@@ -66,6 +79,25 @@ public class InfoAboutAppActivity extends AppCompatActivity
         Intent intent = new Intent(this, InfoActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Metoda, která načte aktuální verzi aplikace
+     * z gradle a vrátí jí jako řetězec.
+     *
+     * @return žetězec, který představuje verzi aktuální aplikace
+     */
+    private String getVersionInfo() {
+        String versionName = "";
+
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return versionName;
     }
 
 
