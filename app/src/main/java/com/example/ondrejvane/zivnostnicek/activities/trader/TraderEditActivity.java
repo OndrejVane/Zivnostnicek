@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class TraderEditActivity extends AppCompatActivity
     private EditText inputCityEdit, inputStreetEdit, inputHouseNumberEdit;
     private TextInputLayout inputLayoutCompanyNameEdit, inputLayoutTelephoneNumberEdit;
     private TextInputLayout inputLayoutIdentificationNumberEdit, inputLayoutTaxIdentificationNumberEdit;
+    private CheckBox checkBoxSameINasTIN;
 
     /**
      * Metoda, která se provede při spuštění akctivity a porovede nezbytné
@@ -70,6 +73,20 @@ public class TraderEditActivity extends AppCompatActivity
         initActivity();
 
         setTextToActivity();
+
+        //listener, který kopíruje IČO na pozici DIČ
+        checkBoxSameINasTIN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (checkBoxSameINasTIN.isChecked()) {
+                    String IN = "CZ" + inputIdentificationNumberEdit.getText().toString();
+                    inputTaxIdentificationNumberEdit.setText(IN);
+                } else {
+                    inputTaxIdentificationNumberEdit.setText("");
+                }
+
+            }
+        });
     }
 
     /**
@@ -92,6 +109,7 @@ public class TraderEditActivity extends AppCompatActivity
         inputLayoutTelephoneNumberEdit = findViewById(R.id.textInputLayoutTelephoneNumberEdit);
         inputLayoutIdentificationNumberEdit = findViewById(R.id.textInputLayoutIdentificationNumberEdit);
         inputLayoutTaxIdentificationNumberEdit = findViewById(R.id.textInputLayoutTaxIdentificationNumberEdit);
+        checkBoxSameINasTIN = findViewById(R.id.checkBoxSameINasTINEdit);
     }
 
     /**
