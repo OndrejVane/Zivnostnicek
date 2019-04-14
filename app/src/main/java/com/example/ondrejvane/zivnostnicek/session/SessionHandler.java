@@ -2,9 +2,7 @@ package com.example.ondrejvane.zivnostnicek.session;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.ondrejvane.zivnostnicek.model.User;
-
-import java.util.Date;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.User;
 
 /**
  * Created by Abhi on 20 Jan 2018 020.

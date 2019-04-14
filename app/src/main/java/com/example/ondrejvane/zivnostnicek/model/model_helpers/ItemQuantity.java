@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.model;
+package com.example.ondrejvane.zivnostnicek.model.model_helpers;
 
 public class ItemQuantity {
 

@@ -20,7 +20,7 @@ import android.widget.ListView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.utilities.ArrayUtility;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewTraderAdapter;

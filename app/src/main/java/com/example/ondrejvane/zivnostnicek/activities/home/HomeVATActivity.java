@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.BillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;

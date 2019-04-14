@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.database;
+package com.example.ondrejvane.zivnostnicek.model.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

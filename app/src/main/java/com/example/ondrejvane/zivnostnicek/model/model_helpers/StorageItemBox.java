@@ -1,7 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.model;
-
-import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
-import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+package com.example.ondrejvane.zivnostnicek.model.model_helpers;
 
 public class StorageItemBox {
 

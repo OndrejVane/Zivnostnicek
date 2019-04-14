@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
-import com.example.ondrejvane.zivnostnicek.model.Event;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.Event;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
@@ -37,10 +37,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;

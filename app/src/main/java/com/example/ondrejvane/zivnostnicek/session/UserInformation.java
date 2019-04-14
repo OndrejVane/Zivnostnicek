@@ -1,6 +1,6 @@
 package com.example.ondrejvane.zivnostnicek.session;
 
-import com.example.ondrejvane.zivnostnicek.model.User;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.User;
 
 /**
  * Třída, která bude uchovávat základní informace o uživateli 

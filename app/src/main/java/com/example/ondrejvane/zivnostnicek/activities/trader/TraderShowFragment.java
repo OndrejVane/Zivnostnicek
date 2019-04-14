@@ -13,8 +13,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TraderDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.model.Trader;
+import com.example.ondrejvane.zivnostnicek.model.database.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.Trader;
 
 /**
  * Fragment, který zobrazí podrobnosti o obchodníkovi.

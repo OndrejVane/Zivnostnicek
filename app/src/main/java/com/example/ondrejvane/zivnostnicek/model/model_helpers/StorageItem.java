@@ -1,30 +1,24 @@
-package com.example.ondrejvane.zivnostnicek.model;
+package com.example.ondrejvane.zivnostnicek.model.model_helpers;
 
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;
 
-public class TypeBill {
+public class StorageItem {
 
     private int id;
     private int userId;
     private String name;
-    private int color;
+    private String unit;
+    private String note;
     private int isDirty;
     private int isDeleted;
 
-    public TypeBill(int id,int userId, String name, int color) {
-        this.id = id;
+    public StorageItem(int userId, String name, String unit){
         this.userId = userId;
         this.name = name;
-        this.color = color;
+        this.unit = unit;
     }
 
-    public TypeBill(int userId, String name, int color) {
-        this.userId = userId;
-        this.name = name;
-        this.color = color;
-    }
-
-    public TypeBill(){
+    public StorageItem(){
 
     }
 
@@ -44,12 +38,20 @@ public class TypeBill {
         this.name = name;
     }
 
-    public int getColor() {
-        return color;
+    public String getUnit() {
+        return unit;
     }
 
-    public void setColor(int color) {
-        this.color = color;
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public int getUserId() {
@@ -77,6 +79,18 @@ public class TypeBill {
     }
 
     public void removeSpecialChars(){
-        this.name = InputValidation.removeSpecialChars(this.name);
+
+        if (this.name != null) {
+            this.name = InputValidation.removeSpecialChars(this.name);
+        }
+
+        if (this.note != null) {
+            this.note = InputValidation.removeSpecialChars(this.note);
+        }
+
+        if (this.unit != null) {
+            this.unit = InputValidation.removeSpecialChars(this.unit);
+        }
+
     }
 }

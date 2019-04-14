@@ -1,13 +1,12 @@
-package com.example.ondrejvane.zivnostnicek.database.ModelHelpers;
+package com.example.ondrejvane.zivnostnicek.model.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.example.ondrejvane.zivnostnicek.database.DatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.Note;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.Note;
 
 import java.util.ArrayList;
 

@@ -17,14 +17,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.ItemQuantityDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.StorageItemDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.ItemQuantityDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.helper.TextInputLength;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.ItemQuantity;
-import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.ItemQuantity;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.StorageItem;
 import com.example.ondrejvane.zivnostnicek.server.Push;
 
 /**

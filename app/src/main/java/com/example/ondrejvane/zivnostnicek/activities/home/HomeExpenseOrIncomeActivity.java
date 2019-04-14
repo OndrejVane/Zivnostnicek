@@ -19,14 +19,14 @@ import android.widget.Spinner;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewHomeAdapter;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.BillDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TypeBillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.BillDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.TypeBillDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.helper.Settings;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
 import com.example.ondrejvane.zivnostnicek.menu.HomeOptionMenu;
-import com.example.ondrejvane.zivnostnicek.model.TypeBill;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.TypeBill;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;

@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.ondrejvane.zivnostnicek.R;
-import com.example.ondrejvane.zivnostnicek.model.BillBox;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.BillBox;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 
 import java.util.ArrayList;

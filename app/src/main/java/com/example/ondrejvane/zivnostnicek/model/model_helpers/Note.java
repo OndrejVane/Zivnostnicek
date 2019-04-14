@@ -1,4 +1,4 @@
-package com.example.ondrejvane.zivnostnicek.model;
+package com.example.ondrejvane.zivnostnicek.model.model_helpers;
 
 
 import com.example.ondrejvane.zivnostnicek.helper.InputValidation;

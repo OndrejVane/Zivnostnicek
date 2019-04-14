@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.note.NoteNewActivity;
 import com.example.ondrejvane.zivnostnicek.adapters.TabPagerTraderAdapter;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.TraderDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.TraderDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.server.Push;

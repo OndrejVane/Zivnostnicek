@@ -21,13 +21,13 @@ import android.widget.ListView;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.activities.home.HomeActivity;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.ItemQuantityDatabaseHelper;
-import com.example.ondrejvane.zivnostnicek.database.ModelHelpers.StorageItemDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.ItemQuantityDatabaseHelper;
+import com.example.ondrejvane.zivnostnicek.model.database.StorageItemDatabaseHelper;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.adapters.ListViewStorageAdapter;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.session.UserInformation;
-import com.example.ondrejvane.zivnostnicek.model.StorageItem;
+import com.example.ondrejvane.zivnostnicek.model.model_helpers.StorageItem;
 
 import java.util.ArrayList;
 
