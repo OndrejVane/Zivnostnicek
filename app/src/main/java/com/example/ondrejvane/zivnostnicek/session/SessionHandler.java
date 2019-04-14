@@ -27,7 +27,7 @@ public class SessionHandler {
     }
 
     /**
-     * Logs in the user by saving user details and setting session
+     * Metoda pro přihlášení uživatele.
      *
      * @param user uživatel
      */
@@ -40,9 +40,9 @@ public class SessionHandler {
 
 
     /**
-     * Checks whether user is logged in
+     * Procedura, která zkontroluje zda je nějaký uživatel přihlášen.
      *
-     * @return
+     * @return logická hodnota, která oznčuje zda je uživatel přihlášen
      */
     public boolean isLoggedIn() {
 
@@ -57,12 +57,12 @@ public class SessionHandler {
     }
 
     /**
-     * Fetches and returns user details
+     * Vrátí informace o přihlášeném uživateli.
      *
-     * @return user details
+     * @return detail uživatele
      */
     public User getUserDetails() {
-        //Check if user is logged in first
+        //nejprve kontrola, zda je uživatel přihlášen
         if (!isLoggedIn()) {
             return null;
         }
@@ -75,7 +75,7 @@ public class SessionHandler {
     }
 
     /**
-     * Logs out user by clearing the session
+     * Procedura k odhlášení uživatele.
      */
     public void logoutUser(){
         mEditor.clear();

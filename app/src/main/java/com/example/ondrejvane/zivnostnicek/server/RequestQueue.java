@@ -5,9 +5,6 @@ import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by Abhi on 20 Jan 2018 020.
- */
 
 public class RequestQueue {
     private static RequestQueue mInstance;
