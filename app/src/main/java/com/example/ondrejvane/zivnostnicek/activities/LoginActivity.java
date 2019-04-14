@@ -195,6 +195,8 @@ public class LoginActivity extends AppCompatActivity {
                 request.put(KEY_EMAIL, secureSending.encrypt(email));
                 request.put(KEY_PASSWORD, secureSending.encrypt(hashedPassword));
 
+                Log.d(TAG, request.toString());
+
                 Log.d(TAG, "Passw " + hashedPassword);
 
             } catch (JSONException e) {

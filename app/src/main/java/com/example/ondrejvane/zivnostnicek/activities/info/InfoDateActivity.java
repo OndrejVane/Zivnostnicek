@@ -1,6 +1,7 @@
 package com.example.ondrejvane.zivnostnicek.activities.info;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ import com.example.ondrejvane.zivnostnicek.model.Event;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
+import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -130,7 +132,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate1.getText().toString().replace("*","");
+                String date = textViewDate1.getText().toString().replace("*", "");
                 String title = textViewDate11.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -142,7 +144,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate2.getText().toString().replace("*","");
+                String date = textViewDate2.getText().toString().replace("*", "");
                 String title = textViewDate22.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -154,7 +156,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate3.getText().toString().replace("*","");
+                String date = textViewDate3.getText().toString().replace("*", "");
                 String title = textViewDate33.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -166,7 +168,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate4.getText().toString().replace("*","");
+                String date = textViewDate4.getText().toString().replace("*", "");
                 String title = textViewDate44.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -178,7 +180,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate5.getText().toString().replace("*","");
+                String date = textViewDate5.getText().toString().replace("*", "");
                 String title = textViewDate55.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -190,7 +192,7 @@ public class InfoDateActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
-                String date = textViewDate6.getText().toString().replace("*","");
+                String date = textViewDate6.getText().toString().replace("*", "");
                 String title = textViewDate66.getText().toString();
                 Event event = new Event(title, date);
                 addEventToTheCalendar(event);
@@ -238,21 +240,24 @@ public class InfoDateActivity extends AppCompatActivity
      * Procedura, která rozdělí vstupní data na požadované informace
      * a zobrazí text do aktivity.
      */
+    @SuppressLint("SetTextI18n")
     private void parseFileAndSetToTextField() {
         String[] splitted = stringFromFile.split(";");
 
-        textViewDate1.setText(splitted[0]);
-        textViewDate11.setText(splitted[1]);
-        textViewDate2.setText(splitted[2].replace("\n", ""));
-        textViewDate22.setText(splitted[3]);
-        textViewDate3.setText(splitted[4].replace("\n", ""));
-        textViewDate33.setText(splitted[5]);
-        textViewDate4.setText(splitted[6].replace("\n", ""));
-        textViewDate44.setText(splitted[7]);
-        textViewDate5.setText(splitted[8].replace("\n", ""));
-        textViewDate55.setText(splitted[9]);
-        textViewDate6.setText(splitted[10].replace("\n", ""));
-        textViewDate66.setText(splitted[11]);
+        String year = splitted[0];
+
+        textViewDate1.setText(FormatUtility.formatDateToShow(splitted[1]));
+        textViewDate11.setText(splitted[2]);
+        textViewDate2.setText(FormatUtility.formatDateToShow(splitted[3]));
+        textViewDate22.setText(splitted[4]);
+        textViewDate3.setText(FormatUtility.formatDateToShow(splitted[5]));
+        textViewDate33.setText(splitted[6]);
+        textViewDate4.setText(FormatUtility.formatDateToShow(splitted[7]));
+        textViewDate44.setText(splitted[8]);
+        textViewDate5.setText(FormatUtility.formatDateToShow(splitted[9]));
+        textViewDate55.setText(splitted[10]);
+        textViewDate6.setText(FormatUtility.formatDateToShow(splitted[11]));
+        textViewDate66.setText(splitted[12]);
 
     }
 
@@ -357,7 +362,7 @@ public class InfoDateActivity extends AppCompatActivity
      * Meotda, která vloží nouvou událost do
      * kalendáře.
      *
-     * @param event Třída událsoti, která obsahuje informace.
+     * @param event Třída události, která obsahuje informace.
      */
     private void addEventToTheCalendar(Event event) {
 

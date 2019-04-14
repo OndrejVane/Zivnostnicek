@@ -15,10 +15,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
 
     // Verze databáze
-    public static final int DATABASE_VERSION = 49;
+    private static final int DATABASE_VERSION = 49;
 
     // Název databáze
-    public static final String DATABASE_NAME = "Zivnostnicek.db";
+    private static final String DATABASE_NAME = "Zivnostnicek.db";
 
     // Názvy jednotlivých tabulek
     public static final String TABLE_USER = "user";

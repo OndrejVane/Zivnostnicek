@@ -79,7 +79,7 @@ public class BillDatabaseHelper extends DatabaseHelper {
      * Metoda pro získání dat pro zobrazení do grafu.
      *
      * @param year      hledaný rok
-     * @param month     heldaný měsic
+     * @param month     hledaný měsic
      * @param isExpense příjem/výdaj
      * @return list všech typů a součet částek k nim
      */

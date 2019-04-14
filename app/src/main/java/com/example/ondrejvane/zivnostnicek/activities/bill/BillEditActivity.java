@@ -580,6 +580,7 @@ public class BillEditActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         try {
             switch (requestCode) {
+                //fotoaparát
                 case 0:
                     if (resultCode == RESULT_OK) {
                         //převedení uri na bitmapu pro zobrazení

@@ -36,16 +36,16 @@ public class FormatUtility {
         return currency;
     }
 
-    public static String formatBalanceAmount(float input){
+    public static String formatBalanceAmount(float input) {
         String output;
-        if(input > 0){
+        if (input > 0) {
             output = formatIncomeAmount(input);
-        }else if(input < 0){
+        } else if (input < 0) {
             output = formatExpenseAmount(input * (-1));
-        }else {
+        } else {
             output = "0.00,-";
         }
-        return  output;
+        return output;
     }
 
     /**
@@ -79,14 +79,14 @@ public class FormatUtility {
             //vybrán pouze rok
         } else if (year != -1 && month == -1) {
 
-            if(year == foundYear){
+            if (year == foundYear) {
                 return true;
             }
 
             //vybrán rok i měsíc
         } else if (year != -1 && month != -1) {
 
-            if( year == foundYear && month == foundMonth){
+            if (year == foundYear && month == foundMonth) {
                 return true;
             }
 
@@ -96,5 +96,36 @@ public class FormatUtility {
         }
 
         return false;
+    }
+
+    public static String formatDateToShow(String date) {
+        boolean star = false;
+        date = date.replace("\n", "");
+
+        if (date.charAt(0) == '*') {
+            date = date.replace("*", "");
+            star = true;
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(date);
+
+
+
+        //pokud den záčíná nulou tak jí odeberu
+        if(date.charAt(0) == '0'){
+            stringBuilder.deleteCharAt(0);
+        }
+
+
+        //pokud mesíc začíná nulou, tak ho odstraním
+        if(date.charAt(3) == '0'){
+            stringBuilder.deleteCharAt(2);
+        }
+
+        if(star){
+            return "*" + stringBuilder.toString();
+        }else {
+            return stringBuilder.toString();
+        }
     }
 }
