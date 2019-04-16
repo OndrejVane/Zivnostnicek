@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
+import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 import java.io.BufferedReader;
@@ -55,7 +56,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
     private TextView date;
 
     //pomocné gloální proměnné
-    private static final String CNB_URL = "http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
+    private static final String CNB_URL = "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
     private static final String FILE_NAME = "denni_kurz.txt";
     private String stringFromFile;
     private int returnValue;                        //globální proměnná pro předání hodnoty z vlákna -1=není připojen k internetu -2=web není dostupný 1=OK
@@ -165,8 +166,12 @@ public class InfoCurrencyActivity extends AppCompatActivity
             if (splited[i].equals("Švédsko")) {
                 swedenCurrency.setText(splited[i + 4]);
             }
+
+            //nastavení data aktualizace
+            if(stringFromFile.length() > 0){
+                date.setText(stringFromFile.substring(0, index));
+            }
         }
-        date.setText(stringFromFile.substring(0, index));
     }
 
     /**
@@ -204,6 +209,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
         String file = "";
 
         try {
+            HttpsTrustManager.allowAllSSL();
             URL url = new URL(CNB_URL);
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
             String line;
@@ -226,7 +232,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která se posí načíst data z lokálního
+     * Metoda, která se pokusí načíst data z lokálního
      * souboru a vrátí je jak řetězec.
      *
      * @return načtený řetězec

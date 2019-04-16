@@ -239,7 +239,6 @@ public class Push {
                 jsonObject.put("vat", bill.getVAT());
                 jsonObject.put("date", bill.getDate());
                 jsonObject.put("photo", bill.getPhoto());
-                jsonObject.put("photo_data", PictureUtility.getPhotoData(bill.getPhoto()));
                 jsonObject.put("is_expense", bill.getIsExpense());
                 jsonObject.put("type_id", bill.getTypeId());
                 jsonObject.put("trader_id", bill.getTraderId());
