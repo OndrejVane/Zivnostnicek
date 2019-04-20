@@ -1,9 +1,9 @@
 package com.example.ondrejvane.zivnostnicek.activities.info;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -19,9 +19,14 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
+import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 
 import java.io.BufferedReader;
@@ -31,7 +36,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -54,12 +58,12 @@ public class InfoCurrencyActivity extends AppCompatActivity
     private TextView canadaCurrency;
     private TextView swedenCurrency;
     private TextView date;
+    private ProgressDialog pDialog;
 
     //pomocné gloální proměnné
     private static final String CNB_URL = "https://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt";
     private static final String FILE_NAME = "denni_kurz.txt";
     private String stringFromFile;
-    private int returnValue;                        //globální proměnná pro předání hodnoty z vlákna -1=není připojen k internetu -2=web není dostupný 1=OK
 
     //kod požadavku přístupu
     private static final int PERMISSION_REQUEST_CODE = 345;
@@ -81,8 +85,7 @@ public class InfoCurrencyActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadDataAsync();
-                setTextToActivity();
+                tryDownloadFileFromServer(view);
             }
         });
 
@@ -102,8 +105,9 @@ public class InfoCurrencyActivity extends AppCompatActivity
         //inicializace aktivity
         initActivity();
 
-        //nastavení dat do aktivity
-        trySetTextToActivity();
+        //pokus o stáhnutí souboru z CNB api
+        tryDownloadFileFromServer(findViewById(android.R.id.content));
+
     }
 
     /**
@@ -135,7 +139,74 @@ public class InfoCurrencyActivity extends AppCompatActivity
     }
 
     /**
-     * Meotda, pro parsování dat a zobrazení do aktivity
+     * Progress dialog pro v průběhu stahování souboru.
+     */
+    private void displayLoader() {
+        pDialog = new ProgressDialog(InfoCurrencyActivity.this);
+        pDialog.setMessage(getString(R.string.downloading_in_progress));
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+    }
+
+
+    /**
+     * Metoda, která se pokusí o stáhnutí souboru z
+     * api ČNB. Poté dojde k nastavení stažených dat do aktivity.
+     *
+     * @param view view aktivity
+     */
+    public void downloadFileFromServer(View view) {
+
+        //zobrazení dialogového okna
+        displayLoader();
+
+        //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+        HttpsTrustManager.allowAllSSL();
+
+        //inicializace nového požadavku
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                CNB_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pDialog.dismiss();
+
+                        //uložení řetězce do souboru pro pozdější použití
+                        saveFile(response);
+
+                        //zobrazení kurzů do aktivity
+                        setTextToActivity();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //zkusit alespoň zobrazit starší data
+                        setTextToActivity();
+
+                        pDialog.dismiss();
+
+                        //zobrazení informace uživateli, pokud došlo k chybě
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Error message: " + error.getMessage());
+                    }
+                }
+        );
+
+        RequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+
+
+    }
+
+
+    /**
+     * Metoda, pro parsování dat a zobrazení do aktivity
      */
     private void parseFileAndSetToTextField() {
         int index = stringFromFile.indexOf(" ");
@@ -168,65 +239,27 @@ public class InfoCurrencyActivity extends AppCompatActivity
             }
 
             //nastavení data aktualizace
-            if(stringFromFile.length() > 0){
+            if (stringFromFile.length() > 0) {
                 date.setText(stringFromFile.substring(0, index));
             }
         }
     }
 
-    /**
-     * Metoda, která je spuštěna na pozadí(v jiném vlákně
-     * nez GUI). Metoda volá další metodu pro stažení dat
-     * z internetu. Následně infomruje uživatele o výsledku akce.
-     */
-    public synchronized void downloadDataAsync() {
-        //nesmí být ve stejném vlákně jako GUI
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                //stáhnutí souboru z url cnb
-                downloadFile();
-            }
-        });
-        //instarnet není dostupný
-        if (returnValue == -1) {
-            Toast.makeText(this, R.string.connect_to_internet, Toast.LENGTH_SHORT).show();
-            //cnb není dostuoné
-        } else if (returnValue == -2) {
-            Toast.makeText(this, R.string.can_not_connect_to_the_server, Toast.LENGTH_SHORT).show();
-            //úspěch
-        } else if (returnValue == 1) {
-            Toast.makeText(this, R.string.data_sucessfully_updated, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     /**
      * Procedura pro stáhnutí textu z url čnb a uložení
      * do lokálního textového souboru.
      */
-    private void downloadFile() {
-        String file = "";
+    private void saveFile(String file) {
 
         try {
-            HttpsTrustManager.allowAllSSL();
-            URL url = new URL(CNB_URL);
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                file = file + line + "\n";
-            }
-            in.close();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(InfoCurrencyActivity.this.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
             outputStreamWriter.write(file);
             outputStreamWriter.close();
-            returnValue = 1;
 
         } catch (MalformedURLException e) {
-            returnValue = -2;
             Log.d(TAG, "Malformed URL: " + e.getMessage());
         } catch (IOException e) {
-            returnValue = -1;
             Log.d(TAG, "I/O Error: " + e.getMessage());
         }
     }
@@ -320,11 +353,11 @@ public class InfoCurrencyActivity extends AppCompatActivity
      */
 
     @AfterPermissionGranted(PERMISSION_REQUEST_CODE)
-    public void trySetTextToActivity() {
-        String[] perms = { Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    public void tryDownloadFileFromServer(View view) {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         if (EasyPermissions.hasPermissions(this, perms)) {
-            setTextToActivity();
+            downloadFileFromServer(view);
         } else {
             EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission_info_currency), PERMISSION_REQUEST_CODE, perms);
         }

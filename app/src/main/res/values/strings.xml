@@ -213,6 +213,7 @@
     <string name="can_not_connect_to_the_server">Can not connect to the server</string>
     <string name="registration_in_progress">Signing Up… Please wait…</string>
     <string name="login_in_progress">Signing in… Please wait…</string>
+    <string name="downloading_in_progress">Downloading… Please wait…</string>
     <string name="year_summary">Year summary</string>
     <string name="vat_summary">VAT summary</string>
     <string name="traders_summary">Traders summary</string>

@@ -197,8 +197,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 Log.d(TAG, request.toString());
 
-                Log.d(TAG, "Passw " + hashedPassword);
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }

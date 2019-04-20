@@ -48,7 +48,6 @@ public class BillDatabaseHelper extends DatabaseHelper {
         }
 
         SQLiteDatabase db = this.getWritableDatabase();
-        long billId;
 
         //odstranění speciálních zanku v objektu bill kvůli SQLinjection
         bill.removeSpecialCharsBill();
