@@ -202,6 +202,7 @@
     <string name="registration_in_progress">Probíhá registrace…Prosím čekejte…</string>
     <string name="login_in_progress">Probíhá přihlašování…Prosím čekejte…</string>
     <string name="downloading_in_progress">Stahování aktuálních kurzů… Prosím čekejte…</string>
+    <string name="downloading_dates_in_progress">Stahování aktuálních termínů… Prosím čekejte…</string>
     <string name="year_summary">Roční přehled</string>
     <string name="vat_summary">Přehled DPH</string>
     <string name="traders_summary">Přehled obchodníků </string>

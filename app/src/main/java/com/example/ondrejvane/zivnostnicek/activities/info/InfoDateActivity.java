@@ -2,9 +2,9 @@ package com.example.ondrejvane.zivnostnicek.activities.info;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
@@ -21,10 +21,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.ondrejvane.zivnostnicek.R;
 import com.example.ondrejvane.zivnostnicek.helper.Header;
 import com.example.ondrejvane.zivnostnicek.model.model_helpers.Event;
 import com.example.ondrejvane.zivnostnicek.server.HttpsTrustManager;
+import com.example.ondrejvane.zivnostnicek.server.RequestQueue;
 import com.example.ondrejvane.zivnostnicek.server.Server;
 import com.example.ondrejvane.zivnostnicek.session.Logout;
 import com.example.ondrejvane.zivnostnicek.utilities.FormatUtility;
@@ -36,7 +41,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -65,6 +69,7 @@ public class InfoDateActivity extends AppCompatActivity
     private TextView textViewDate55;
     private TextView textViewDate6;
     private TextView textViewDate66;
+    private ProgressDialog pDialog;
 
 
     //kod požadavku přístupu
@@ -72,9 +77,6 @@ public class InfoDateActivity extends AppCompatActivity
 
     //název uloženého souboru s daty
     private static final String FILE_NAME = "dates.txt";
-
-    //pomocná proměnná pro návratovou hodnotu
-    private int returnValue;
 
     //text ze souboru
     private String stringFromFile;
@@ -97,8 +99,7 @@ public class InfoDateActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadDataAsync();
-                setTextToActivity();
+                tryDownloadFileFromServer(view);
             }
         });
 
@@ -119,8 +120,8 @@ public class InfoDateActivity extends AppCompatActivity
         //inicializace aktivity
         initActivity();
 
-        //zavolání metody pro nastavení textu do aktivity přes metodu, která se zeptá uživatele o povolení práv
-        trySetTextToActivity();
+        //pokus o stažení souboru ze serveru
+        tryDownloadFileFromServer(findViewById(android.R.id.content));
 
 
         //nastavení naslouchače pro text view po stisknutí
@@ -217,6 +218,71 @@ public class InfoDateActivity extends AppCompatActivity
     }
 
     /**
+     * Progress dialog pro v průběhu stahování souboru.
+     */
+    private void displayLoader() {
+        pDialog = new ProgressDialog(InfoDateActivity.this);
+        pDialog.setMessage(getString(R.string.downloading_dates_in_progress));
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+    }
+
+    /**
+     * Metoda, která se pokusí o stáhnutí souboru ze serveru.
+     * Poté dojde k nastavení stažených dat do aktivity.
+     *
+     * @param view view aktivity
+     */
+    public void downloadFileFromServer(View view) {
+
+        //zobrazení dialogového okna
+        displayLoader();
+
+        //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
+        HttpsTrustManager.allowAllSSL();
+
+        //inicializace nového požadavku
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.GET,
+                Server.getInstance().getDatesUrl(),
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pDialog.dismiss();
+
+                        //uložení řetězce do souboru pro pozdější použití
+                        saveFile(response);
+
+                        //zobrazení kurzů do aktivity
+                        setTextToActivity();
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                        //zkusit alespoň zobrazit starší data
+                        setTextToActivity();
+
+                        pDialog.dismiss();
+
+                        //zobrazení informace uživateli, pokud došlo k chybě
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.can_not_connect_to_the_server), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Error message: " + error.getMessage());
+                    }
+                }
+        );
+
+        RequestQueue.getInstance(this).addToRequestQueue(stringRequest);
+
+
+    }
+
+    /**
      * Procedura, která zkusí načíst data z lokálního souboru.
      * Pokud toto nepodaří informuje o tom uživatele.
      */
@@ -240,8 +306,6 @@ public class InfoDateActivity extends AppCompatActivity
     private void parseFileAndSetToTextField() {
         String[] splitted = stringFromFile.split(";");
 
-        String year = splitted[0];
-
         textViewDate1.setText(FormatUtility.formatDateToShow(splitted[1]));
         textViewDate11.setText(splitted[2]);
         textViewDate2.setText(FormatUtility.formatDateToShow(splitted[3]));
@@ -257,62 +321,21 @@ public class InfoDateActivity extends AppCompatActivity
 
     }
 
-    /**
-     * Metoda, která je spuštěna na pozadí(v jiném vlákně
-     * nez GUI). Metoda volá další metodu pro stažení dat
-     * z internetu. Následně infomruje uživatele o výsledku akce.
-     */
-    public synchronized void downloadDataAsync() {
-        //nesmí být ve stejném vlákně jako GUI
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-
-                //stáhnutí souboru z url cnb
-                downloadFile();
-            }
-        });
-        //instarnet není dostupný
-        if (returnValue == -1) {
-            Toast.makeText(this, R.string.connect_to_internet, Toast.LENGTH_SHORT).show();
-            //cnb není dostuoné
-        } else if (returnValue == -2) {
-            Toast.makeText(this, R.string.can_not_connect_to_the_server, Toast.LENGTH_SHORT).show();
-            //úspěch
-        } else if (returnValue == 1) {
-            Toast.makeText(this, R.string.data_sucessfully_updated, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     /**
-     * Procedura pro stáhnutí textu z url serveru a uložení
+     * Procedura uložení
      * do lokálního textového souboru.
      */
-    private void downloadFile() {
-        String file = "";
+    private void saveFile(String file) {
 
         try {
-
-            //povolení nedůvěryhodných certifikátu pro zabezpečené spojení
-            HttpsTrustManager.allowAllSSL();
-
-            URL url = new URL(Server.getInstance().getDatesUrl());
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-            while ((line = in.readLine()) != null) {
-                file = file + line + "\n";
-            }
-            in.close();
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(InfoDateActivity.this.openFileOutput(FILE_NAME, Context.MODE_PRIVATE));
             outputStreamWriter.write(file);
             outputStreamWriter.close();
-            returnValue = 1;
 
         } catch (MalformedURLException e) {
-            returnValue = -2;
             Log.d(TAG, "Malformed URL: " + e.getMessage());
         } catch (IOException e) {
-            returnValue = -1;
             Log.d(TAG, "I/O Error: " + e.getMessage());
         }
     }
@@ -432,11 +455,11 @@ public class InfoDateActivity extends AppCompatActivity
      */
 
     @AfterPermissionGranted(PERMISSION_REQUEST_CODE)
-    public void trySetTextToActivity() {
+    public void tryDownloadFileFromServer(View view) {
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_CALENDAR};
 
         if (EasyPermissions.hasPermissions(this, perms)) {
-            setTextToActivity();
+            downloadFileFromServer(view);
         } else {
             EasyPermissions.requestPermissions(this, getResources().getString(R.string.permission_info_currency), PERMISSION_REQUEST_CODE, perms);
         }
