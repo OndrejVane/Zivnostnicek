@@ -1,18 +1,22 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -52,8 +56,12 @@ import com.example.ondrejvane.zivnostnicek.model.model_helpers.ItemQuantity;
 import com.example.ondrejvane.zivnostnicek.model.model_helpers.StorageItem;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -373,11 +381,29 @@ public class BillEditActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která inicializuje a spustí aktivitu
+     * fotoaparátu.
+     */
     private void openCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, 0);
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+
+            File imageFile = getImageFile();
+
+            if (imageFile != null) {
+                Uri imageUri = FileProvider.getUriForFile(this, "com.example.provider.zivnostnicek", imageFile);
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(cameraIntent, 0);
+            }
+        }
     }
 
+    /**
+     * Procedura, která inicializuje aktivitu pro
+     * zobrazení galerie.
+     */
     private void openGallery() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -386,7 +412,7 @@ public class BillEditActivity extends AppCompatActivity
 
     /**
      * Metoda, která vykreslí dialogové okno pro přidání položky
-     * katury. NOV8 vs EXISTUJÍCÍ
+     * katury. NOVÉ vs EXISTUJÍCÍ
      *
      * @param view view aktivity
      */
@@ -583,17 +609,9 @@ public class BillEditActivity extends AppCompatActivity
                 //fotoaparát
                 case 0:
                     if (resultCode == RESULT_OK) {
-                        //převedení uri na bitmapu pro zobrazení
-                        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-
-                        //zobrazení bitmapy
-                        photoViewBillEdit.setImageBitmap(bitmap);
-
                         //uložení obrázku do uložiště zařízení
-                        picturePath = PictureUtility.saveToInternalStorage(bitmap, this);
-
-                        //vypis názvu soboru
-                        Log.d(TAG, "Picture path " + picturePath);
+                        Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+                        photoViewBillEdit.setImageBitmap(bitmap);
                     }
                     break;
                 //galerie
@@ -821,6 +839,30 @@ public class BillEditActivity extends AppCompatActivity
         }
 
         return true;
+    }
+
+    /**
+     * Metoda, která vytvoří nový soubor pro fotku s
+     * unikátním názvem podle data. Cestu uloží do globální proměnné
+     * a jako návratovou hodnotu vrátí soubor
+     *
+     * @return vytvořený soubor
+     */
+    private File getImageFile() {
+        @SuppressLint("SimpleDateFormat")
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageName = "jpg_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        File imageFile = null;
+        try {
+            imageFile = File.createTempFile(imageName, ".jpg", storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d(TAG, "Cannot create a file");
+        }
+        picturePath = imageFile.getAbsolutePath();
+        return imageFile;
     }
 
     /*

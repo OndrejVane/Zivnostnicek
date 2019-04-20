@@ -342,6 +342,10 @@ public class BillNewActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Procedura, která inicializuje a spustí aktivitu
+     * fotoaparátu.
+     */
     private void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -357,6 +361,10 @@ public class BillNewActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Procedura, která inicializuje aktivitu pro
+     * zobrazení galerie.
+     */
     private void openGallery() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -378,14 +386,8 @@ public class BillNewActivity extends AppCompatActivity
                 //fotoaparát
                 case 0:
                     if (resultCode == RESULT_OK) {
-                        //převedení uri na bitmapu pro zobrazení
-                        //Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-
-                        //zobrazení bitmapy
-                        //photoView.setImageBitmap(bitmap);
 
                         //uložení obrázku do uložiště zařízení
-                        //picturePath = PictureUtility.saveToInternalStorage(bitmap, this);
                         Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
                         photoView.setImageBitmap(bitmap);
 
