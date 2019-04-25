@@ -37,7 +37,6 @@ public class TraderShowFragment extends Fragment {
      * Povinná metoda při použití fragmentu.
      */
     public TraderShowFragment() {
-        // Required empty public constructor
     }
 
 

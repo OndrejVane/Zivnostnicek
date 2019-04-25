@@ -51,7 +51,7 @@ public class StorageActivity extends AppCompatActivity
     private int[] holderId;
 
     /**
-     * Meotoda, která je volána při vytvoření aktivity
+     * Metoda, která je volána při vytvoření aktivity
      *
      * @param savedInstanceState savedInstanceState
      */

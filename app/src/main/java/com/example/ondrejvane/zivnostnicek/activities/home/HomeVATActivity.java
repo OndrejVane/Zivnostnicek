@@ -271,7 +271,7 @@ public class HomeVATActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která se porvede po stisknutí talčítka zpět
+     * Metoda, která se porvede po stisknutí tlačítka zpět.
      */
     @Override
     public void onBackPressed() {
@@ -284,7 +284,7 @@ public class HomeVATActivity extends AppCompatActivity
     }
 
     /**
-     * Meotda, která vykreslí boční navigační menu.
+     * Metoda, která vykreslí boční navigační menu.
      *
      * @param menu menu
      * @return boolean
@@ -298,7 +298,7 @@ public class HomeVATActivity extends AppCompatActivity
 
     /**
      * Metoda, která se stará o boční navigační menu a přechod
-     * mezi aktivitami
+     * mezi aktivitami.
      *
      * @param item vybraný item z menu
      * @return boolean

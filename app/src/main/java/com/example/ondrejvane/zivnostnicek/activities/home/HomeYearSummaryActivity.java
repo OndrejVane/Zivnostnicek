@@ -265,6 +265,9 @@ public class HomeYearSummaryActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Procedura, která je volána při stisku tlačítka zpět.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

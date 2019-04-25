@@ -301,6 +301,10 @@ public class InfoCurrencyActivity extends AppCompatActivity
         return ret;
     }
 
+    /**
+     * Procedura, která je volána po stisku tlačítka zpět.
+     * Ukončí tuto aktivitu a spustí odpovídající.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

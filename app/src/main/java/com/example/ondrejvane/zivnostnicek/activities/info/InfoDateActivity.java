@@ -378,7 +378,7 @@ public class InfoDateActivity extends AppCompatActivity
     }
 
     /**
-     * Meotda, která vloží nouvou událost do
+     * Metoda, která vloží nouvou událost do
      * kalendáře.
      *
      * @param event Třída události, která obsahuje informace.
@@ -402,6 +402,10 @@ public class InfoDateActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Metoda, která je volána po stisknutí tlačítka zpět.
+     * Ukončí tuto aktivivitu a spustí příslušnou aktivitu.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

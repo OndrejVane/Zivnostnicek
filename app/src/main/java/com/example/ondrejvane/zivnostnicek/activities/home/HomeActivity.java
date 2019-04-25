@@ -33,7 +33,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import java.util.ArrayList;
 
 /**
- * Aktivita, která zobrazuje hlavní přehled přímů a výdajů.
+ * Aktivita, která zobrazuje hlavní přehled příjmů a výdajů.
  */
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,8 +52,8 @@ public class HomeActivity extends AppCompatActivity
     private BillDatabaseHelper billDatabaseHelper;
     private int pickedYear = -1;
     private int pickedMonth = -1;
-    private boolean isFisrtPickYear = true;
-    private boolean isFisrtPickMonth = true;
+    private boolean isFirstPickYear = true;
+    private boolean isFirstPickMonth = true;
     private float incomes = 0.0f;
     private float expense = 0.0f;
 
@@ -100,8 +100,8 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Pokud se jedná o první výber data se nenastavují
-                if (isFisrtPickYear) {
-                    isFisrtPickYear = false;
+                if (isFirstPickYear) {
+                    isFirstPickYear = false;
                     return;
                 }
 
@@ -125,8 +125,8 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //Pokud se jedná o první výber data se nenastavují
-                if (isFisrtPickMonth) {
-                    isFisrtPickMonth = false;
+                if (isFirstPickMonth) {
+                    isFirstPickMonth = false;
                     return;
                 }
 
@@ -146,7 +146,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     /**
-     * Procedura, která inicializuje všechyn prvky aktivity
+     * Procedura, která inicializuje všechyn prvky aktivity.
      */
     private void initActivity() {
         //inicializace prvků v aktivitě
@@ -225,7 +225,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     /**
-     * Získání dat az databáze a zobrazení do aktivity
+     * Získání dat z databáze a zobrazení do aktivity
      */
     private void getDataAndSetToActivity() {
 
@@ -279,14 +279,13 @@ public class HomeActivity extends AppCompatActivity
     }
 
     /**
-     * Meotda, která vykreslí boční navigační menu.
+     * Metoda, která vykreslí boční navigační menu.
      *
      * @param menu menu
      * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_side_menu, menu);
         return true;
     }
