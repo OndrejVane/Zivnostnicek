@@ -191,7 +191,13 @@ public class HomeExpenseOrIncomeActivity extends AppCompatActivity
      */
     private void setDataToActivity() {
         ArrayList<TypeBill> tempTypeBill = typeBillDatabaseHelper.getAllTypeByUserId(UserInformation.getInstance().getUserId());
-        tempTypeBill.get(0).setColor(getResources().getColor(R.color.colorPrimary));
+
+        //nastavení barvy grafu podle příjmu nebo výdaje
+        if (isExpense){
+            tempTypeBill.get(0).setColor(getResources().getColor(R.color.expense));
+        }else {
+            tempTypeBill.get(0).setColor(getResources().getColor(R.color.income));
+        }
         tempTypeBill.get(0).setName(getResources().getString(R.string.not_assigned));
 
         typeName = new String[tempTypeBill.size()];

@@ -21,7 +21,7 @@
     <string name="title_activity_info_currency">Kurzovní lístek</string>
     <string name="title_activity_storage_new">Přidat skladovou položku</string>
     <string name="title_activity_storage_show">Náhled skladové položky</string>
-    <string name="title_activity_storage_edit">Editce skladové položky</string>
+    <string name="title_activity_storage_edit">Editace skladové položky</string>
     <string name="title_activity_income_show">Náhled příjmu</string>
     <string name="title_activity_expense_show">Náhled výdaje</string>
     <string name="title_activity_bill_edit">Editace příjmu</string>
@@ -35,7 +35,7 @@
     <string name="title_activity_info_links">Užitečné odkazy</string>
     <string name="title_activity_income_new">Přidejte příjem</string>
     <string name="title_activity_info_date">Důležité termíny</string>
-    <string name="exit_question">Přejete si ukočnit aplikaci Živnostníček?</string>
+    <string name="exit_question">Přejete si ukončit aplikaci Živnostníček?</string>
 
     <!-- OSTATNí-->
     <string name="data_synchronization">Synchronizace dat</string>
@@ -82,7 +82,7 @@
     <string name="city">Město</string>
     <string name="street">Ulice</string>
     <string name="company_name_is_empty">Název obchodníka je prázdný</string>
-    <string name="telephone_has_wrong_format">Špatný formát telefoního čísla př. +420123456789</string>
+    <string name="telephone_has_wrong_format">Špatný formát telefonního čísla př. +420123456789</string>
     <string name="wrong_id_number">Špatný formát IČ př. 25596641</string>
     <string name="wrong_format_of_tid">Špatný formát DIČ př. CZ25596641</string>
     <string name="search">Hledat</string>
@@ -94,7 +94,7 @@
     <string name="delete">Smazat</string>
     <string name="delete_trader_question">Opravdu chcete smazat tohoto obchodníka?</string>
     <string name="trader_deleted_message">Obchodník byl smazán</string>
-    <string name="trader_not_deleted_message">Obchodníl nebyl smazán</string>
+    <string name="trader_not_deleted_message">Obchodník nebyl smazán</string>
     <string name="save">Uložit změny</string>
     <string name="edit_information_about_trader">Editujte údaje o obchodníkovi</string>
     <string name="title">Název</string>
@@ -203,6 +203,7 @@
     <string name="login_in_progress">Probíhá přihlašování…Prosím čekejte…</string>
     <string name="downloading_in_progress">Stahování aktuálních kurzů… Prosím čekejte…</string>
     <string name="downloading_dates_in_progress">Stahování aktuálních termínů… Prosím čekejte…</string>
+    <string name="user_already_exists">Tento uživatel již existuje</string>
     <string name="year_summary">Roční přehled</string>
     <string name="vat_summary">Přehled DPH</string>
     <string name="traders_summary">Přehled obchodníků </string>
@@ -224,13 +225,13 @@
     <string name="not_assigned">Nepřiřazeno</string>
     <string name="sync_data_with_server">Zapnout automatické zálohování dat</string>
     <string name="sync_allow_only_on_wifi">Zálohovat data pouze na Wi-Fi</string>
-    <string name="sync_info_1">Při automatickém zálohování dat na server se ujistěte, že přidáváte a edituje záznamy pouze na jedno zařízení. Mohlo by dojít ke ztrátě dat.</string>
-    <string name="sync_info_2">Data můžete ručně zálohovat na server tlačítem \"ZÁLOHOVAT DATA NYNÍ\" a obnovit data ze serveru můžete tlačítkem \"OBNOVIT DATA NYNÍ\".</string>
+    <string name="sync_info_1">Při automatickém zálohování dat na server se ujistěte, že přidáváte a edituje záznamy pouze na jednom zařízení. Mohlo by dojít ke ztrátě dat.</string>
+    <string name="sync_info_2">Data můžete ručně zálohovat na server tlačítkem \"ZÁLOHOVAT DATA NYNÍ\" a obnovit data ze serveru můžete tlačítkem \"OBNOVIT DATA NYNÍ\".</string>
     <string name="sync_now">Synchronizovat nyní</string>
     <string name="fill_all_columns">Vyplňte všechny údaje</string>
     <string name="permission_info_camera">Aplikace potřebuje přístup k fotoaparátu k pořízení fotografie faktury a uložení fotografie do zařízení.</string>
     <string name="permission_info_gallery">Aplikace potřebuje přístup k fotografiím k přidání obrázku k faktuře.</string>
-    <string name="permission_info_currency">Aplikcae potřebuje přístup k paměti pro načítání a ukládání potřebných dat.</string>
+    <string name="permission_info_currency">Aplikace potřebuje přístup k paměti pro načítání a ukládání potřebných dat.</string>
     <string name="pull_question">Opravdu si přejete obnovit data ze serveru? Všechna lokální data budou SMAZÁNA!</string>
     <string name="permission_denied">Přístup byl serverem odepřen</string>
     <string name="data_successfully_restored">Data byla úspěšně obnovena ze serveru</string>

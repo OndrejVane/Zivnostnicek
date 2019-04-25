@@ -143,18 +143,21 @@ public class LoginActivity extends AppCompatActivity {
         if (emailAddress.isEmpty()) {
             message = getString(R.string.empty_user_name);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            userAddressET.setError(message);
             return false;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailAddress).matches()) {
             message = getString(R.string.email_is_not_valid);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            userAddressET.setError(message);
             return false;
         }
 
         if (passwordLoad.isEmpty()) {
             message = getString(R.string.empty_password1);
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            passwordET.setError(message);
             return false;
         }
 
@@ -267,6 +270,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(),
                                             getResources().getString(R.string.wrong_password_or_address),
                                             Toast.LENGTH_SHORT).show();
+                                    passwordET.setError(getResources().getString(R.string.wrong_password_or_address));
 
                                     //nevyplněné údaje
                                 } else {
