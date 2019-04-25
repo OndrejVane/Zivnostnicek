@@ -62,7 +62,7 @@ public class TypeBillDatabaseHelper extends DatabaseHelper {
      * Získání potřebných dat pro zobrazení typu faktur do spinneru.
      *
      * @param userId id uživatele
-     * @return
+     * @return  pole, které uchováví informace o základních údajích typu
      */
     public synchronized String[][] getTypeBillData(int userId) {
         String data[][];

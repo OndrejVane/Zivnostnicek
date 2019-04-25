@@ -151,7 +151,7 @@ public class StorageItemDatabaseHelper extends DatabaseHelper {
      * položka označena za smazanou.
      *
      * @param storageItemId id skladové položky
-     * @return
+     * @return logická hodnota, která určuje zda došlo ke smazání
      */
     public synchronized boolean deleteStorageItemById(int storageItemId) {
         String where = COLUMN_STORAGE_ITEM_ID + " = ? AND " + COLUMN_STORAGE_ITEM_USER_ID + " = ?";

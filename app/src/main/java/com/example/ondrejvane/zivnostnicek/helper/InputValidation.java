@@ -163,7 +163,7 @@ public class InputValidation {
     /**
      * Metoda, která validuje, zda je string prázdný.
      *
-     * @return
+     * @return  logická hodnota udávající, zda je string prázdný
      */
     public static boolean validateNote(String input) {
         if (input.isEmpty()) {
@@ -175,7 +175,7 @@ public class InputValidation {
     /**
      * Metoda, která validuje, zda je string prázdný.
      *
-     * @return
+     * @return logická hodnota udávající, zda je string prázdný
      */
     public static boolean validateIsEmpty(String input) {
         if (input.isEmpty()) {
