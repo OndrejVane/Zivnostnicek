@@ -274,7 +274,7 @@ public class BillShowActivity extends AppCompatActivity
         }
         Intent intent = new Intent(BillShowActivity.this, BillActivity.class);
         intent.putExtra("IS_EXPENSE", isExpense);
-        //startActivity(intent);
+        startActivity(intent);
         finish();
     }
 

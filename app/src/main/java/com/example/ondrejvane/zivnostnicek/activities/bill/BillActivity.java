@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import top.defaults.colorpicker.ColorPickerPopup;
 
 /**
- * Aktivita pro zobrazení všech příjmu.
+ * Aktivita pro zobrazení všech příjmu nebo výdajů.
  */
 public class BillActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,7 +64,6 @@ public class BillActivity extends AppCompatActivity
     private int[] ID;
     private int pickedYear = -1;
     private int pickedMonth = -1;
-    //private boolean firstPickYear = true;
     private boolean firstPickMonth = true;
 
     /**
@@ -123,7 +122,7 @@ public class BillActivity extends AppCompatActivity
                     intent.putExtra("BILL_ID", incomeId);
                     intent.putExtra("IS_EXPENSE", isExpense);
                     startActivity(intent);
-                    //finish();
+                    finish();
                 }
             }
         });
@@ -133,15 +132,6 @@ public class BillActivity extends AppCompatActivity
         spinnerBillYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                //zabránění načítání dat z databáze vícekrát při inicializaci aktivity
-                /*
-                if (firstPickYear) {
-                    firstPickYear = false;
-                    return;
-                }
-                */
-
 
                 if (position != 0) {
                     pickedYear = Integer.parseInt(spinnerBillYear.getSelectedItem().toString());
@@ -215,7 +205,7 @@ public class BillActivity extends AppCompatActivity
     /**
      * Funkce, která načte data z databáze a uloží je do
      * globálních proměnných. Tato akce je prováděna v jiném
-     * vlákně něž vlákno GUI.
+     * vlákně něž vlákno GUI, aby nezpomalovala odezvu UI.
      */
     private void readDataFromDatabase() {
         Log.d(TAG, "Reading data from db");
@@ -250,7 +240,7 @@ public class BillActivity extends AppCompatActivity
     }
 
     /**
-     * Načtení nastevení aktuálního uživatele do aktivity.
+     * Načtení nastavení aktuálního uživatele do aktivity.
      */
     private void setSettings() {
         Settings settings = Settings.getInstance();
@@ -385,7 +375,7 @@ public class BillActivity extends AppCompatActivity
     }
 
     /**
-     * Metoda, která se stará o vykreslení menu v prvém rohu.
+     * Metoda, která se stará o vykreslení menu v pravém rohu.
      *
      * @param menu menu
      * @return boolean

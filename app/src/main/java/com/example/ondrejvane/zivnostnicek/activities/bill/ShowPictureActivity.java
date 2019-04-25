@@ -1,6 +1,5 @@
 package com.example.ondrejvane.zivnostnicek.activities.bill;
 
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
@@ -60,13 +59,12 @@ public class ShowPictureActivity extends AppCompatActivity {
     }
 
     /**
-     * Metoda, která se zavole před ukončením aktivity.
-     * Vynulování image view kvuli apměti a spuštění GC.
+     * Metoda, která se zavola před ukončením aktivity.
+     * Vynulování image view kvuli paměti.
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         touchImageView.setImageBitmap(null);
-        System.gc();
     }
 }

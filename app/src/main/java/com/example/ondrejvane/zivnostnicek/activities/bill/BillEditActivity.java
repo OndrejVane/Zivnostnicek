@@ -155,7 +155,7 @@ public class BillEditActivity extends AppCompatActivity
     }
 
     /**
-     * Procedura, která porvádí inicializaci aktivity
+     * Procedura, která provádí inicializaci aktivity
      */
     private void initActivity() {
         //načtení dat z shared preferences
